@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!--
+    Viewport — SC 1.4.4 (Resize Text).
+    MUST NOT include user-scalable=no or maximum-scale=1.
+    Either prevents users from zooming, violating SC 1.4.4.
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!--
+    Page title — SC 2.4.2.
+    Format: "Page Purpose — Site Name".
+  -->
+  <title>Contact Us — ShopCo</title>
+  <style>
+    /* ─────────────────────────────────────────────────────────────────
+     * Color token palette — ALL UI colors via tokens; no scattered hex.
+     *
+     * Contrast verification (foreground on --color-surface: #ffffff):
+     *   --color-text:    #111827  18.7:1  ✓ SC 1.4.3 (needs 4.5:1)
+     *   --color-muted:   #4b5563   7.1:1  ✓ SC 1.4.3
+     *   --color-brand:   #1e3a5f  13.5:1  ✓ SC 1.4.3
+     *   white on brand           13.5:1  ✓ SC 1.4.3
+     *   --color-brand-dark: #14294a — hover only (non-color change also used)
+     *   --color-focus:   #005fcc   7.0:1  ✓ SC 1.4.11 (needs 3:1)
+     *   --color-border:  #6b7280   4.6:1  ✓ SC 1.4.11 (needs 3:1)
+     *   --color-error:   #b91c1c   6.5:1  ✓ SC 1.4.3
+     *   --color-success: #14532d   9.9:1  ✓ SC 1.4.3
+     *
+     * --color-surface: #ffffff (M-3: explicit, ratios above verified against it)
+     * ───────────────────────────────────────────────────────────────── */
+    :root {
+      --color-bg:          #f3f4f6;
+      --color-surface:     #ffffff;
+      --color-text:        #111827;
+      --color-muted:       #4b5563;
+      --color-brand:       #1e3a5f;
+      --color-brand-dark:  #14294a;
+      --color-focus:       #005fcc;
+      --color-border:      #6b7280;
+      --color-border-light:#d1d5db;
+      --color-error:       #b91c1c;
+      --color-success:     #14532d;
+      --radius:            0.375rem;
+    }
+
+    /* ── Reset ───────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Base ────────────────────────────────────────────────────────── */
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── Skip link — SC 2.4.1 ────────────────────────────────────────── */
+    /*
+     * First focusable element in the DOM — precedes all header content.
+     * Visible on :focus/:active; clipped otherwise.
+     * Uses :not(:focus):not(:active) so clip is removed when focused.
+     * Clip technique — NOT display:none (which removes from tab order).
+     * CSS from the detailed instructions specification.
+     */
+    .sr-only:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    /*
+     * Always-hidden utility — keeps content in AT tree at all times.
+     * Used for the required-field "(required)" text, which must ALWAYS
+     * be available to AT, not only when focused.
+     * NOT display:none or visibility:hidden — those remove from AT tree.
+     */
+    .sr-always {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 9999;
+      padding: 0.5rem 1rem;
+      background: var(--color-brand);
+      color: var(--color-surface);
+      border-radius: var(--radius);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* ── Focus styles — SC 2.4.7 + SC 2.4.11 (WCAG 2.2) ───────────── */
+    /*
+     * :focus-visible — keyboard/AT navigation only; not triggered by mouse.
+     * 3px solid #005fcc on white = 7.0:1 ✓ SC 1.4.11, SC 2.4.11.
+     * outline-offset: 2px — ring sits outside element border.
+     * NO box-shadow used for focus (suppressed in forced-colors mode).
+     * NEVER removed by prefers-reduced-motion (not animated).
+     * No global `outline: none` in this file.
+     */
+    :focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    /* ── Header — implicit role="banner" at body level ──────────────── */
+    header {
+      background: var(--color-brand);
+      color: var(--color-surface);
+      padding: 0 1.5rem;
+    }
+
+    .header-inner {
+      max-width: 52rem;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      min-height: 3.5rem;
+    }
+
+    .site-name {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: var(--color-surface);
+      text-decoration: none;
+    }
+
+    .site-name:focus-visible {
+      outline: 3px solid var(--color-surface);
+      outline-offset: 3px;
+    }
+
+    /* ── Main — implicit role="main" ────────────────────────────────── */
+    /*
+     * tabindex="-1" — allows skip link to programmatically focus <main>
+     * without inserting it into the natural tab sequence. SC 2.4.1.
+     */
+    main {
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    /* ── Page heading — one <h1> per page, SC 1.3.1, SC 2.4.6 ──────── */
+    main > h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 900;
+      color: var(--color-brand);
+      margin-bottom: 0.375rem;
+    }
+
+    .page-intro {
+      font-size: 0.9375rem;
+      color: var(--color-muted);
+      max-width: 36rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Form card ───────────────────────────────────────────────────── */
+    .form-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-light);
+      border-radius: 0.625rem;
+      padding: 2rem;
+      max-width: 32rem;   /* rem — scales with user font size, SC 1.4.4 */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    /* ── Success message (shown after submit, replaces form) ─────────── */
+    /*
+     * role="status" = polite live region (SC 4.1.3).
+     * aria-atomic="true" — announces the full message as one unit.
+     * tabindex="-1" — allows JS .focus() to move AT reading position
+     *   to the message immediately after submission (SC 2.4.3).
+     *
+     * CRITICAL: Exists in initial HTML. Never created by JS.
+     * Live regions injected dynamically are unreliable in all major AT.
+     * JS only: (1) shows the element, (2) sets textContent via rAF pattern.
+     *
+     * Hidden via display:none initially — shown by .is-visible class.
+     * This DOES NOT conflict with live region behavior because the
+     * region announcement is triggered by textContent mutation AFTER
+     * the element is visible (the rAF ensures ordering).
+     */
+    .success-msg {
+      display: none;
+      padding: 1.25rem;
+      background: #f0fdf4;
+      border: 1.5px solid #16a34a;   /* #16a34a on white = 4.6:1 ✓ SC 1.4.11 */
+      border-radius: var(--radius);
+      color: var(--color-success);    /* 9.9:1 ✓ SC 1.4.3 */
+      font-size: 0.9375rem;
+      font-weight: 600;
+      line-height: 1.55;
+    }
+
+    .success-msg.is-visible { display: block; }
+
+    /* ── Form heading (h2 inside form) ──────────────────────────────── */
+    /*
+     * aria-labelledby="form-heading" on <form> points here.
+     * H1 (page) → H2 (form section) — no skipped levels.
+     * This gives the form landmark a descriptive accessible name,
+     * making it appear in AT landmark navigation as "Send us a message".
+     */
+    .form-heading {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--color-brand);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.625rem;
+      border-bottom: 2px solid var(--color-border-light);
+    }
+
+    /* ── Form ────────────────────────────────────────────────────────── */
+    /*
+     * novalidate — disables browser-native validation UI, which can be
+     * inconsistent across AT. Our JS provides accessible validation.
+     * aria-labelledby="form-heading" — gives form landmark an accessible
+     * name so it appears in AT landmark navigation (SC 4.1.2).
+     */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.375rem;
+    }
+
+    /* ── Form field wrapper (class="form-field" as specified) ────────── */
+    /*
+     * Contains: <label>, <input>, optional hint <p>, error <p role="alert">.
+     */
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    /* ── Labels — SC 1.3.1, SC 4.1.2 ────────────────────────────────── */
+    /*
+     * Explicit <label for="id"> — preferred over wrapping or aria-label.
+     * Most reliable labeling mechanism across all AT combinations.
+     */
+    .form-label {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--color-text);
+      line-height: 1.4;
+    }
+
+    /*
+     * Required asterisk — aria-hidden="true" prevents AT announcing
+     * "asterisk" (a bare symbol with no semantic meaning).
+     * Adjacent .sr-always "(required)" provides the semantic signal to AT.
+     * Visual asterisk + color gives sighted users the cue.
+     * NOT color alone — the asterisk glyph is a non-color indicator (SC 1.4.1).
+     */
+    .req-star {
+      color: var(--color-error);   /* 6.5:1 ✓ SC 1.4.3 */
+      margin-left: 0.2em;
+      font-weight: 700;
+    }
+
+    /* ── Inputs — SC 1.4.11 (Non-text Contrast) ─────────────────────── */
+    /*
+     * context7-mini-live contrast docs:
+     *   UI component borders need 3:1 minimum (SC 1.4.11).
+     *   #6b7280 on white = 4.6:1 ✓ — exceeds the 3:1 minimum.
+     *
+     * min-height: 2.75rem — SC 2.5.8 (Minimum Target Size, WCAG 2.2 AA).
+     * 2.75rem = 44px at 16px base font; exceeds 24px minimum.
+     * In rem so it scales with user font size (SC 1.4.4). (N-3 addressed)
+     *
+     * width: 100% — ensures no horizontal overflow at 320px. SC 1.4.10.
+     */
+    .form-input {
+      padding: 0.5625rem 0.75rem;
+      min-height: 2.75rem;   /* SC 2.5.8 (pre-flight N-3) */
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      color: var(--color-text);
+      background: var(--color-surface);
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+
+    .form-input:hover { border-color: var(--color-focus); }
+
+    .form-input:focus-visible {
+      border-color: var(--color-focus);
+      outline: 3px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    /*
+     * Error state — NOT conveyed by color alone (SC 1.4.1).
+     * Two non-color indicators alongside color:
+     *   1. Border thickness increases (1.5px → 2.5px) — visual weight change.
+     *   2. Error text below the field (already in place via role="alert").
+     * Color change from neutral to error-red is a third signal.
+     */
+    .form-input[aria-invalid="true"] {
+      border: 2.5px solid var(--color-error);
+    }
+
+    .form-input[aria-invalid="true"]:focus-visible {
+      outline-color: var(--color-error);
+      border-color: var(--color-error);
+    }
+
+    /* ── Hint text ───────────────────────────────────────────────────── */
+    /*
+     * Always visible — users see format guidance before typing (SC 3.3.2).
+     * Referenced by aria-describedby on the input.
+     * ID listed FIRST in aria-describedby so AT announces hint before error
+     * (correct cognitive order: format guidance → then any error).
+     */
+    .field-hint {
+      font-size: 0.8125rem;
+      color: var(--color-muted);   /* 7.1:1 ✓ SC 1.4.3 */
+      line-height: 1.5;
+    }
+
+    /* ── Error messages — SC 3.3.1, SC 4.1.3 ────────────────────────── */
+    /*
+     * CRITICAL PATTERN — do NOT add `hidden`, `display:none`, or
+     * `visibility:hidden` to these elements.
+     *
+     * role="alert" = assertive live region. Fires when textContent changes.
+     *
+     * For the announcement to fire reliably in NVDA+Firefox, JAWS, and
+     * VoiceOver+Safari, the element must exist in the accessibility tree
+     * BEFORE any content is injected into it.
+     *
+     * If the element is hidden from the AT tree (via display:none or hidden
+     * attr) when text is injected, the announcement is silently skipped.
+     *
+     * Empty role="alert" = silent. An empty <p role="alert"> announces
+     * nothing. JS injects text to announce; clears text to silence.
+     *
+     * M-1 (pre-flight): Only textContent mutation.
+     *   ✓ errorEl.textContent = 'message' — triggers live region
+     *   ✗ errorEl.innerHTML = '<span>message</span>' — may not trigger
+     *   ✗ errorEl.replaceWith(newEl) — will not trigger
+     *
+     * Visual hiding when empty:
+     *   An empty <p> with no content collapses to zero height naturally.
+     *   No CSS needed to visually hide it — gap in .form-field handles spacing.
+     *   Do NOT add display:none or visibility:hidden here.
+     */
+    .field-error {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-error);   /* 6.5:1 ✓ SC 1.4.3 */
+      line-height: 1.5;
+      /* min-height: 0 — empty element takes zero height; no extra space */
+    }
+
+    /* ── Submit button ───────────────────────────────────────────────── */
+    /*
+     * context7-mini-live buttons docs:
+     *   • Semantic <button> — implicit role="button"; keyboard-operable
+     *     (Enter + Space) natively; receives focus without tabindex.
+     *   • type="submit" — triggers form submission.
+     *   • Visible text "Send Message" is the accessible name (SC 4.1.2).
+     *
+     * min-height: 2.75rem + min-width: 2.75rem — SC 2.5.8 (44px target).
+     *
+     * N-2 (pre-flight): Hover must change more than color alone (SC 1.4.1).
+     *   At hover: color shifts from --color-brand to --color-brand-dark
+     *   AND text-decoration: underline is added — non-color visual cue.
+     */
+    .btn-submit {
+      margin-top: 0.5rem;
+      padding: 0.6875rem 1.75rem;
+      min-height: 2.75rem;   /* SC 2.5.8 */
+      min-width: 2.75rem;
+      background: var(--color-brand);
+      color: var(--color-surface);   /* 13.5:1 ✓ SC 1.4.3 */
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: background 0.15s;
+    }
+
+    /*
+     * Hover: color change + underline (non-color change).
+     * Ensures hover state is perceivable without relying on color alone.
+     */
+    .btn-submit:hover {
+      background: var(--color-brand-dark);
+      text-decoration: underline;
+    }
+
+    /* ── Footer — implicit role="contentinfo" at body level ──────────── */
+    footer {
+      background: var(--color-brand);
+      color: rgba(255, 255, 255, 0.75);
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: auto;
+      font-size: 0.8125rem;
+    }
+
+    /* ── Forced colors (Windows High Contrast mode) ──────────────────── */
+    /*
+     * Rules per detailed instructions:
+     *   • System color keywords ONLY — no hex/RGB inside this block.
+     *   • NO forced-color-adjust: none.
+     *   • Explicit overrides where auto-remapping is insufficient.
+     *   • box-shadow is suppressed by UA — no overrides needed for shadows.
+     *   • Error color (#b91c1c) is auto-remapped to CanvasText or GrayText;
+     *     explicit override to CanvasText ensures legibility.
+     *   • Success border auto-remapped — add explicit ButtonBorder override.
+     */
+    @media (forced-colors: active) {
+      :focus-visible {
+        outline: 3px solid Highlight;   /* system highlight keyword */
+        outline-offset: 2px;
+      }
+
+      .form-input {
+        border: 1.5px solid ButtonBorder;
+        color: CanvasText;
+        background: Canvas;
+      }
+
+      .form-input[aria-invalid="true"] {
+        border: 2.5px solid ButtonBorder;
+        /* error state: border thickness change remains as non-color cue */
+      }
+
+      .field-error {
+        color: CanvasText;
+        font-style: italic;   /* additional non-color cue for error state */
+      }
+
+      .btn-submit {
+        border: 2px solid ButtonBorder;
+        color: ButtonText;
+        background: ButtonFace;
+      }
+
+      .success-msg {
+        border: 1.5px solid ButtonBorder;
+        color: CanvasText;
+        background: Canvas;
+      }
+
+      .skip-link {
+        border: 2px solid ButtonBorder;
+        color: ButtonText;
+        background: ButtonFace;
+      }
+    }
+
+    /* ── Reduced motion ──────────────────────────────────────────────── */
+    /*
+     * N-6 (pre-flight): Suppress transitions for users who have enabled
+     * reduced motion at the OS level.
+     * :focus-visible outlines are NOT animated — unaffected.
+     * Functional behaviors (show/hide) unaffected.
+     */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ── Reflow — SC 1.4.10 ──────────────────────────────────────────── */
+    /*
+     * At 320px viewport (1280px zoomed to 400%):
+     *   • Single-column flex layout — no horizontal scrolling.
+     *   • max-width: 32rem — constrained by viewport at 320px.
+     *   • All widths in rem/% — no fixed px elements.
+     *   • Reduce side padding at very narrow widths.
+     *   • Submit button becomes full-width (align-self: stretch) at 320px.
+     */
+    @media (max-width: 24rem) {
+      main { padding-left: 1rem; padding-right: 1rem; }
+      .form-card { padding: 1.25rem; }
+      .btn-submit { align-self: stretch; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    Skip link — SC 2.4.1 (Bypass Blocks).
+    First focusable element in DOM.
+    Visible on :focus/:active; clipped at all other times.
+    Targets <main id="main-content" tabindex="-1">.
+  -->
+  <a class="skip-link sr-only" href="#main-content">
+    Skip to main content
+  </a>
+
+  <!--
+    <header> — implicit role="banner" at body level.
+    No role="banner" needed (SC 4.1.2 — no redundant ARIA).
+  -->
+  <header>
+    <div class="header-inner">
+      <!--
+        Site name link — visible text "ShopCo" is the accessible name.
+        N-4 (pre-flight): confirmed as visible text (not image).
+      -->
+      <a class="site-name" href="#">ShopCo</a>
+    </div>
+  </header>
+
+  <!--
+    <main> — implicit role="main".
+    tabindex="-1" — skip link programmatic focus target. SC 2.4.1.
+  -->
+  <main id="main-content" tabindex="-1">
+
+    <!-- One <h1> per page — SC 1.3.1, SC 2.4.6 -->
+    <h1>Contact Us</h1>
+    <p class="page-intro">
+      Fill in the form below and we will respond within one business day.
+      Fields marked with an asterisk (*) are required.
+    </p>
+
+    <div class="form-card">
+
+      <!--
+        Success message — MUST exist in initial HTML. Never created by JS.
+        role="status" = polite live region.
+        aria-atomic="true" — full message read as one unit.
+        tabindex="-1" — receives .focus() after submit (SC 2.4.3).
+        JS shows it and injects text via the clear→rAF→set pattern.
+      -->
+      <div
+        class="success-msg"
+        id="success-msg"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        tabindex="-1"
+      ></div>
+
+      <!--
+        <form>:
+          novalidate — disables browser-native validation UI (can be
+          inconsistent across AT). JS provides accessible validation.
+          aria-labelledby="form-heading" — gives the form landmark an
+          accessible name so it appears in AT landmark navigation.
+          A <form> only creates a "form" landmark when it has an accessible
+          name; without one, it is invisible to landmark navigation.
+      -->
+      <form
+        class="contact-form"
+        id="contact-form"
+        novalidate
+        aria-labelledby="form-heading"
+      >
+
+        <!--
+          Form heading — H2 (H1→H2, no skipped levels, SC 1.3.1).
+          id="form-heading" referenced by aria-labelledby on <form>.
+        -->
+        <h2 class="form-heading" id="form-heading">
+          Send us a message
+        </h2>
+
+        <!-- ── Full Name (required) ──────────────────────────────────── -->
+        <!--
+          div.form-field — as specified.
+          Contains: label, input, error container.
+        -->
+        <div class="form-field">
+
+          <!--
+            <label for="full-name"> — explicit for/id pairing (SC 1.3.1, 4.1.2).
+            Required indicator:
+              • <span aria-hidden="true"> hides the "*" glyph from AT
+                (prevents "asterisk" being read aloud).
+              • <span class="sr-always">(required)</span> provides the
+                semantic signal to AT — always in AT tree (clip technique).
+              • native `required` attribute communicates constraint natively.
+          -->
+          <label class="form-label" for="full-name">
+            Full Name
+            <span class="req-star" aria-hidden="true">*</span>
+            <span class="sr-always">(required)</span>
+          </label>
+
+          <!--
+            type="text" — correct for a person's name.
+            autocomplete="name" — SC 1.3.5 (Identify Input Purpose, AA).
+            required — native constraint validation.
+            aria-invalid — ABSENT on load.
+              Default when absent is false (not invalid).
+              Explicitly setting aria-invalid="false" on load causes some
+              AT (JAWS 2024, older NVDA) to announce "invalid entry" before
+              the user has typed anything. Absence is the correct default.
+              JS adds aria-invalid="true" on failure;
+              JS removes the attribute (not sets to "false") on recovery.
+            aria-describedby="name-error" — associates error container.
+              name-error is empty on load; modern AT ignores empty references.
+              If testing reveals unexpected empty-announcement, switch to
+              adding aria-describedby dynamically in JS (N-1 option A).
+          -->
+          <input
+            class="form-input"
+            type="text"
+            id="full-name"
+            name="full-name"
+            autocomplete="name"
+            required
+            aria-describedby="name-error"
+          />
+
+          <!--
+            Error container — CRITICAL: persistent in DOM (no hidden/display:none).
+            role="alert" = assertive live region.
+            Fires on textContent change — not on display:none toggle.
+            An empty role="alert" is silent — safe to leave in DOM empty.
+
+            M-1 (pre-flight): JS MUST use textContent mutation only:
+              ✓ errorEl.textContent = 'message'
+              ✗ errorEl.innerHTML = '<span>message</span>'
+              ✗ errorEl.replaceWith(newElement)
+          -->
+          <p class="field-error" id="name-error" role="alert"></p>
+
+        </div>
+
+        <!-- ── Email Address (required, with helper text) ─────────────── -->
+        <div class="form-field">
+
+          <label class="form-label" for="email-address">
+            Email Address
+            <span class="req-star" aria-hidden="true">*</span>
+            <span class="sr-always">(required)</span>
+          </label>
+
+          <!--
+            type="email" — enables email keyboard on mobile; browser validates
+            format natively (though novalidate overrides browser UI).
+            autocomplete="email" — SC 1.3.5.
+            aria-describedby="email-hint email-error":
+              Hint ID listed FIRST — announcement order matches cognitive order.
+              AT reads: label → type hint → format hint → error (if present).
+              If error ID came first, AT would announce error before hint,
+              which is confusing when the user wants to know the correct format.
+          -->
+          <input
+            class="form-input"
+            type="email"
+            id="email-address"
+            name="email-address"
+            autocomplete="email"
+            required
+            aria-describedby="email-hint email-error"
+          />
+
+          <!--
+            Hint text — always visible; users see it before typing (SC 3.3.2).
+            "Example:" is unambiguous. Shortened to avoid repeating
+            "email" which appears in the label already.
+          -->
+          <p class="field-hint" id="email-hint">
+            Example: name@example.com
+          </p>
+
+          <p class="field-error" id="email-error" role="alert"></p>
+
+        </div>
+
+        <!-- ── Phone Number (optional, with helper text) ──────────────── -->
+        <div class="form-field">
+
+          <!--
+            No asterisk, no "(required)" — field is optional.
+            Label "Phone Number" alone is unambiguous (SC 3.3.2).
+          -->
+          <label class="form-label" for="phone-number">
+            Phone Number
+          </label>
+
+          <!--
+            type="tel" — triggers numeric/phone keyboard on mobile.
+            autocomplete="tel" — SC 1.3.5.
+            No `required` — field is optional.
+            aria-describedby="phone-hint" only — no error container for
+            optional field with no format validation in this demo.
+            (A future implementation adding phone validation would need
+            to add a persistent role="alert" error container here.)
+          -->
+          <input
+            class="form-input"
+            type="tel"
+            id="phone-number"
+            name="phone-number"
+            autocomplete="tel"
+            aria-describedby="phone-hint"
+          />
+
+          <!--
+            Hint: "Optional." clarifies the field is not required.
+            "Use the format" is unambiguous — no ambiguity about whether
+            other formats are accepted (avoids confusion, SC 3.3.2).
+          -->
+          <p class="field-hint" id="phone-hint">
+            Optional. Use the format (555) 555-5555.
+          </p>
+
+        </div>
+
+        <!-- ── Submit ────────────────────────────────────────────────── -->
+        <!--
+          type="submit" — triggers native form submission and JS handler.
+          Visible text "Send Message" is the accessible name (SC 4.1.2).
+          No aria-label needed — visible text IS the accessible name.
+          Hover: color + underline (non-color indicator) — SC 1.4.1.
+          min-height/min-width: 2.75rem — SC 2.5.8.
+        -->
+        <button class="btn-submit" type="submit">
+          Send Message
+        </button>
+
+      </form>
+    </div>
+
+  </main>
+
+  <!--
+    <footer> — implicit role="contentinfo" at body level.
+  -->
+  <footer>
+    <p>&copy; 2026 ShopCo. All rights reserved.</p>
+  </footer>
+
+  <script>
+    /*
+     * Contact form — accessible validation and success handling
+     * ─────────────────────────────────────────────────────────────────
+     *
+     * Validation strategy:
+     *   novalidate on <form> disables browser UI. JS validates on submit.
+     *
+     * Error handling lifecycle:
+     *   1. Validate all required fields; collect failures.
+     *   2. Inject error text via textContent into role="alert" containers.
+     *      (M-1: textContent only — never innerHTML or node replacement.)
+     *   3. Set aria-invalid="true" on each failing input.
+     *   4. Move focus to the first failing input (.focus()).
+     *      (M-2: target the <input>, not the error <p>.)
+     *
+     * aria-invalid lifecycle:
+     *   • Absent on page load — default "not invalid" state.
+     *   • aria-invalid="true" added on validation failure.
+     *   • removeAttribute("aria-invalid") on recovery — NOT set to "false".
+     *     Setting to "false" causes some AT (JAWS 2024) to announce
+     *     "invalid entry" redundantly. Removing the attribute cleanly
+     *     restores the default non-invalid state.
+     *
+     * Live error clearing:
+     *   'input' event on required fields clears the error as the user types.
+     *   This provides real-time feedback that the issue has been resolved.
+     *
+     * Success flow:
+     *   1. Hide the form.
+     *   2. Show success message element.
+     *   3. Clear textContent (ensures rAF detects mutation even on repeat).
+     *   4. In next rAF: set textContent and .focus() the element.
+     *      Both the role="status" live region announcement AND .focus()
+     *      fire, covering all AT/browser combinations (SC 2.4.3, SC 4.1.3).
+     */
+
+    const form       = document.getElementById('contact-form');
+    const successMsg = document.getElementById('success-msg');
+
+    // ── Field definitions ──────────────────────────────────────────────
+    const fields = [
+      {
+        input: document.getElementById('full-name'),
+        error: document.getElementById('name-error'),
+        label: 'Full Name',
+        validate(val) {
+          if (!val.trim()) return `${this.label} is required.`;
+          return null;
+        }
+      },
+      {
+        input: document.getElementById('email-address'),
+        error: document.getElementById('email-error'),
+        label: 'Email Address',
+        validate(val) {
+          if (!val.trim()) return `${this.label} is required.`;
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim())) {
+            return `${this.label} must be in the format name@example.com.`;
+          }
+          return null;
+        }
+      }
+      // Phone is optional — no entry needed.
+    ];
+
+    // ── showError / clearError ─────────────────────────────────────────
+    /*
+     * showError: inject error text BEFORE setting aria-invalid BEFORE
+     * moving focus. This ensures the input's aria-describedby description
+     * is populated when the AT reads the field after focus moves to it.
+     * If aria-invalid were set first, some AT announces "invalid" before
+     * the description is ready.
+     *
+     * M-1 critical: errorEl.textContent = message
+     * NOT errorEl.innerHTML or errorEl.replaceWith(...)
+     */
+    function showError(field, message) {
+      field.error.textContent = message;                     // 1. inject text (role=alert fires)
+      field.input.setAttribute('aria-invalid', 'true');     // 2. mark invalid
+    }
+
+    function clearError(field) {
+      field.error.textContent = '';                          // clear announcement
+      field.input.removeAttribute('aria-invalid');           // remove (not set to "false")
+    }
+
+    // ── Live clearing on input event ───────────────────────────────────
+    fields.forEach(field => {
+      field.input.addEventListener('input', () => {
+        // Only clear if currently marked invalid — avoid unnecessary DOM mutations.
+        if (field.input.getAttribute('aria-invalid') === 'true') {
+          clearError(field);
+        }
+      });
+    });
+
+    // ── Submit handler ─────────────────────────────────────────────────
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Validate all fields; collect failures in DOM order.
+      const failures = [];
+      fields.forEach(field => {
+        const message = field.validate(field.input.value);
+        if (message) {
+          failures.push({ field, message });
+        } else {
+          clearError(field);
+        }
+      });
+
+      if (failures.length > 0) {
+        // Step 1 + 2: inject errors and mark invalid (all fields before focus).
+        // This ensures ALL errors are visible before focus moves.
+        failures.forEach(({ field, message }) => showError(field, message));
+
+        // Step 3: focus the first failing INPUT element.
+        // M-2 (pre-flight): target the <input>, NOT the error <p>.
+        // The input's aria-describedby already associates it with the error;
+        // AT reads label → hint → error automatically on focus.
+        failures[0].field.input.focus();
+
+      } else {
+        // ── Success path ─────────────────────────────────────────────
+        form.style.display = 'none';
+        successMsg.classList.add('is-visible');
+
+        /*
+         * Clear → rAF → set pattern (SC 4.1.3, live region reliability):
+         *   Clear first: if the user resubmits with the same outcome,
+         *   the textContent must change for AT to detect the mutation.
+         *   Setting the same string twice would not trigger re-announcement.
+         *
+         *   rAF: gives the browser one frame to process the clear mutation
+         *   before injecting the new content. Ensures AT sees two distinct
+         *   mutations: '' → 'message'.
+         *
+         *   .focus(): moves AT reading position to the success element
+         *   immediately, covering AT/browser combos where the polite live
+         *   region might be delayed or missed (SC 2.4.3).
+         */
+        successMsg.textContent = '';
+        requestAnimationFrame(() => {
+          successMsg.textContent =
+            'Thank you! Your message has been sent. We will be in touch within one business day.';
+          successMsg.focus();
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

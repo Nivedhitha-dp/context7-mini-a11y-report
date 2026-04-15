@@ -1,0 +1,4412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Context7-mini-live A11y LLM Eval</title>
+<base href=".">
+<style>
+:root {
+  --bg-surface: #111827;
+  --surface: #1f2937;
+  --surface-muted: #283446;
+  --border-subtle: #334155;
+  --border-strong: #475569;
+  --text-primary: #f9fafb;
+  --text-secondary: #cbd5f5;
+  --text-on-accent: #ffffff;
+  --accent: #006aec;
+  --accent-strong: #3b82f6;
+  --pass: #0a8336;
+  --fail: #a80000;
+  --warn: #fbbf24;
+  --badge-radius: 999px;
+  --card-shadow: 0 12px 30px rgba(8, 47, 73, 0.35);
+  --focus-ring: 0 0 0 3px rgba(29, 78, 216, 0.35);
+  --link-text: #659fff;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.6;
+}
+a { color: var(--link-text); }
+a:hover { color: var(--accent-strong); }
+header, main, footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+header { padding-top: 2.5rem; padding-bottom: 1.5rem; }
+header h1 { margin: 0; font-size: 2.25rem; letter-spacing: -0.015em; }
+p, ul, li { color: var(--text-secondary); }
+main { padding-bottom: 3rem; }
+section + section { margin-top: 2rem; }
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.1);
+  margin-bottom: 1.5rem;
+}
+caption {
+  text-align: left;
+  padding: 1rem 1.25rem 0.5rem;
+  --heatmap-low: #2d3748; /* fallback low value */
+  --heatmap-high: #16a34a; /* fallback high value */
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+thead th {
+  background: var(--surface-muted);
+  color: var(--text-primary);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+tbody td, tbody th {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+tbody tr:last-child td, tbody tr:last-child th { border-bottom: none; }
+tbody tr:nth-child(even) { background: rgba(15, 23, 42, 0.04); }
+.badge-pass, .badge-fail, .badge-na {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--badge-radius);
+  letter-spacing: 0.01em;
+}
+.badge-pass { background: var(--pass); color: var(--text-on-accent); }
+.badge-fail { background: var(--fail); color: var(--text-on-accent); }
+.badge-na { background: var(--warn); color: #1f2937; }
+code { font-size: 0.85rem; background: var(--surface-muted); padding: 0.1rem 0.35rem; border-radius: 0.35rem; }
+details {
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: var(--surface);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+details[open] {
+  border-color: var(--accent-strong);
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.12);
+}
+summary { cursor: pointer;}
+details summary h2,
+details summary h3,
+details summary h4,
+details summary h5 {
+  display: inline-flex;
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+details summary:focus-visible {
+  box-shadow: var(--focus-ring);
+  border-radius: 0.5rem;
+}
+tbody th { text-align: left; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.1);
+  margin-bottom: 1rem;
+}
+.filters label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+.filters select {
+  margin-top: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.95rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-muted);
+  color: var(--text-primary);
+}
+.filters button {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.95rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.filters button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+}
+.filters button:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+.filters-summary { margin: 1rem 0 0.5rem; font-size: 0.95rem; color: var(--text-primary); font-weight: 600; }
+.samples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+.sample-card {
+  border-radius: 0.9rem;
+  border: 1px solid var(--border-subtle);
+  padding: 1rem;
+  background: var(--surface);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.sample-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.16);
+}
+.sample-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+.sample-card p { margin: 0.35rem 0; color: var(--text-secondary); }
+.pass-rate-bar {
+  height: 12px;
+  background: var(--surface-muted);
+  position: relative;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.pass-rate-bar span {
+  position: absolute;
+  inset: 0;
+  background: var(--pass);
+  transition: width 0.4s ease;
+}
+figure { margin: 0.75rem 0 0; }
+figure img {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+}
+.prompt-block {
+  white-space: pre-wrap;
+  background: var(--surface-muted);
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-subtle);
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.12);
+}
+.agg-table { margin-top: 1rem; }
+/* Heatmap cells for pass@k tables */
+.pass-at-k-cell {
+  transition: background-color 0.25s ease, color 0.25s ease;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Report navigation (single page) */
+.report-nav {
+  margin: 1rem 0 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.85rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  position: sticky;
+  top: 0.5rem;
+  z-index: 20;
+  backdrop-filter: blur(6px);
+}
+.report-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.65rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+.report-nav a:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-muted);
+}
+.report-nav a:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+.report-nav a[aria-current="page"] {
+  background: var(--accent);
+  border-color: var(--accent-strong);
+  color: var(--text-on-accent);
+}
+
+[data-report-section][hidden] {
+  display: none !important;
+}
+
+/* Keep anchor targets visible below sticky nav */
+section[id], h2[id], h3[id] {
+  scroll-margin-top: 5rem;
+}
+footer {
+  padding: 2rem 1.5rem 3rem;
+  color: var(--text-secondary);
+}
+footer a { color: var(--link-text); }
+details ul { margin: 0.5rem 0 0.25rem; padding-left: 1.15rem; }
+details li { margin-bottom: 0.35rem; }
+@media (max-width: 768px) {
+  header, main, footer { padding: 0 1rem; }
+  header h1 { font-size: 1.75rem; }
+  table, details { box-shadow: none; }
+  .filters { padding: 0.75rem; }
+  .report-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .report-nav a { white-space: nowrap; }
+}
+</style>
+</head>
+<body>
+<header>
+<h1>Context7-mini-live A11y LLM Eval</h1>
+</header>
+<main id="main">
+
+<nav class="report-nav" aria-label="Report sections">
+  <a href="index.html#control-summary" data-report-nav="control">Control</a>
+  <a href="index.html#instruction-sets" data-report-nav="instructions">Instruction sets</a>
+  <a href="index.html#details-h2" data-report-nav="details">Detailed results</a>
+  <a href="index.html#methodology" data-report-nav="about">Methodology &amp; glossary</a>
+</nav>
+
+<section id="control-section" data-report-section="control">
+
+<section id="control-summary">
+<h2>Control summary</h2>
+
+<p>Control results show how well models produce accessible code with no instructions or prompts to specifically create accessible code. Models are ranked by WCAG pass rate across 7 test cases and 0 samples per test (0 samples per model). These tests do not comprehensively test all WCAG requirements, only a subset of the most common issues. WCAG failures may still exist even for passing tests.</p>
+<table>
+<thead>
+<tr><th>Model</th><th>Rank</th><th>WCAG Pass Rate*</th><th>Avg Total WCAG Failures</th><th>Avg Axe WCAG Failures</th><th>Avg Assertion WCAG Failures</th><th>Avg Best Practice Failures</th></tr>
+</thead>
+<tbody>
+
+<tr>
+  <th>index</th>
+  <td>1</td>
+  <td class="pass-at-k-cell" data-pass="0.7500">75%</td>
+  <td>0.25</td>
+  <td>0.00</td>
+  <td>0.25</td>
+  <td>1.75</td>
+</tr>
+
+</tbody>
+</table>
+
+
+<details>
+  <summary><h3>Pass@k aggregates</h3></summary>
+  <p>Pass@k estimates the probability that at least one of <em>k</em> randomly selected samples passes. This is computed from control samples only.</p>
+  
+    <table class="agg-table">
+      <caption>disclosure-widget</caption>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Samples</th>
+          <th>Passes</th>
+          
+            <th>pass@1</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>index</td>
+          <td>1</td>
+          <td>1</td>
+          
+            
+            <td class="pass-at-k-cell" data-pass-at-k="1" data-pass="1.0000">100%</td>
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  
+    <table class="agg-table">
+      <caption>modal-dialog</caption>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Samples</th>
+          <th>Passes</th>
+          
+            <th>pass@1</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>index</td>
+          <td>1</td>
+          <td>1</td>
+          
+            
+            <td class="pass-at-k-cell" data-pass-at-k="1" data-pass="1.0000">100%</td>
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  
+    <table class="agg-table">
+      <caption>shopping-home-page</caption>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Samples</th>
+          <th>Passes</th>
+          
+            <th>pass@1</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>index</td>
+          <td>1</td>
+          <td>1</td>
+          
+            
+            <td class="pass-at-k-cell" data-pass-at-k="1" data-pass="1.0000">100%</td>
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  
+    <table class="agg-table">
+      <caption>simple-contact-form</caption>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Samples</th>
+          <th>Passes</th>
+          
+            <th>pass@1</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>index</td>
+          <td>1</td>
+          <td>0</td>
+          
+            
+            <td class="pass-at-k-cell" data-pass-at-k="1" data-pass="0.0000">0%</td>
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  
+</details>
+
+
+
+<details>
+  <summary><h3>Control analysis</h3></summary>
+  <p>This section summarizes where models perform well, where they struggle, and the most frequent types of accessibility issues observed across all samples.</p>
+
+  
+
+  
+  <h3>Most common axe best-practice failures</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Impact</th>
+        <th>Failures</th>
+        <th>% of failures</th>
+        <th>Seen in models</th>
+        <th>Seen in test cases</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <th>landmark-one-main</th>
+        <td>moderate</td>
+        <td>2</td>
+        <td>40.0%</td>
+        <td>1</td>
+        <td>2</td>
+        <td class="note">Ensure the document has a main landmark</td>
+      </tr>
+      
+      <tr>
+        <th>region</th>
+        <td>moderate</td>
+        <td>2</td>
+        <td>40.0%</td>
+        <td>1</td>
+        <td>2</td>
+        <td class="note">Ensure all page content is contained by landmarks</td>
+      </tr>
+      
+      <tr>
+        <th>heading-order</th>
+        <td>moderate</td>
+        <td>1</td>
+        <td>20.0%</td>
+        <td>1</td>
+        <td>1</td>
+        <td class="note">Ensure the order of headings is semantically correct</td>
+      </tr>
+      
+    </tbody>
+  </table>
+  
+
+  
+  <h3>Assertion-level patterns (per test case)</h3>
+  
+    
+      <h4>disclosure-widget</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Assertion</th>
+            <th>Type</th>
+            <th>Failure rate</th>
+            <th>Failures / applicable</th>
+            <th>Not applicable</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <th>All examples have a valid semantics</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Collapsed content is hidden from assistive technology</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+        </tbody>
+      </table>
+      <p><small>Assertion statistics are computed within this test case only and are not compared across different test cases.</small></p>
+    
+  
+    
+      <h4>modal-dialog</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Assertion</th>
+            <th>Type</th>
+            <th>Failure rate</th>
+            <th>Failures / applicable</th>
+            <th>Not applicable</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <th>Each dialog can be closed by escape key</th>
+            <td>BP</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Each dialog has a dialog role</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Each modal dialog hides content behind it while open</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Each modal dialog takes focus when opened</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Each modal dialog traps keyboard focus</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+        </tbody>
+      </table>
+      <p><small>Assertion statistics are computed within this test case only and are not compared across different test cases.</small></p>
+    
+  
+    
+      <h4>shopping-home-page</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Assertion</th>
+            <th>Type</th>
+            <th>Failure rate</th>
+            <th>Failures / applicable</th>
+            <th>Not applicable</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <th>Has a single banner</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Has a single footer</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Has a single maincontent</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Has an h1</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Has at least one h2</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+        </tbody>
+      </table>
+      <p><small>Assertion statistics are computed within this test case only and are not compared across different test cases.</small></p>
+    
+  
+    
+      <h4>simple-contact-form</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Assertion</th>
+            <th>Type</th>
+            <th>Failure rate</th>
+            <th>Failures / applicable</th>
+            <th>Not applicable</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <th>Helper text is programmatically associated</th>
+            <td>R</td>
+            <td>100%</td>
+            <td>1 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Each text input has an accessible name</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Each text input has textbox role</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Inputs use appropriate autocomplete for purpose</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+          <tr>
+            <th>Placeholder text is programmatically defined as a property</th>
+            <td>R</td>
+            <td>0%</td>
+            <td>0 / 1</td>
+            <td>0</td>
+          </tr>
+          
+        </tbody>
+      </table>
+      <p><small>Assertion statistics are computed within this test case only and are not compared across different test cases.</small></p>
+    
+  
+  
+</details>
+
+</section>
+
+</section>
+
+<section id="report-about" data-report-section="about">
+<h2 id="methodology">Methodology</h2>
+  <p>This report shows how well various LLMs generate accessible HTML.</p>
+  <ul>
+    <li>Each test uses a prompt to generate HTML. The generated HTML is then tested for accessibility.</li>
+    <li>The prompts intentionally do not include specific accessibility instructions. The goal is to see if the LLMs produce accessible HTML by default.</li>
+    <li>The resulting HTML is rendered in a browser via Playwright (Chromium). This allows the HTML's JavaScript and CSS to execute, which can impact accessibility.</li>
+    <li>The rendered HTML is evaluated using <a href="https://github.com/dequelabs/axe-core">axe-core</a> to identify common accessibility issues.</li>
+    <li>A custom test script (JavaScript) is executed against the rendered page to check for accessibility requirements that are specific to the test case and not covered by axe-core. These tests look for <a href="https://www.w3.org/WAI/WCAG22/quickref/">WCAG 2.2</a> failures and best practices. Best practices do not impact pass/fail results.</li>
+    <li>Each test case is run multiple times (samples) to evaluate the consistency and reliability of the LLM's output.</li>
+    <li>By default, the harness does not explicitly set a temperature, so each provider/model uses its own default sampling behavior.</li>
+    <li>Instruction sets are also evaluated to see how specific accessibility instructions impact results. See the "Instruction sets" section for details.</li>
+  </ul>
+  
+  
+  
+  
+  
+  
+  
+  <p>All tests are automatic and deterministic (no human intervention). Only a fraction of accessibility requirements in WCAG can be covered in this way. Many requirements still need a human to evaluate. As such, these tests are not comprehensive. Even if a test passes, it may still fail WCAG and contain serious accessibility issues.</p>
+  <p>Please leave feedback, review the source code, and contribute test cases, assertions, and other improvements at the <a href="https://github.com/microsoft/a11y-llm-eval">GitHub Project</a>.</p>
+
+<h2 id="glossary">Glossary</h2>
+  <h3>Column Definitions</h3>
+  <ul>
+    <li><strong>Rank</strong>: The position of the model when sorted by WCAG Pass Rate (lower is better).</li>
+    <li><strong>WCAG Pass Rate</strong>: The percentage of samples that passed all WCAG tests, including both axe-core WCAG checks and custom WCAG assertions. This does not include best practices.</li>
+    <li><strong>Not applicable assertion</strong>: An assertion result that indicates a check did not apply to that sample. It is tracked at the assertion level and does not change the sample-level pass-rate denominator.</li>
+    <li><strong>Avg Total WCAG Failures</strong>: The average number of total WCAG failures (axe-core + assertions) per sample for the model. This does not include best practices.</li>
+    <li><strong>Avg Axe WCAG Failures</strong>: The average number of axe-core detected WCAG failures per sample for the model. This does not include best practices.</li>
+    <li><strong>Avg Assertion WCAG Failures</strong>: The average number of custom WCAG assertion failures per sample for the model. This does not include best practices.</li>
+    <li><strong>Avg Best Practice Failures</strong>: The average number of best practice accessibility issues (informational only) per sample for the model. This includes axe-core best practices and best practice assertions.</li>
+  </ul>
+
+  <h3>Other Glossary Terms</h3>
+  <ul>
+    <li><strong>Assertion</strong>: A specific accessibility check defined in the test script. Each assertion checks for a particular accessibility requirement or best practice for the specific test case which is not already tested by axe.</li>
+    <li><strong>Axe-core</strong>: An open-source accessibility testing engine developed by Deque Systems. It is widely used for automated accessibility testing of web applications. <a href="https://github.com/dequelabs/axe-core">Axe-core</a></li>
+    <li><strong>Pass@k</strong>: A metric that estimates the likelihood of at least one sample passing a test when k samples are randomly selected.</li>
+    <li><strong>WCAG</strong>: <a href=https://www.w3.org/WAI/WCAG22/quickref/">Web Content Accessibility Guidelines</a>, a set of guidelines for making web content more accessible to people with disabilities.</li>
+    <li><strong>Test Case</strong>: A specific scenario designed to evaluate the accessibility of generated HTML content. Each test case includes a prompt, expected accessibility requirements, and a test script.</li>
+  </ul>
+
+  <h2 id="change-log">Change Log</h2>
+  <h3>2/2026 Update</h3>
+  <ul>
+    <li><strong>Test Cases</strong>: Added a test case for a simple contact form with assertions for simple form controls. Also fixed some minor bugs in other test cases.</li>
+    <li><strong>Instruction Sets</strong>: Added instruction set evaluation.</li>
+    <li><strong>Report</strong>: Updated report layout and added new sections for instruction sets and analysis. Also allow filtering by instruction set and specific assertions within test cases.</li>
+  </ul>
+</section>
+
+  </section>
+
+  <section id="instruction-sets" data-report-section="instructions">
+  
+
+
+<section id="instruction-benchmark-summary">
+  <h2>Instruction Benchmarks (vs Control)</h2>
+  <p>These results show how well each instruction set performs vs the control configuration (averaged across models). Instruction sets contain specific guidance intended to improve accessibility and are appended to the system prompt.</p>
+  <p>Several instruction sets are used in this benchmark to help identify which instructions are most effective at improving accessibility. Models are ranked by average WCAG pass rate across all models and test cases for that instruction set.</p>
+  <h3>Summary (ranked by avg WCAG pass rate)</h3>
+  
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Instruction Set</th>
+          <th>Avg Control Pass Rate</th>
+          <th>Avg Instruction Set Pass Rate</th>
+          <th>Δ Avg Pass Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>1</td>
+          <th>basic</th>
+          <td class="pass-at-k-cell" data-pass="0.7500">75%</td>
+          <td class="pass-at-k-cell" data-pass="1.0000">100%</td>
+          <td>+25.0pp</td>
+        </tr>
+        
+        <tr>
+          <td>2</td>
+          <th>detailed</th>
+          <td class="pass-at-k-cell" data-pass="0.7500">75%</td>
+          <td class="pass-at-k-cell" data-pass="1.0000">100%</td>
+          <td>+25.0pp</td>
+        </tr>
+        
+        <tr>
+          <td>3</td>
+          <th>minimal</th>
+          <td class="pass-at-k-cell" data-pass="0.7500">75%</td>
+          <td class="pass-at-k-cell" data-pass="0.7500">75%</td>
+          <td>+0.0pp</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  
+</section>
+
+<section id="instruction-benchmark-details">
+  <h2>Instruction benchmark details</h2>
+  <p>This section includes per-model benchmark results and the full text of each instruction set.</p>
+
+    
+      <h3>Instruction sets</h3>
+      
+        <details>
+          <summary>basic</summary>
+          
+          
+          
+            <p><em>No custom instructions markdown available.</em></p>
+          
+        </details>
+      
+        <details>
+          <summary>detailed</summary>
+          
+          
+          
+            <p><em>No custom instructions markdown available.</em></p>
+          
+        </details>
+      
+        <details>
+          <summary>minimal</summary>
+          
+          
+          
+            <p><em>No custom instructions markdown available.</em></p>
+          
+        </details>
+      
+    
+
+    <h3>Results</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Instruction Set</th>
+          <th>Control Pass Rate</th>
+          <th>Instruction Set Pass Rate</th>
+          <th>Δ Pass Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th>index</th>
+          <td>basic</td>
+          <td class="pass-at-k-cell" data-pass="0.7500">75%</td>
+          <td class="pass-at-k-cell" data-pass="1.0000">100%</td>
+          <td>+25.0pp</td>
+        </tr>
+        
+        <tr>
+          <th>index</th>
+          <td>detailed</td>
+          <td class="pass-at-k-cell" data-pass="0.7500">75%</td>
+          <td class="pass-at-k-cell" data-pass="1.0000">100%</td>
+          <td>+25.0pp</td>
+        </tr>
+        
+        <tr>
+          <th>index</th>
+          <td>minimal</td>
+          <td class="pass-at-k-cell" data-pass="0.7500">75%</td>
+          <td class="pass-at-k-cell" data-pass="0.7500">75%</td>
+          <td>+0.0pp</td>
+        </tr>
+        
+      </tbody>
+    </table>
+</section>
+
+
+  
+  <section id="instruction-set-analysis">
+    <details>
+      <summary><h2>Instruction set analysis vs control</h2></summary>
+      <p>This section highlights where each instruction set helped (or hurt) compared to the control, aggregated across all samples for that instruction set.</p>
+
+      
+        <details>
+          <summary>
+            basic — overall Δ pass rate +25.0pp
+          </summary>
+
+        <p>
+          <strong>Overall:</strong>
+          Control 75% (n=4) →
+          Variant 100% (n=4).
+          Avg WCAG failures/sample: 0.25 → 0.00
+          (Δ -0.25).
+        </p>
+
+        
+          <h3>Most improved test cases</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Test case</th>
+                <th>Control pass rate</th>
+                <th>Variant pass rate</th>
+                <th>Δ pass rate</th>
+                <th>Δ avg WCAG failures</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr>
+                <th>simple-contact-form</th>
+                <td class="pass-at-k-cell" data-pass="0.0000">0%</td>
+                <td class="pass-at-k-cell" data-pass="1.0000">100%</td>
+                <td>+100.0pp</td>
+                <td>-1.00</td>
+              </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+
+        
+
+        
+
+        
+          <h3>Assertion analysis (vs control)</h3>
+          <p>Failure rates are computed per assertion (within each test case) and compared between the variant and control.</p>
+
+          
+            <h4>Most improved assertions</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Test case</th>
+                  <th>Assertion</th>
+                  <th>Type</th>
+                  <th>Control fail rate</th>
+                  <th>Variant fail rate</th>
+                  <th>Δ fail rate</th>
+                  <th>Control failures/total</th>
+                  <th>Variant failures/total</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                <tr>
+                  <td>simple-contact-form</td>
+                  <th>Helper text is programmatically associated</th>
+                  <td>R</td>
+                  <td>100%</td>
+                  <td>0%</td>
+                  <td>-100.0pp</td>
+                  <td>1 / 1</td>
+                  <td>0 / 1</td>
+                </tr>
+                
+              </tbody>
+            </table>
+          
+
+          
+
+          
+            <details>
+              <summary>All assertion deltas (per test case)</summary>
+              
+                
+                  <h4>disclosure-widget</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>All examples have a valid semantics</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Collapsed content is hidden from assistive technology</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+                
+                  <h4>modal-dialog</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>Each dialog can be closed by escape key</th>
+                        <td>BP</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each dialog has a dialog role</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each modal dialog hides content behind it while open</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each modal dialog takes focus when opened</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each modal dialog traps keyboard focus</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Focus is not lost when each dialog closes</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+                
+                  <h4>shopping-home-page</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>Has a single banner</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has a single footer</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has a single maincontent</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has an h1</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has at least one h2</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has at least one navigation</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has single h1</th>
+                        <td>BP</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+                
+                  <h4>simple-contact-form</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>Each text input has an accessible name</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each text input has textbox role</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Inputs use appropriate autocomplete for purpose</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Required fields are indicated programmatically</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Required fields are indicated visually</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Text inputs are keyboard focusable</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Visible label is included in accessible name</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Visual labels are defined and persistent</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Helper text is programmatically associated</th>
+                        <td>R</td>
+                        <td>100%</td>
+                        <td>0%</td>
+                        <td>-100.0pp</td>
+                        <td>1 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Placeholder text is programmatically defined as a property</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>0 / 1</td>
+                        <td>0 / 0</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+            </details>
+          
+        
+        </details>
+      
+        <details>
+          <summary>
+            detailed — overall Δ pass rate +25.0pp
+          </summary>
+
+        <p>
+          <strong>Overall:</strong>
+          Control 75% (n=4) →
+          Variant 100% (n=4).
+          Avg WCAG failures/sample: 0.25 → 0.00
+          (Δ -0.25).
+        </p>
+
+        
+          <h3>Most improved test cases</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Test case</th>
+                <th>Control pass rate</th>
+                <th>Variant pass rate</th>
+                <th>Δ pass rate</th>
+                <th>Δ avg WCAG failures</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr>
+                <th>simple-contact-form</th>
+                <td class="pass-at-k-cell" data-pass="0.0000">0%</td>
+                <td class="pass-at-k-cell" data-pass="1.0000">100%</td>
+                <td>+100.0pp</td>
+                <td>-1.00</td>
+              </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+
+        
+
+        
+
+        
+          <h3>Assertion analysis (vs control)</h3>
+          <p>Failure rates are computed per assertion (within each test case) and compared between the variant and control.</p>
+
+          
+            <h4>Most improved assertions</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Test case</th>
+                  <th>Assertion</th>
+                  <th>Type</th>
+                  <th>Control fail rate</th>
+                  <th>Variant fail rate</th>
+                  <th>Δ fail rate</th>
+                  <th>Control failures/total</th>
+                  <th>Variant failures/total</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                <tr>
+                  <td>simple-contact-form</td>
+                  <th>Helper text is programmatically associated</th>
+                  <td>R</td>
+                  <td>100%</td>
+                  <td>0%</td>
+                  <td>-100.0pp</td>
+                  <td>1 / 1</td>
+                  <td>0 / 1</td>
+                </tr>
+                
+              </tbody>
+            </table>
+          
+
+          
+
+          
+            <details>
+              <summary>All assertion deltas (per test case)</summary>
+              
+                
+                  <h4>disclosure-widget</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>All examples have a valid semantics</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Collapsed content is hidden from assistive technology</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+                
+                  <h4>modal-dialog</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>Each dialog can be closed by escape key</th>
+                        <td>BP</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each dialog has a dialog role</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each modal dialog hides content behind it while open</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each modal dialog takes focus when opened</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each modal dialog traps keyboard focus</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Focus is not lost when each dialog closes</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+                
+                  <h4>shopping-home-page</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>Has a single banner</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has a single footer</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has a single maincontent</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has an h1</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has at least one h2</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has at least one navigation</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has single h1</th>
+                        <td>BP</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+                
+                  <h4>simple-contact-form</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>Each text input has an accessible name</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each text input has textbox role</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Inputs use appropriate autocomplete for purpose</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Required fields are indicated programmatically</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Required fields are indicated visually</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Text inputs are keyboard focusable</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Visible label is included in accessible name</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Visual labels are defined and persistent</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Helper text is programmatically associated</th>
+                        <td>R</td>
+                        <td>100%</td>
+                        <td>0%</td>
+                        <td>-100.0pp</td>
+                        <td>1 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Placeholder text is programmatically defined as a property</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>0 / 1</td>
+                        <td>0 / 0</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+            </details>
+          
+        
+        </details>
+      
+        <details>
+          <summary>
+            minimal — overall Δ pass rate +0.0pp
+          </summary>
+
+        <p>
+          <strong>Overall:</strong>
+          Control 75% (n=4) →
+          Variant 75% (n=4).
+          Avg WCAG failures/sample: 0.25 → 0.25
+          (Δ +0.00).
+        </p>
+
+        
+
+        
+
+        
+
+        
+
+        
+          <h3>Assertion analysis (vs control)</h3>
+          <p>Failure rates are computed per assertion (within each test case) and compared between the variant and control.</p>
+
+          
+
+          
+
+          
+            <details>
+              <summary>All assertion deltas (per test case)</summary>
+              
+                
+                  <h4>disclosure-widget</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>All examples have a valid semantics</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Collapsed content is hidden from assistive technology</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+                
+                  <h4>modal-dialog</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>Each dialog can be closed by escape key</th>
+                        <td>BP</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each dialog has a dialog role</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each modal dialog hides content behind it while open</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each modal dialog takes focus when opened</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each modal dialog traps keyboard focus</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Focus is not lost when each dialog closes</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+                
+                  <h4>shopping-home-page</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>Has a single banner</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has a single footer</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has a single maincontent</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has an h1</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has at least one h2</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has at least one navigation</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Has single h1</th>
+                        <td>BP</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+                
+                  <h4>simple-contact-form</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Assertion</th>
+                        <th>Type</th>
+                        <th>Control fail rate</th>
+                        <th>Variant fail rate</th>
+                        <th>Δ fail rate</th>
+                        <th>Control failures/total</th>
+                        <th>Variant failures/total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                      <tr>
+                        <th>Helper text is programmatically associated</th>
+                        <td>R</td>
+                        <td>100%</td>
+                        <td>100%</td>
+                        <td>+0.0pp</td>
+                        <td>1 / 1</td>
+                        <td>1 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each text input has an accessible name</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Each text input has textbox role</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Inputs use appropriate autocomplete for purpose</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Placeholder text is programmatically defined as a property</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Required fields are indicated programmatically</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Required fields are indicated visually</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Text inputs are keyboard focusable</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Visible label is included in accessible name</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                      <tr>
+                        <th>Visual labels are defined and persistent</th>
+                        <td>R</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>+0.0pp</td>
+                        <td>0 / 1</td>
+                        <td>0 / 1</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                
+              
+            </details>
+          
+        
+        </details>
+      
+    </details>
+  </section>
+  
+  
+  </section>
+
+  <section id="detailed-results" data-report-section="details">
+<section>
+<h2 id="details-h2">Detailed Results</h2>
+<div class="filters" role="region" aria-label="Detailed results filters">
+  <label>
+    Model
+    <select id="model-filter">
+      <option value="">All models</option>
+      
+        <option value="index">index</option>
+      
+    </select>
+  </label>
+  <label>
+    Instruction set
+    <select id="variant-filter">
+      <option value="control" selected>Control</option>
+      <option value="">All instruction sets</option>
+      
+    </select>
+  </label>
+  <label>
+    Result
+    <select id="result-filter">
+      <option value="">All results</option>
+      <option value="PASS">Pass</option>
+      <option value="FAIL">Fail</option>
+    </select>
+  </label>
+  <button type="button" id="reset-filters">Reset</button>
+</div>
+<p id="filter-count" class="filters-summary" aria-live="polite" aria-atomic="true"></p>
+<p id="no-results-message" hidden>No samples match the current filters.</p>
+
+<section>
+  <details>
+    <summary><h3>disclosure-widget</h3></summary>
+    
+    
+    <div class="filters assertion-filters" role="region" aria-label="Filters for assertions in disclosure-widget test case">
+      <label>
+        Assertion
+        <select class="assertion-name-filter">
+          <option value="">All assertions</option>
+          
+            <option value="All examples have a valid semantics">All examples have a valid semantics</option>
+          
+            <option value="Collapsed content is hidden from assistive technology">Collapsed content is hidden from assistive technology</option>
+          
+        </select>
+      </label>
+      <label>
+        Assertion result
+        <select class="assertion-status-filter">
+          <option value="">All results</option>
+          <option value="pass">Pass</option>
+          <option value="fail">Fail</option>
+          <option value="na">Not applicable</option>
+        </select>
+      </label>
+      <button type="button" class="assertion-reset-filters">Reset</button>
+    </div>
+    <p class="filters-summary assertion-filter-count" aria-live="polite" aria-atomic="true"></p>
+    
+    
+    <details>
+      <summary>Prompt</summary>
+      <pre class="prompt-block">- Generate an HTML file that demonstrates an expand/collapse widget.
+- Wrap each widget with a div that has an `example` class.
+- Give the container for controlled content a `details` class.
+</pre>
+    </details>
+    
+    
+    <details data-model-group="index">
+      <summary>
+        <h4>
+          index
+          
+            
+              <span class="variant-only" data-variant="control">&nbsp;—&nbsp;100%</span>
+            
+          
+        </h4>
+      </summary>
+      <div class="model-aggregates">
+        <p class="variant-aggregate-note" hidden><em>Aggregates are shown when filtering to a specific instruction set.</em></p>
+        
+          
+            <div class="variant-only" data-variant="control">
+              <p>Samples: 1 | Passes: 1</p>
+              <table>
+                <thead><tr><th>pass@1</th></tr></thead>
+                <tbody><tr>
+                  <td class="pass-at-k-cell" data-pass-at-k="1" data-pass="1.0000">100%</td>
+                </tr></tbody>
+              </table>
+              
+              <div class="pass-rate-bar" role="img" aria-label="Pass ratio - 100.0 percent"><span style="width: 100.0%"></span></div>
+            </div>
+          
+        
+      </div>
+      <div class="samples">
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="control">
+          
+          
+          
+          <h4>
+            <a href="raw/disclosure-widget/index.html">
+              Sample 0 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              Control
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0 | BP: 3</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots/disclosure-widget__index.png" alt="Screenshot sample None for disclosure-widget / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="All examples have a valid semantics" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                All examples have a valid semantics (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Collapsed content is hidden from assistive technology" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Collapsed content is hidden from assistive technology (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          <details>
+            <summary>Axe Best Practice Issues (3) <span role="img" aria-label="Warning">⚠️</span></summary>
+            <ul>
+              
+              <li><strong>heading-order</strong> (moderate): Ensure the order of headings is semantically correct <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+              <li><strong>landmark-one-main</strong> (moderate): Ensure the document has a main landmark <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+              <li><strong>region</strong> (moderate): Ensure all page content is contained by landmarks <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+            </ul>
+          </details>
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="basic">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/basic/disclosure-widget/index.html">
+              Sample 1 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              basic
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0 | BP: 2</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/basic/disclosure-widget__index.png" alt="Screenshot sample None for disclosure-widget / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="All examples have a valid semantics" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                All examples have a valid semantics (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Collapsed content is hidden from assistive technology" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Collapsed content is hidden from assistive technology (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          <details>
+            <summary>Axe Best Practice Issues (2) <span role="img" aria-label="Warning">⚠️</span></summary>
+            <ul>
+              
+              <li><strong>region</strong> (moderate): Ensure all page content is contained by landmarks <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+            </ul>
+          </details>
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="detailed">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/detailed/disclosure-widget/index.html">
+              Sample 2 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              detailed
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/detailed/disclosure-widget__index.png" alt="Screenshot sample None for disclosure-widget / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="All examples have a valid semantics" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                All examples have a valid semantics (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Collapsed content is hidden from assistive technology" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Collapsed content is hidden from assistive technology (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="minimal">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/minimal/disclosure-widget/index.html">
+              Sample 3 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              minimal
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0 | BP: 2</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/minimal/disclosure-widget__index.png" alt="Screenshot sample None for disclosure-widget / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="All examples have a valid semantics" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                All examples have a valid semantics (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Collapsed content is hidden from assistive technology" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Collapsed content is hidden from assistive technology (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          <details>
+            <summary>Axe Best Practice Issues (2) <span role="img" aria-label="Warning">⚠️</span></summary>
+            <ul>
+              
+              <li><strong>region</strong> (moderate): Ensure all page content is contained by landmarks <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+            </ul>
+          </details>
+          
+          
+        </div>
+      
+      </div>
+    </details>
+    
+  </details>
+</section>
+
+<section>
+  <details>
+    <summary><h3>modal-dialog</h3></summary>
+    
+    
+    <div class="filters assertion-filters" role="region" aria-label="Filters for assertions in modal-dialog test case">
+      <label>
+        Assertion
+        <select class="assertion-name-filter">
+          <option value="">All assertions</option>
+          
+            <option value="Each dialog can be closed by escape key">Each dialog can be closed by escape key</option>
+          
+            <option value="Each dialog has a dialog role">Each dialog has a dialog role</option>
+          
+            <option value="Each modal dialog hides content behind it while open">Each modal dialog hides content behind it while open</option>
+          
+            <option value="Each modal dialog takes focus when opened">Each modal dialog takes focus when opened</option>
+          
+            <option value="Each modal dialog traps keyboard focus">Each modal dialog traps keyboard focus</option>
+          
+            <option value="Focus is not lost when each dialog closes">Focus is not lost when each dialog closes</option>
+          
+        </select>
+      </label>
+      <label>
+        Assertion result
+        <select class="assertion-status-filter">
+          <option value="">All results</option>
+          <option value="pass">Pass</option>
+          <option value="fail">Fail</option>
+          <option value="na">Not applicable</option>
+        </select>
+      </label>
+      <button type="button" class="assertion-reset-filters">Reset</button>
+    </div>
+    <p class="filters-summary assertion-filter-count" aria-live="polite" aria-atomic="true"></p>
+    
+    
+    <details>
+      <summary>Prompt</summary>
+      <pre class="prompt-block">Create an example of a modal dialog component. It is closed by default, and the button to open it has a `trigger` class.</pre>
+    </details>
+    
+    
+    <details data-model-group="index">
+      <summary>
+        <h4>
+          index
+          
+            
+              <span class="variant-only" data-variant="control">&nbsp;—&nbsp;100%</span>
+            
+          
+        </h4>
+      </summary>
+      <div class="model-aggregates">
+        <p class="variant-aggregate-note" hidden><em>Aggregates are shown when filtering to a specific instruction set.</em></p>
+        
+          
+            <div class="variant-only" data-variant="control">
+              <p>Samples: 1 | Passes: 1</p>
+              <table>
+                <thead><tr><th>pass@1</th></tr></thead>
+                <tbody><tr>
+                  <td class="pass-at-k-cell" data-pass-at-k="1" data-pass="1.0000">100%</td>
+                </tr></tbody>
+              </table>
+              
+              <div class="pass-rate-bar" role="img" aria-label="Pass ratio - 100.0 percent"><span style="width: 100.0%"></span></div>
+            </div>
+          
+        
+      </div>
+      <div class="samples">
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="control">
+          
+          
+          
+          <h4>
+            <a href="raw/modal-dialog/index.html">
+              Sample 0 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              Control
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots/modal-dialog__index.png" alt="Screenshot sample None for modal-dialog / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Each dialog has a dialog role" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each dialog has a dialog role (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each dialog can be closed by escape key" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each dialog can be closed by escape key (BP): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog traps keyboard focus" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog traps keyboard focus (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog takes focus when opened" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog takes focus when opened (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Focus is not lost when each dialog closes" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Focus is not lost when each dialog closes (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog hides content behind it while open" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog hides content behind it while open (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="basic">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/basic/modal-dialog/index.html">
+              Sample 1 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              basic
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/basic/modal-dialog__index.png" alt="Screenshot sample None for modal-dialog / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Each dialog has a dialog role" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each dialog has a dialog role (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each dialog can be closed by escape key" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each dialog can be closed by escape key (BP): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog traps keyboard focus" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog traps keyboard focus (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog takes focus when opened" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog takes focus when opened (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Focus is not lost when each dialog closes" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Focus is not lost when each dialog closes (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog hides content behind it while open" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog hides content behind it while open (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="detailed">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/detailed/modal-dialog/index.html">
+              Sample 2 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              detailed
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/detailed/modal-dialog__index.png" alt="Screenshot sample None for modal-dialog / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Each dialog has a dialog role" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each dialog has a dialog role (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each dialog can be closed by escape key" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each dialog can be closed by escape key (BP): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog traps keyboard focus" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog traps keyboard focus (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog takes focus when opened" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog takes focus when opened (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Focus is not lost when each dialog closes" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Focus is not lost when each dialog closes (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog hides content behind it while open" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog hides content behind it while open (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="minimal">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/minimal/modal-dialog/index.html">
+              Sample 3 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              minimal
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/minimal/modal-dialog__index.png" alt="Screenshot sample None for modal-dialog / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Each dialog has a dialog role" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each dialog has a dialog role (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each dialog can be closed by escape key" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each dialog can be closed by escape key (BP): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog traps keyboard focus" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog traps keyboard focus (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog takes focus when opened" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog takes focus when opened (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Focus is not lost when each dialog closes" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Focus is not lost when each dialog closes (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each modal dialog hides content behind it while open" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each modal dialog hides content behind it while open (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          
+        </div>
+      
+      </div>
+    </details>
+    
+  </details>
+</section>
+
+<section>
+  <details>
+    <summary><h3>shopping-home-page</h3></summary>
+    
+    
+    <div class="filters assertion-filters" role="region" aria-label="Filters for assertions in shopping-home-page test case">
+      <label>
+        Assertion
+        <select class="assertion-name-filter">
+          <option value="">All assertions</option>
+          
+            <option value="Has a single banner">Has a single banner</option>
+          
+            <option value="Has a single footer">Has a single footer</option>
+          
+            <option value="Has a single maincontent">Has a single maincontent</option>
+          
+            <option value="Has an h1">Has an h1</option>
+          
+            <option value="Has at least one h2">Has at least one h2</option>
+          
+            <option value="Has at least one navigation">Has at least one navigation</option>
+          
+            <option value="Has single h1">Has single h1</option>
+          
+        </select>
+      </label>
+      <label>
+        Assertion result
+        <select class="assertion-status-filter">
+          <option value="">All results</option>
+          <option value="pass">Pass</option>
+          <option value="fail">Fail</option>
+          <option value="na">Not applicable</option>
+        </select>
+      </label>
+      <button type="button" class="assertion-reset-filters">Reset</button>
+    </div>
+    <p class="filters-summary assertion-filter-count" aria-live="polite" aria-atomic="true"></p>
+    
+    
+    <details>
+      <summary>Prompt</summary>
+      <pre class="prompt-block">Generate an HTML file for the home page of a shopping website. The home page has several sections of content for popular items, deals, and blog posts.
+</pre>
+    </details>
+    
+    
+    <details data-model-group="index">
+      <summary>
+        <h4>
+          index
+          
+            
+              <span class="variant-only" data-variant="control">&nbsp;—&nbsp;100%</span>
+            
+          
+        </h4>
+      </summary>
+      <div class="model-aggregates">
+        <p class="variant-aggregate-note" hidden><em>Aggregates are shown when filtering to a specific instruction set.</em></p>
+        
+          
+            <div class="variant-only" data-variant="control">
+              <p>Samples: 1 | Passes: 1</p>
+              <table>
+                <thead><tr><th>pass@1</th></tr></thead>
+                <tbody><tr>
+                  <td class="pass-at-k-cell" data-pass-at-k="1" data-pass="1.0000">100%</td>
+                </tr></tbody>
+              </table>
+              
+              <div class="pass-rate-bar" role="img" aria-label="Pass ratio - 100.0 percent"><span style="width: 100.0%"></span></div>
+            </div>
+          
+        
+      </div>
+      <div class="samples">
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="control">
+          
+          
+          
+          <h4>
+            <a href="raw/shopping-home-page/index.html">
+              Sample 0 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              Control
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots/shopping-home-page__index.png" alt="Screenshot sample None for shopping-home-page / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Has an h1" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has an h1 (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has single h1" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has single h1 (BP): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has at least one h2" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has at least one h2 (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single banner" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single banner (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single maincontent" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single maincontent (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has at least one navigation" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has at least one navigation (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single footer" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single footer (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="basic">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/basic/shopping-home-page/index.html">
+              Sample 1 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              basic
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/basic/shopping-home-page__index.png" alt="Screenshot sample None for shopping-home-page / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Has an h1" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has an h1 (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has single h1" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has single h1 (BP): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has at least one h2" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has at least one h2 (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single banner" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single banner (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single maincontent" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single maincontent (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has at least one navigation" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has at least one navigation (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single footer" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single footer (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="detailed">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/detailed/shopping-home-page/index.html">
+              Sample 2 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              detailed
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/detailed/shopping-home-page__index.png" alt="Screenshot sample None for shopping-home-page / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Has an h1" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has an h1 (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has single h1" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has single h1 (BP): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has at least one h2" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has at least one h2 (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single banner" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single banner (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single maincontent" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single maincontent (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has at least one navigation" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has at least one navigation (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single footer" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single footer (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="minimal">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/minimal/shopping-home-page/index.html">
+              Sample 3 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              minimal
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/minimal/shopping-home-page__index.png" alt="Screenshot sample None for shopping-home-page / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Has an h1" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has an h1 (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has single h1" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has single h1 (BP): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has at least one h2" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has at least one h2 (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single banner" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single banner (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single maincontent" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single maincontent (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has at least one navigation" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has at least one navigation (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Has a single footer" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Has a single footer (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          
+        </div>
+      
+      </div>
+    </details>
+    
+  </details>
+</section>
+
+<section>
+  <details>
+    <summary><h3>simple-contact-form</h3></summary>
+    
+    
+    <div class="filters assertion-filters" role="region" aria-label="Filters for assertions in simple-contact-form test case">
+      <label>
+        Assertion
+        <select class="assertion-name-filter">
+          <option value="">All assertions</option>
+          
+            <option value="Each text input has an accessible name">Each text input has an accessible name</option>
+          
+            <option value="Each text input has textbox role">Each text input has textbox role</option>
+          
+            <option value="Helper text is programmatically associated">Helper text is programmatically associated</option>
+          
+            <option value="Inputs use appropriate autocomplete for purpose">Inputs use appropriate autocomplete for purpose</option>
+          
+            <option value="Placeholder text is programmatically defined as a property">Placeholder text is programmatically defined as a property</option>
+          
+            <option value="Required fields are indicated programmatically">Required fields are indicated programmatically</option>
+          
+            <option value="Required fields are indicated visually">Required fields are indicated visually</option>
+          
+            <option value="Text inputs are keyboard focusable">Text inputs are keyboard focusable</option>
+          
+            <option value="Visible label is included in accessible name">Visible label is included in accessible name</option>
+          
+            <option value="Visual labels are defined and persistent">Visual labels are defined and persistent</option>
+          
+        </select>
+      </label>
+      <label>
+        Assertion result
+        <select class="assertion-status-filter">
+          <option value="">All results</option>
+          <option value="pass">Pass</option>
+          <option value="fail">Fail</option>
+          <option value="na">Not applicable</option>
+        </select>
+      </label>
+      <button type="button" class="assertion-reset-filters">Reset</button>
+    </div>
+    <p class="filters-summary assertion-filter-count" aria-live="polite" aria-atomic="true"></p>
+    
+    
+    <details>
+      <summary>Prompt</summary>
+      <pre class="prompt-block">Create an HTML file with a contact form containing three text input fields:
+
+- Full Name (required field)
+- Email Address (required field, with helper text explaining the expected format)
+- Phone Number (optional field, with helper text about the preferred format)
+
+Wrap each field (label, input, and any helper text) in a div with class `form-field`. Include a submit button.
+</pre>
+    </details>
+    
+    
+    <details data-model-group="index">
+      <summary>
+        <h4>
+          index
+          
+            
+              <span class="variant-only" data-variant="control">&nbsp;—&nbsp;0%</span>
+            
+          
+        </h4>
+      </summary>
+      <div class="model-aggregates">
+        <p class="variant-aggregate-note" hidden><em>Aggregates are shown when filtering to a specific instruction set.</em></p>
+        
+          
+            <div class="variant-only" data-variant="control">
+              <p>Samples: 1 | Passes: 0</p>
+              <table>
+                <thead><tr><th>pass@1</th></tr></thead>
+                <tbody><tr>
+                  <td class="pass-at-k-cell" data-pass-at-k="1" data-pass="0.0000">0%</td>
+                </tr></tbody>
+              </table>
+              
+              <div class="pass-rate-bar" role="img" aria-label="Pass ratio - 0.0 percent"><span style="width: 0.0%"></span></div>
+            </div>
+          
+        
+      </div>
+      <div class="samples">
+      
+        
+        <div class="sample-card" data-model="index" data-result="FAIL" data-variant="control">
+          
+          
+          
+          <h4>
+            <a href="raw/simple-contact-form/index.html">
+              Sample 0 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              Control
+            
+          </p>
+          <p><span class="badge-fail">FAIL</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0 | BP: 4</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots/simple-contact-form__index.png" alt="Screenshot sample None for simple-contact-form / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Fail">❌</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Each text input has an accessible name" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each text input has an accessible name (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Visible label is included in accessible name" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Visible label is included in accessible name (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each text input has textbox role" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each text input has textbox role (R): pass
+                 - Text input fields with textbox role found
+              </li>
+              
+              <li data-assertion-name="Helper text is programmatically associated" data-assertion-status="fail">
+                
+                  <span role="img" aria-label="Fail">❌</span>:
+                
+                Helper text is programmatically associated (R): fail
+                 - Found `e.g. Jane Smith`
+              </li>
+              
+              <li data-assertion-name="Text inputs are keyboard focusable" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Text inputs are keyboard focusable (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Visual labels are defined and persistent" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Visual labels are defined and persistent (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Required fields are indicated visually" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Required fields are indicated visually (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Required fields are indicated programmatically" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Required fields are indicated programmatically (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Inputs use appropriate autocomplete for purpose" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Inputs use appropriate autocomplete for purpose (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Placeholder text is programmatically defined as a property" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Placeholder text is programmatically defined as a property (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          <details>
+            <summary>Axe Best Practice Issues (4) <span role="img" aria-label="Warning">⚠️</span></summary>
+            <ul>
+              
+              <li><strong>landmark-one-main</strong> (moderate): Ensure the document has a main landmark <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+              <li><strong>region</strong> (moderate): Ensure all page content is contained by landmarks <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+            </ul>
+          </details>
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="basic">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/basic/simple-contact-form/index.html">
+              Sample 1 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              basic
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0 | BP: 3</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/basic/simple-contact-form__index.png" alt="Screenshot sample None for simple-contact-form / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Each text input has an accessible name" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each text input has an accessible name (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Visible label is included in accessible name" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Visible label is included in accessible name (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each text input has textbox role" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each text input has textbox role (R): pass
+                 - Text input fields with textbox role found
+              </li>
+              
+              <li data-assertion-name="Helper text is programmatically associated" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Helper text is programmatically associated (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Text inputs are keyboard focusable" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Text inputs are keyboard focusable (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Visual labels are defined and persistent" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Visual labels are defined and persistent (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Required fields are indicated visually" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Required fields are indicated visually (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Required fields are indicated programmatically" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Required fields are indicated programmatically (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Inputs use appropriate autocomplete for purpose" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Inputs use appropriate autocomplete for purpose (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Placeholder text is programmatically defined as a property" data-assertion-status="na">
+                
+                  <span role="img" aria-label="Not applicable">➖</span>:
+                
+                Placeholder text is programmatically defined as a property (R): na
+                 - No placeholder text present on text inputs
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          <details>
+            <summary>Axe Best Practice Issues (3) <span role="img" aria-label="Warning">⚠️</span></summary>
+            <ul>
+              
+              <li><strong>landmark-one-main</strong> (moderate): Ensure the document has a main landmark <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+              <li><strong>region</strong> (moderate): Ensure all page content is contained by landmarks <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+            </ul>
+          </details>
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="PASS" data-variant="detailed">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/detailed/simple-contact-form/index.html">
+              Sample 2 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              detailed
+            
+          </p>
+          <p><span class="badge-pass">PASS</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/detailed/simple-contact-form__index.png" alt="Screenshot sample None for simple-contact-form / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Pass">✅</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Each text input has an accessible name" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each text input has an accessible name (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Visible label is included in accessible name" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Visible label is included in accessible name (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each text input has textbox role" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each text input has textbox role (R): pass
+                 - Text input fields with textbox role found
+              </li>
+              
+              <li data-assertion-name="Helper text is programmatically associated" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Helper text is programmatically associated (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Text inputs are keyboard focusable" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Text inputs are keyboard focusable (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Visual labels are defined and persistent" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Visual labels are defined and persistent (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Required fields are indicated visually" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Required fields are indicated visually (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Required fields are indicated programmatically" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Required fields are indicated programmatically (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Inputs use appropriate autocomplete for purpose" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Inputs use appropriate autocomplete for purpose (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Placeholder text is programmatically defined as a property" data-assertion-status="na">
+                
+                  <span role="img" aria-label="Not applicable">➖</span>:
+                
+                Placeholder text is programmatically defined as a property (R): na
+                 - No placeholder text present on text inputs
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          
+        </div>
+      
+        
+        <div class="sample-card" data-model="index" data-result="FAIL" data-variant="minimal">
+          
+          
+          
+          <h4>
+            <a href="raw_variants/minimal/simple-contact-form/index.html">
+              Sample 3 (index)
+            </a>
+          </h4>
+          <p>
+            <strong>Instruction set:</strong>
+            
+              minimal
+            
+          </p>
+          <p><span class="badge-fail">FAIL</span> | Latency 0.00s</p>
+          <p>Axe WCAG: 0 | BP: 4</p>
+          
+            
+            
+            
+            <figure>
+              <img src="screenshots_variants/minimal/simple-contact-form__index.png" alt="Screenshot sample None for simple-contact-form / index" style="max-width:320px;">
+            </figure>
+          
+          <details>
+            <summary>
+              Assertions
+              
+                <span role="img" aria-label="Fail">❌</span>
+              
+            </summary>
+            <ul>
+              
+              <li data-assertion-name="Each text input has an accessible name" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each text input has an accessible name (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Visible label is included in accessible name" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Visible label is included in accessible name (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Each text input has textbox role" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Each text input has textbox role (R): pass
+                 - Text input fields with textbox role found
+              </li>
+              
+              <li data-assertion-name="Helper text is programmatically associated" data-assertion-status="fail">
+                
+                  <span role="img" aria-label="Fail">❌</span>:
+                
+                Helper text is programmatically associated (R): fail
+                 - Found `e.g. Jane Smith`
+              </li>
+              
+              <li data-assertion-name="Text inputs are keyboard focusable" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Text inputs are keyboard focusable (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Visual labels are defined and persistent" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Visual labels are defined and persistent (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Required fields are indicated visually" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Required fields are indicated visually (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Required fields are indicated programmatically" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Required fields are indicated programmatically (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Inputs use appropriate autocomplete for purpose" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Inputs use appropriate autocomplete for purpose (R): pass
+                
+              </li>
+              
+              <li data-assertion-name="Placeholder text is programmatically defined as a property" data-assertion-status="pass">
+                
+                  <span role="img" aria-label="Pass">✅</span>:
+                
+                Placeholder text is programmatically defined as a property (R): pass
+                
+              </li>
+              
+            </ul>
+          </details>
+          
+          
+          
+          <details>
+            <summary>Axe Best Practice Issues (4) <span role="img" aria-label="Warning">⚠️</span></summary>
+            <ul>
+              
+              <li><strong>landmark-one-main</strong> (moderate): Ensure the document has a main landmark <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+              <li><strong>region</strong> (moderate): Ensure all page content is contained by landmarks <em>(Best Practice - does not affect pass/fail)</em></li>
+              
+            </ul>
+          </details>
+          
+          
+        </div>
+      
+      </div>
+    </details>
+    
+  </details>
+</section>
+
+</section>
+  </section>
+</main>
+<footer>
+<p>GitHub Project: <a href="https://github.com/microsoft/a11y-llm-eval">a11y-llm-eval</a>. Run ID: my-run</p>
+
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function initReportSectionNav() {
+    const nav = document.querySelector('.report-nav');
+    if (!nav) return;
+
+    const links = Array.from(nav.querySelectorAll('a[data-report-nav]'));
+    if (!links.length) return;
+
+    const sections = Array.from(document.querySelectorAll('[data-report-section]'));
+    if (!sections.length) return;
+
+    const sectionByKey = new Map();
+    sections.forEach(function (section) {
+      const key = section.getAttribute('data-report-section');
+      if (key) sectionByKey.set(key, section);
+    });
+
+    function keyFromHash() {
+      const hash = (window.location.hash || '').replace('#', '');
+      if (!hash) return null;
+
+      // First: direct mapping for known ids.
+      if (hash === 'control-summary' || hash === 'control-section') return 'control';
+      if (hash === 'instruction-sets') return 'instructions';
+      if (hash === 'details-h2' || hash === 'detailed-results') return 'details';
+      if (hash === 'methodology' || hash === 'glossary' || hash === 'report-about') return 'about';
+
+      // Otherwise: find which major section contains the target.
+      const target = document.getElementById(hash);
+      if (target) {
+        for (const entry of sectionByKey.entries()) {
+          const key = entry[0];
+          const section = entry[1];
+          if (section.contains(target)) return key;
+        }
+      }
+      return null;
+    }
+
+    function setCurrentLink(key) {
+      links.forEach(function (a) {
+        const k = a.getAttribute('data-report-nav');
+        if (k === key) {
+          a.setAttribute('aria-current', 'page');
+        } else {
+          a.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    function showSection(key, opts) {
+      const options = opts || {};
+      const section = sectionByKey.get(key);
+      if (!section) return;
+
+      sections.forEach(function (s) {
+        s.hidden = (s !== section);
+      });
+      setCurrentLink(key);
+
+      // If the current hash points to an element, scroll it into view.
+      if (options.scrollToHash) {
+        const hash = (window.location.hash || '').replace('#', '');
+        if (hash) {
+          const target = document.getElementById(hash);
+          if (target) {
+            target.scrollIntoView({ block: 'start' });
+          }
+        }
+      }
+    }
+
+    // Default selection: control.
+    const initialKey = keyFromHash() || 'control';
+    showSection(initialKey, { scrollToHash: false });
+
+    links.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        const key = a.getAttribute('data-report-nav');
+        if (!key) return;
+
+        // Switch immediately; allow the browser to handle the anchor navigation.
+        showSection(key, { scrollToHash: false });
+      });
+    });
+
+    window.addEventListener('hashchange', function () {
+      const key = keyFromHash();
+      if (key) showSection(key, { scrollToHash: true });
+    });
+  }
+
+  initReportSectionNav();
+
+  const modelFilter = document.getElementById('model-filter');
+  const variantFilter = document.getElementById('variant-filter');
+  const resultFilter = document.getElementById('result-filter');
+  const resetButton = document.getElementById('reset-filters');
+  const modelSections = Array.from(document.querySelectorAll('[data-model-group]'));
+  const allCards = Array.from(document.querySelectorAll('.sample-card'));
+  const noResultsMessage = document.getElementById('no-results-message');
+  const countEl = document.getElementById('filter-count');
+  const totalCardCount = allCards.length;
+
+  function applyVariantVisibility() {
+    const variantValue = variantFilter ? variantFilter.value : 'control';
+    const variantEls = Array.from(document.querySelectorAll('.variant-only[data-variant]'));
+    const notes = Array.from(document.querySelectorAll('.variant-aggregate-note'));
+
+    // When viewing "All instruction sets", hide aggregates to avoid confusion.
+    if (!variantValue) {
+      variantEls.forEach(function (el) { el.style.display = 'none'; });
+      notes.forEach(function (el) { el.hidden = false; });
+      return;
+    }
+
+    notes.forEach(function (el) { el.hidden = true; });
+    variantEls.forEach(function (el) {
+      const elVariant = el.getAttribute('data-variant');
+      el.style.display = (elVariant === variantValue) ? '' : 'none';
+    });
+  }
+
+  function applyFilters() {
+    const modelValue = modelFilter ? modelFilter.value : '';
+    const variantValue = variantFilter ? variantFilter.value : 'control';
+    const resultValue = resultFilter ? resultFilter.value : '';
+    let anyVisible = false;
+    let visibleCardCount = 0;
+
+    modelSections.forEach(function (section) {
+      const cards = Array.from(section.querySelectorAll('.sample-card'));
+      const sectionModel = section.getAttribute('data-model-group');
+      let sectionHasVisibleCard = false;
+
+      cards.forEach(function (card) {
+        const cardModel = card.getAttribute('data-model');
+        const cardVariant = card.getAttribute('data-variant') || 'control';
+        const cardResult = card.getAttribute('data-result');
+        const matchesModel = !modelValue || cardModel === modelValue;
+        const matchesVariant = !variantValue || cardVariant === variantValue;
+        const matchesResult = !resultValue || cardResult === resultValue;
+        const hiddenByAssertion = card.classList.contains('hidden-by-assertion');
+        const shouldShowCard = matchesModel && matchesVariant && matchesResult && !hiddenByAssertion;
+
+        card.style.display = shouldShowCard ? '' : 'none';
+        if (shouldShowCard) {
+          sectionHasVisibleCard = true;
+          visibleCardCount += 1;
+        }
+      });
+
+      const sectionMatchesModel = !modelValue || sectionModel === modelValue;
+      const shouldShowSection = sectionMatchesModel && sectionHasVisibleCard;
+      section.style.display = shouldShowSection ? '' : 'none';
+      section.toggleAttribute('hidden', !shouldShowSection);
+
+      if (shouldShowSection) {
+        anyVisible = true;
+      }
+    });
+
+    if (noResultsMessage) {
+      noResultsMessage.hidden = anyVisible;
+    }
+    if (countEl) {
+      const message = anyVisible ? `Showing ${visibleCardCount} of ${totalCardCount} samples` : `Showing 0 of ${totalCardCount} samples`;
+      countEl.textContent = message;
+    }
+
+    applyVariantVisibility();
+    updateAssertionCounts();
+  }
+
+  if (modelFilter) {
+    modelFilter.addEventListener('change', applyFilters);
+  }
+  if (variantFilter) {
+    variantFilter.addEventListener('change', applyFilters);
+  }
+  if (resultFilter) {
+    resultFilter.addEventListener('change', applyFilters);
+  }
+  if (resetButton) {
+    resetButton.addEventListener('click', function () {
+      if (modelFilter) {
+        modelFilter.value = '';
+      }
+      if (variantFilter) {
+        variantFilter.value = 'control';
+      }
+      if (resultFilter) {
+        resultFilter.value = '';
+      }
+      applyFilters();
+    });
+  }
+
+  applyFilters();
+  const assertionFilterContainers = Array.from(document.querySelectorAll('.assertion-filters'));
+
+  assertionFilterContainers.forEach(function (container) {
+    const nameFilter = container.querySelector('.assertion-name-filter');
+    const statusFilter = container.querySelector('.assertion-status-filter');
+    const resetAssertionButton = container.querySelector('.assertion-reset-filters');
+    const testCaseSection = container.closest('section');
+    if (!testCaseSection) return;
+
+    const sampleCards = Array.from(testCaseSection.querySelectorAll('.sample-card'));
+
+    function applyAssertionFilters() {
+      const nameValue = nameFilter ? nameFilter.value : '';
+      const statusValue = statusFilter ? statusFilter.value : '';
+
+      sampleCards.forEach(function (card) {
+        const assertionItems = Array.from(card.querySelectorAll('li[data-assertion-name][data-assertion-status]'));
+        let matches = true;
+
+        if (nameValue || statusValue) {
+          matches = assertionItems.some(function (item) {
+            const itemName = item.getAttribute('data-assertion-name') || '';
+            const itemStatus = item.getAttribute('data-assertion-status') || '';
+            const matchesName = !nameValue || itemName === nameValue;
+            const matchesStatus = !statusValue || itemStatus === statusValue;
+            return matchesName && matchesStatus;
+          });
+        }
+
+        card.classList.toggle('hidden-by-assertion', !matches);
+      });
+
+      applyFilters();
+    }
+
+    if (nameFilter) {
+      nameFilter.addEventListener('change', applyAssertionFilters);
+    }
+    if (statusFilter) {
+      statusFilter.addEventListener('change', applyAssertionFilters);
+    }
+    if (resetAssertionButton) {
+      resetAssertionButton.addEventListener('click', function () {
+        if (nameFilter) {
+          nameFilter.value = '';
+        }
+        if (statusFilter) {
+          statusFilter.value = '';
+        }
+        sampleCards.forEach(function (card) {
+          card.classList.remove('hidden-by-assertion');
+        });
+        applyFilters();
+      });
+    }
+
+    applyAssertionFilters();
+  });
+
+  function updateAssertionCounts() {
+    const containers = Array.from(document.querySelectorAll('.assertion-filters'));
+    containers.forEach(function (container) {
+      const summaryEl = container.parentElement.querySelector('.assertion-filter-count');
+      if (!summaryEl) return;
+      const testCaseSection = container.closest('section');
+      if (!testCaseSection) return;
+      const cards = Array.from(testCaseSection.querySelectorAll('.sample-card'));
+      const total = cards.length;
+      let visible = 0;
+      cards.forEach(function (card) {
+        if (card.style.display !== 'none') {
+          visible += 1;
+        }
+      });
+      if (!total) {
+        summaryEl.textContent = '';
+      } else {
+        summaryEl.textContent = `Showing ${visible} of ${total} samples in this test case`;
+      }
+    });
+  }
+});
+</script>
+<script>
+// Heatmap coloring for pass@k cells: maps 0.0-1.0 to a green-ish scale and ensures text contrast
+document.addEventListener('DOMContentLoaded', function () {
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function hexToRgb(hex) {
+    const h = hex.replace('#','');
+    return [parseInt(h.substring(0,2),16), parseInt(h.substring(2,4),16), parseInt(h.substring(4,6),16)];
+  }
+  function rgbToHex(r,g,b){
+    return '#' + [r,g,b].map(x=>{ const s = Math.round(x).toString(16); return s.length===1 ? '0'+s : s; }).join('');
+  }
+  function luminance(r,g,b){
+    const rs = r/255, gs = g/255, bs = b/255;
+    const a = [rs,gs,bs].map(c=> c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4));
+    return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
+  }
+  function contrastRatio(l1, l2){
+    const hi = Math.max(l1,l2), lo = Math.min(l1,l2);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  // Define heatmap endpoints
+  const lowColor = getComputedStyle(document.documentElement).getPropertyValue('--heatmap-low').trim() || '#2d3748';
+  const highColor = getComputedStyle(document.documentElement).getPropertyValue('--heatmap-high').trim() || '#16a34a';
+  const lowRgb = hexToRgb(lowColor.replace(/\s/g,''));
+  const highRgb = hexToRgb(highColor.replace(/\s/g,''));
+
+  const cells = Array.from(document.querySelectorAll('.pass-at-k-cell'));
+  cells.forEach(function(cell){
+    const v = cell.getAttribute('data-pass');
+    if (!v) return;
+    const t = Math.min(1, Math.max(0, parseFloat(v)));
+    const r = lerp(lowRgb[0], highRgb[0], t);
+    const g = lerp(lowRgb[1], highRgb[1], t);
+    const b = lerp(lowRgb[2], highRgb[2], t);
+    const bg = rgbToHex(r,g,b);
+    cell.style.backgroundColor = bg;
+    // compute readable foreground (black or white) based on WCAG contrast
+    const Lbg = luminance(r,g,b);
+    const Lwhite = luminance(255,255,255);
+    const Lblack = luminance(0,0,0);
+    const contrastWithWhite = contrastRatio(Lwhite, Lbg);
+    const contrastWithBlack = contrastRatio(Lblack, Lbg);
+    const fg = contrastWithWhite >= contrastWithBlack ? '#ffffff' : '#000000';
+    cell.style.color = fg;
+  });
+});
+</script>
+</body>
+</html>

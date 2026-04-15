@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopMin — Home</title>
+  <style>
+    /* ── Reset / tokens ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:      #005fcc;   /* on white 7.03:1 ✓ SC 1.4.3 */
+      --accent-dark: #004ab8;   /* hover    9.10:1 ✓ */
+      --success:     #166534;   /* on white 9.25:1 ✓ */
+      --text:        #111827;   /* on white 18.7:1 ✓ */
+      --text-muted:  #4b5563;   /* on white  7.12:1 ✓ */
+      --brand:       #1e3a5f;   /* headings 13.5:1 ✓ */
+      --border:      #d1d5db;
+      --bg-page:     #f3f4f6;
+      --bg-card:     #ffffff;
+      --sale-badge:  #b91c1c;   /* white text 6.47:1 ✓ */
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg-page);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── Visually hidden utility (clip technique) ────────────────────── */
+    /*
+     * Hides content visually while keeping it in the accessibility tree.
+     * Used for: sale price "Was/Now" labels, "Add to Cart" product names,
+     * disambiguated "Read more" link suffixes.
+     */
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ── Skip link ───────────────────────────────────────────────────── */
+    /*
+     * SC 2.4.1 — allows keyboard users to bypass the repeated header.
+     * Visible only on focus so it does not clutter the visual design.
+     */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 999;
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 0 0 0.375rem 0.375rem;
+      text-decoration: none;
+      transition: top 0.15s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Header ──────────────────────────────────────────────────────── */
+    /*
+     * role="banner" on <header> is implicit in <body> context — SC 1.3.6.
+     * Contains: logo (H2 landmark replacement kept as branded link), search
+     * form (role="search"), primary nav, and cart button.
+     */
+    .site-header {
+      background: var(--brand);
+      color: #fff;
+      padding: 0 1.5rem;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 0.875rem 0;
+    }
+
+    /* Logo — visible text link, accessible name from content */
+    .site-logo {
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .site-logo:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /*
+     * Search form — role="search" landmark (SC 1.3.6).
+     * Label is visually-hidden but present for screen readers (SC 1.3.1).
+     * flex-grow pushes cart button to the right on wide viewports.
+     */
+    .search-form {
+      display: flex;
+      flex: 1 1 200px;
+      gap: 0;
+    }
+
+    .search-label { /* visually hidden */
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      border: none;
+      border-radius: 0.375rem 0 0 0.375rem;
+      font-size: 0.9375rem;
+      color: var(--text);
+      background: #fff;
+    }
+    .search-input:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: -2px;
+      z-index: 1;
+    }
+
+    .search-btn {
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 0 0.375rem 0.375rem 0;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .search-btn:hover { background: var(--accent-dark); }
+    .search-btn:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+
+    /* Primary nav — aria-label="Primary" distinguishes from footer nav */
+    .primary-nav { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+
+    .primary-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      padding: 0.375rem 0.625rem;
+      border-radius: 0.25rem;
+      white-space: nowrap;
+      opacity: 0.9;
+    }
+    .primary-nav a:hover { opacity: 1; background: rgba(255,255,255,0.12); }
+    .primary-nav a:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+    .primary-nav a[aria-current="page"] {
+      background: rgba(255,255,255,0.2);
+      opacity: 1;
+    }
+
+    /*
+     * Cart button — aria-label updated by JS to include item count.
+     * Live region (#cart-status) separately announces add-to-cart events.
+     */
+    .cart-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.875rem;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.4);
+      border-radius: 0.375rem;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .cart-btn:hover { background: rgba(255,255,255,0.25); }
+    .cart-btn:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────── */
+    /*
+     * Background image is decorative — applied via CSS, not <img>.
+     * Real DOM <h1> provides the page title (SC 1.3.1 / 2.4.6).
+     * Overlay div ensures sufficient contrast for text on the gradient.
+     */
+    .hero {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      color: #fff;
+      text-align: center;
+      padding: 4rem 1.5rem;
+    }
+
+    .hero-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.75rem, 5vw, 2.75rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero p {
+      font-size: 1.0625rem;
+      opacity: 0.9;
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      padding: 0.8125rem 2rem;
+      background: #fff;
+      color: var(--brand);   /* #1e3a5f on #fff = 13.5:1 ✓ */
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+    }
+    .hero-cta:hover { background: #e5e7eb; }
+    .hero-cta:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 3px;
+    }
+
+    /* ── Main content wrapper ────────────────────────────────────────── */
+    .content-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    /* ── Section ─────────────────────────────────────────────────────── */
+    /*
+     * Each section has a unique aria-labelledby pointing to its H2.
+     * H2 headings sit inside <section> so heading hierarchy is:
+     *   H1 (hero page title) → H2 (section) → H3 (product/article title)
+     * No levels are skipped (SC 1.3.1 / 2.4.6).
+     */
+    .content-section {
+      margin-bottom: 3.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.625rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: var(--brand);
+    }
+
+    .section-header a {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .section-header a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    /* ── Product grid ────────────────────────────────────────────────── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ── Product card ────────────────────────────────────────────────── */
+    /*
+     * Single-link pattern (Heydon Pickering):
+     *   • Image link: aria-hidden="true" tabindex="-1" — decorative duplicate
+     *   • H3 link: sole navigation entry point — descriptive name
+     *   • "Add to Cart" button: aria-label includes product name (SC 4.1.2)
+     * <article> provides implicit landmark for each product item.
+     */
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 0.625rem;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:focus-within {
+      box-shadow: 0 0 0 3px var(--accent);
+    }
+
+    /* Image link — aria-hidden + tabindex="-1" (duplicate link) */
+    .card-img-link {
+      display: block;
+      line-height: 0;
+    }
+
+    .card-img-link img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body {
+      padding: 0.875rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 0.375rem;
+    }
+
+    .card-category {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* H3 — product title; link provides accessible nav entry point */
+    .card-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .card-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .card-title a:hover { text-decoration: underline; }
+    .card-title a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    /*
+     * Price section:
+     *   Regular price — plain text.
+     *   Sale price — two patterns:
+     *     • <s aria-hidden="true"> + visually-hidden "Was: $X. Now: $Y." text
+     *     • Badge uses aria-hidden — color/strikethrough alone is SC 1.4.1 violation
+     */
+    .card-pricing {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.25rem;
+    }
+
+    .price-current {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    /* Strikethrough original price — hidden from AT; visually-hidden text used instead */
+    .price-was {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
+    /* Sale badge — aria-hidden; color not sole indicator (SC 1.4.1) */
+    .sale-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--sale-badge);  /* 6.47:1 ✓ */
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+    }
+
+    .card-footer {
+      padding: 0 0.875rem 0.875rem;
+      margin-top: auto;
+    }
+
+    /* "Add to Cart" button — aria-label set in HTML to include product name */
+    .btn-cart {
+      width: 100%;
+      padding: 0.5625rem 1rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-cart:hover { background: var(--accent-dark); }
+    .btn-cart:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    /* ── Blog grid ───────────────────────────────────────────────────── */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .blog-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 0.625rem;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /*
+     * Blog thumbnail — alt="" (decorative; heading link names the article).
+     * aria-hidden="true" + tabindex="-1" on image link (duplicate of heading link).
+     */
+    .blog-card-img-link {
+      display: block;
+      line-height: 0;
+    }
+
+    .blog-card-img-link img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+
+    .blog-card-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 0.5rem;
+    }
+
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .blog-category-tag {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .blog-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .blog-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .blog-title a:hover { text-decoration: underline; }
+    .blog-title a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    .blog-excerpt {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    /*
+     * "Read more" link — SC 2.4.4 link purpose in context.
+     * Visible text: "Read more"
+     * Screen reader text: "Read more about [Article Title]"
+     * Achieved via visually-hidden span inside the link.
+     */
+    .read-more {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: underline;
+      margin-top: 0.375rem;
+      display: inline-block;
+    }
+    .read-more:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────── */
+    /*
+     * role="contentinfo" on <footer> is implicit — SC 1.3.6.
+     * Footer nav has aria-label="Footer" to distinguish from primary nav.
+     */
+    .site-footer {
+      background: var(--brand);
+      color: rgba(255,255,255,0.85);
+      padding: 2rem 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .footer-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+
+    .footer-nav a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: underline;
+      font-size: 0.875rem;
+    }
+    .footer-nav a:hover { color: #fff; }
+    .footer-nav a:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    .footer-copy {
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* ── Reduced motion ──────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    Skip link — SC 2.4.1 Bypass Blocks.
+    Must be the first focusable element in the DOM.
+    Visible only on focus; links to #main-content.
+  -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ── Site header ─────────────────────────────────────────────── -->
+  <!--
+    <header> at the top level has implicit role="banner".
+    Contains three landmarks: search form, primary nav, cart button.
+  -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+
+      <!-- Logo — accessible name from visible text "ShopMin" -->
+      <a class="site-logo" href="/">ShopMin</a>
+
+      <!--
+        Search form — role="search" landmark (SC 1.3.6).
+        Visually-hidden <label> provides accessible name for the input.
+        type="search" declares semantic intent.
+      -->
+      <form class="search-form" role="search" action="/search" method="get">
+        <label class="search-label" for="site-search">Search products</label>
+        <input
+          class="search-input"
+          type="search"
+          id="site-search"
+          name="q"
+          placeholder="Search products…"
+          autocomplete="off"
+          aria-label="Search products"
+        />
+        <button class="search-btn" type="submit">Search</button>
+      </form>
+
+      <!--
+        Primary navigation — aria-label="Primary" distinguishes from footer nav.
+        aria-current="page" marks the current page link (SC 1.3.1).
+      -->
+      <nav aria-label="Primary">
+        <ul class="primary-nav" role="list">
+          <li><a href="/" aria-current="page">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/deals">Deals</a></li>
+          <li><a href="/blog">Blog</a></li>
+        </ul>
+      </nav>
+
+      <!--
+        Cart button — aria-label includes item count (updated by JS).
+        Count is also reflected in the visually-hidden <span> for screen readers.
+        aria-live="polite" region (#cart-status) announces add-to-cart events separately.
+      -->
+      <button
+        class="cart-btn"
+        type="button"
+        id="cart-btn"
+        aria-label="Shopping cart, 0 items"
+      >
+        🛒 Cart
+        (<span id="cart-count" aria-hidden="true">0</span>)
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ── Hero section ────────────────────────────────────────────── -->
+  <!--
+    Background is CSS gradient — purely decorative (no img element).
+    Real DOM <h1> provides the page title (SC 2.4.6, SC 1.3.1).
+    One H1 per page (non-negotiable standard).
+  -->
+  <section class="hero" aria-label="Hero banner">
+    <div class="hero-inner">
+      <h1>Shop Smarter, Save More</h1>
+      <p>Thousands of products. Exclusive deals every day. Free shipping over $50.</p>
+      <a class="hero-cta" href="/shop">Browse All Products</a>
+    </div>
+  </section>
+
+  <!-- ── Main content ─────────────────────────────────────────────── -->
+  <!--
+    id="main-content" — target for the skip link above.
+    <main> has implicit role="main" (SC 1.3.6).
+  -->
+  <main id="main-content">
+    <div class="content-wrap">
+
+      <!-- ══════════════════════════════════════════════════════════
+           Section 1 — Popular Items
+      ══════════════════════════════════════════════════════════ -->
+      <!--
+        <section> with aria-labelledby pointing to its H2 creates a
+        named region landmark (SC 1.3.6). Heading hierarchy: H1 → H2 → H3.
+      -->
+      <section class="content-section" aria-labelledby="popular-heading">
+        <div class="section-header">
+          <h2 id="popular-heading">Popular Items</h2>
+          <a href="/shop?sort=popular">View all popular items</a>
+        </div>
+
+        <div class="product-grid">
+
+          <!-- ── Product card 1 ─────────────────────────────────── -->
+          <!--
+            <article> provides an implicit landmark for screen reader navigation.
+            Single-link pattern:
+              • Image link: aria-hidden="true" tabindex="-1" (no duplicate tab stop)
+              • H3 link: sole keyboard/AT navigation entry point
+              • "Add to Cart": aria-label="Add to cart: Wireless Headphones Pro"
+          -->
+          <article class="product-card" aria-label="Wireless Headphones Pro">
+            <a
+              class="card-img-link"
+              href="/products/wireless-headphones-pro"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/400x300/1e3a5f/ffffff?text=Headphones"
+                alt=""
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+            </a>
+            <div class="card-body">
+              <p class="card-category">Electronics</p>
+              <h3 class="card-title">
+                <a href="/products/wireless-headphones-pro">Wireless Headphones Pro</a>
+              </h3>
+              <div class="card-pricing">
+                <!--
+                  Sale price pattern (SC 1.4.1 — not color/strikethrough alone):
+                    • <s aria-hidden="true"> hides original price from AT
+                    • Visually-hidden span provides "Was $89.99. Now $64.99." to screen readers
+                    • Sale badge is aria-hidden — supplementary visual indicator only
+                -->
+                <span class="visually-hidden">Was $89.99. Now $64.99.</span>
+                <span class="price-current" aria-hidden="true">$64.99</span>
+                <s class="price-was" aria-hidden="true">$89.99</s>
+                <span class="sale-badge" aria-hidden="true">Sale</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn-cart"
+                type="button"
+                aria-label="Add to cart: Wireless Headphones Pro"
+                data-product="Wireless Headphones Pro"
+                data-price="64.99"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </article>
+
+          <!-- ── Product card 2 ─────────────────────────────────── -->
+          <article class="product-card" aria-label="Mechanical Keyboard TKL">
+            <a
+              class="card-img-link"
+              href="/products/mechanical-keyboard-tkl"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/400x300/1e3a5f/ffffff?text=Keyboard"
+                alt=""
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+            </a>
+            <div class="card-body">
+              <p class="card-category">Peripherals</p>
+              <h3 class="card-title">
+                <a href="/products/mechanical-keyboard-tkl">Mechanical Keyboard TKL</a>
+              </h3>
+              <div class="card-pricing">
+                <span class="price-current">$79.99</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn-cart"
+                type="button"
+                aria-label="Add to cart: Mechanical Keyboard TKL"
+                data-product="Mechanical Keyboard TKL"
+                data-price="79.99"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </article>
+
+          <!-- ── Product card 3 ─────────────────────────────────── -->
+          <article class="product-card" aria-label="USB-C Hub 7-in-1">
+            <a
+              class="card-img-link"
+              href="/products/usb-c-hub"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/400x300/1e3a5f/ffffff?text=USB+Hub"
+                alt=""
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+            </a>
+            <div class="card-body">
+              <p class="card-category">Accessories</p>
+              <h3 class="card-title">
+                <a href="/products/usb-c-hub">USB-C Hub 7-in-1</a>
+              </h3>
+              <div class="card-pricing">
+                <span class="visually-hidden">Was $49.99. Now $34.99.</span>
+                <span class="price-current" aria-hidden="true">$34.99</span>
+                <s class="price-was" aria-hidden="true">$49.99</s>
+                <span class="sale-badge" aria-hidden="true">Sale</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn-cart"
+                type="button"
+                aria-label="Add to cart: USB-C Hub 7-in-1"
+                data-product="USB-C Hub 7-in-1"
+                data-price="34.99"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </article>
+
+          <!-- ── Product card 4 ─────────────────────────────────── -->
+          <article class="product-card" aria-label="Laptop Stand Adjustable">
+            <a
+              class="card-img-link"
+              href="/products/laptop-stand"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/400x300/1e3a5f/ffffff?text=Laptop+Stand"
+                alt=""
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+            </a>
+            <div class="card-body">
+              <p class="card-category">Accessories</p>
+              <h3 class="card-title">
+                <a href="/products/laptop-stand">Laptop Stand Adjustable</a>
+              </h3>
+              <div class="card-pricing">
+                <span class="price-current">$42.00</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn-cart"
+                type="button"
+                aria-label="Add to cart: Laptop Stand Adjustable"
+                data-product="Laptop Stand Adjustable"
+                data-price="42.00"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Section 2 — Today's Deals
+      ══════════════════════════════════════════════════════════ -->
+      <section class="content-section" aria-labelledby="deals-heading">
+        <div class="section-header">
+          <h2 id="deals-heading">Today's Deals</h2>
+          <a href="/deals">View all deals</a>
+        </div>
+
+        <div class="product-grid">
+
+          <!-- ── Deal card 1 ─────────────────────────────────────── -->
+          <article class="product-card" aria-label="Noise-Cancelling Earbuds">
+            <a
+              class="card-img-link"
+              href="/products/nc-earbuds"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/400x300/2563eb/ffffff?text=Earbuds"
+                alt=""
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+            </a>
+            <div class="card-body">
+              <p class="card-category">Audio</p>
+              <h3 class="card-title">
+                <a href="/products/nc-earbuds">Noise-Cancelling Earbuds</a>
+              </h3>
+              <div class="card-pricing">
+                <span class="visually-hidden">Was $129.99. Now $79.99.</span>
+                <span class="price-current" aria-hidden="true">$79.99</span>
+                <s class="price-was" aria-hidden="true">$129.99</s>
+                <span class="sale-badge" aria-hidden="true">38% off</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn-cart"
+                type="button"
+                aria-label="Add to cart: Noise-Cancelling Earbuds"
+                data-product="Noise-Cancelling Earbuds"
+                data-price="79.99"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </article>
+
+          <!-- ── Deal card 2 ─────────────────────────────────────── -->
+          <article class="product-card" aria-label="Portable SSD 1TB">
+            <a
+              class="card-img-link"
+              href="/products/portable-ssd-1tb"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/400x300/2563eb/ffffff?text=SSD"
+                alt=""
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+            </a>
+            <div class="card-body">
+              <p class="card-category">Storage</p>
+              <h3 class="card-title">
+                <a href="/products/portable-ssd-1tb">Portable SSD 1TB</a>
+              </h3>
+              <div class="card-pricing">
+                <span class="visually-hidden">Was $109.99. Now $74.99.</span>
+                <span class="price-current" aria-hidden="true">$74.99</span>
+                <s class="price-was" aria-hidden="true">$109.99</s>
+                <span class="sale-badge" aria-hidden="true">32% off</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn-cart"
+                type="button"
+                aria-label="Add to cart: Portable SSD 1TB"
+                data-product="Portable SSD 1TB"
+                data-price="74.99"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </article>
+
+          <!-- ── Deal card 3 ─────────────────────────────────────── -->
+          <article class="product-card" aria-label="Webcam 4K Auto-Focus">
+            <a
+              class="card-img-link"
+              href="/products/webcam-4k"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/400x300/2563eb/ffffff?text=Webcam"
+                alt=""
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+            </a>
+            <div class="card-body">
+              <p class="card-category">Video</p>
+              <h3 class="card-title">
+                <a href="/products/webcam-4k">Webcam 4K Auto-Focus</a>
+              </h3>
+              <div class="card-pricing">
+                <span class="visually-hidden">Was $149.99. Now $99.99.</span>
+                <span class="price-current" aria-hidden="true">$99.99</span>
+                <s class="price-was" aria-hidden="true">$149.99</s>
+                <span class="sale-badge" aria-hidden="true">33% off</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn-cart"
+                type="button"
+                aria-label="Add to cart: Webcam 4K Auto-Focus"
+                data-product="Webcam 4K Auto-Focus"
+                data-price="99.99"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </article>
+
+          <!-- ── Deal card 4 ─────────────────────────────────────── -->
+          <article class="product-card" aria-label="Mouse Pad XL Desk Mat">
+            <a
+              class="card-img-link"
+              href="/products/mousepad-xl"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/400x300/2563eb/ffffff?text=Desk+Mat"
+                alt=""
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+            </a>
+            <div class="card-body">
+              <p class="card-category">Accessories</p>
+              <h3 class="card-title">
+                <a href="/products/mousepad-xl">Mouse Pad XL Desk Mat</a>
+              </h3>
+              <div class="card-pricing">
+                <span class="visually-hidden">Was $29.99. Now $18.99.</span>
+                <span class="price-current" aria-hidden="true">$18.99</span>
+                <s class="price-was" aria-hidden="true">$29.99</s>
+                <span class="sale-badge" aria-hidden="true">37% off</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn-cart"
+                type="button"
+                aria-label="Add to cart: Mouse Pad XL Desk Mat"
+                data-product="Mouse Pad XL Desk Mat"
+                data-price="18.99"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Section 3 — From the Blog
+      ══════════════════════════════════════════════════════════ -->
+      <section class="content-section" aria-labelledby="blog-heading">
+        <div class="section-header">
+          <h2 id="blog-heading">From the Blog</h2>
+          <a href="/blog">View all articles</a>
+        </div>
+
+        <div class="blog-grid">
+
+          <!-- ── Blog card 1 ─────────────────────────────────────── -->
+          <!--
+            Blog card pattern:
+              • Thumbnail: alt="" (decorative) + image link aria-hidden + tabindex="-1"
+              • H3 link: the accessible entry point for the article
+              • "Read more": visually-hidden span appended for SC 2.4.4 compliance
+          -->
+          <article class="blog-card">
+            <a
+              class="blog-card-img-link"
+              href="/blog/best-wireless-headphones-2026"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/560x315/1e3a5f/ffffff?text=Blog+1"
+                alt=""
+                width="560"
+                height="315"
+                loading="lazy"
+              />
+            </a>
+            <div class="blog-card-body">
+              <div class="blog-meta">
+                <span class="blog-category-tag">Buying Guide</span>
+                <span aria-hidden="true">·</span>
+                <time datetime="2026-04-10">April 10, 2026</time>
+              </div>
+              <h3 class="blog-title">
+                <a href="/blog/best-wireless-headphones-2026">
+                  The Best Wireless Headphones of 2026
+                </a>
+              </h3>
+              <p class="blog-excerpt">
+                We tested over 30 pairs to find the top performers across every
+                budget. Here are our top picks for commuters, gamers, and audiophiles.
+              </p>
+              <!--
+                "Read more" link — SC 2.4.4 link purpose in context.
+                Visible: "Read more"
+                Screen reader: "Read more about The Best Wireless Headphones of 2026"
+              -->
+              <a class="read-more" href="/blog/best-wireless-headphones-2026">
+                Read more
+                <span class="visually-hidden">about The Best Wireless Headphones of 2026</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- ── Blog card 2 ─────────────────────────────────────── -->
+          <article class="blog-card">
+            <a
+              class="blog-card-img-link"
+              href="/blog/home-office-setup-tips"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/560x315/1e3a5f/ffffff?text=Blog+2"
+                alt=""
+                width="560"
+                height="315"
+                loading="lazy"
+              />
+            </a>
+            <div class="blog-card-body">
+              <div class="blog-meta">
+                <span class="blog-category-tag">Productivity</span>
+                <span aria-hidden="true">·</span>
+                <time datetime="2026-04-07">April 7, 2026</time>
+              </div>
+              <h3 class="blog-title">
+                <a href="/blog/home-office-setup-tips">
+                  10 Tips to Level Up Your Home Office Setup
+                </a>
+              </h3>
+              <p class="blog-excerpt">
+                Whether you are working remotely full-time or just need a better desk
+                corner, these gear and ergonomics tips will transform your productivity.
+              </p>
+              <a class="read-more" href="/blog/home-office-setup-tips">
+                Read more
+                <span class="visually-hidden">about 10 Tips to Level Up Your Home Office Setup</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- ── Blog card 3 ─────────────────────────────────────── -->
+          <article class="blog-card">
+            <a
+              class="blog-card-img-link"
+              href="/blog/usb-c-everything-you-need-to-know"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <img
+                src="https://placehold.co/560x315/1e3a5f/ffffff?text=Blog+3"
+                alt=""
+                width="560"
+                height="315"
+                loading="lazy"
+              />
+            </a>
+            <div class="blog-card-body">
+              <div class="blog-meta">
+                <span class="blog-category-tag">Tech Explained</span>
+                <span aria-hidden="true">·</span>
+                <time datetime="2026-04-03">April 3, 2026</time>
+              </div>
+              <h3 class="blog-title">
+                <a href="/blog/usb-c-everything-you-need-to-know">
+                  USB-C: Everything You Need to Know in 2026
+                </a>
+              </h3>
+              <p class="blog-excerpt">
+                Confused by USB-C speeds, power delivery ratings, and Thunderbolt
+                compatibility? This plain-language guide cuts through the jargon.
+              </p>
+              <a class="read-more" href="/blog/usb-c-everything-you-need-to-know">
+                Read more
+                <span class="visually-hidden">about USB-C: Everything You Need to Know in 2026</span>
+              </a>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ── Site footer ──────────────────────────────────────────────── -->
+  <!--
+    <footer> has implicit role="contentinfo" (SC 1.3.6).
+    Footer nav uses aria-label="Footer" (distinct from aria-label="Primary").
+  -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav aria-label="Footer">
+        <ul class="footer-nav" role="list">
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/accessibility">Accessibility</a></li>
+        </ul>
+      </nav>
+      <p class="footer-copy">
+        &copy; 2026 ShopMin. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <!--
+    Cart live region — SC 4.1.3 Status Messages.
+    MUST be present in the static HTML (not injected by JS) so the
+    browser registers it as a live region before any updates occur.
+    role="status" = aria-live="polite" + aria-atomic="true".
+    Content is cleared then set via requestAnimationFrame to ensure
+    re-announcement when the same product is added twice.
+  -->
+  <div
+    id="cart-status"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    class="visually-hidden"
+  ></div>
+
+  <script>
+    /*
+     * Cart counter — updates:
+     *   1. Visible count badge (#cart-count)
+     *   2. aria-label on the cart button (#cart-btn)
+     *   3. Live region (#cart-status) — polite announcement of add-to-cart
+     *
+     * Live region technique: clear → rAF → set, so that adding the same
+     * item twice re-triggers the announcement (SC 4.1.3).
+     */
+    let cartCount = 0;
+    const cartCountEl = document.getElementById('cart-count');
+    const cartBtn     = document.getElementById('cart-btn');
+    const cartStatus  = document.getElementById('cart-status');
+
+    document.querySelectorAll('.btn-cart').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const product = btn.getAttribute('data-product');
+
+        // Increment count
+        cartCount += 1;
+
+        // Update visible count
+        cartCountEl.textContent = cartCount;
+
+        // Update aria-label on cart button (SC 4.1.2)
+        cartBtn.setAttribute(
+          'aria-label',
+          `Shopping cart, ${cartCount} item${cartCount === 1 ? '' : 's'}`
+        );
+
+        // Live region: clear first, then set (guarantees re-announcement)
+        cartStatus.textContent = '';
+        requestAnimationFrame(() => {
+          cartStatus.textContent =
+            `${product} added to cart. Cart now has ${cartCount} item${cartCount === 1 ? '' : 's'}.`;
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

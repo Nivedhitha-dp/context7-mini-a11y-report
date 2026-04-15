@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expand / Collapse Widget — Minimal Disclosure</title>
+  <style>
+    /* ── Reset / tokens ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand:       #1e3a5f;   /* headings — on white 13.5:1 ✓ SC 1.4.3 */
+      --accent:      #005fcc;   /* focus ring — on white 7.03:1 ✓ */
+      --text:        #111827;   /* body — on white 18.7:1 ✓ */
+      --text-muted:  #4b5563;   /* secondary — on white 7.12:1 ✓ */
+      --bg-page:     #f3f4f6;
+      --bg-card:     #ffffff;
+      --bg-header:   #f9fafb;   /* collapsed button background */
+      --bg-expanded: #eff6ff;   /* expanded button background */
+      --border:      #d1d5db;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg-page);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    /* ── Page header ─────────────────────────────────────────────────── */
+    .page-header {
+      max-width: 640px;
+      margin: 0 auto 2rem;
+    }
+
+    .page-header h1 {
+      font-size: clamp(1.375rem, 4vw, 1.875rem);
+      font-weight: 800;
+      color: var(--brand);
+      margin-bottom: 0.375rem;
+    }
+
+    .page-header p {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Section heading above the disclosure group ──────────────────── */
+    /*
+     * This h2 establishes the heading level above the h3 buttons,
+     * so the heading hierarchy is H1 → H2 → H3 (no skipped levels, SC 1.3.1).
+     */
+    .group-heading {
+      max-width: 640px;
+      margin: 0 auto 0.75rem;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--brand);
+    }
+
+    /* ── div.example — wraps each widget as specified ────────────────── */
+    .example {
+      max-width: 640px;
+      margin: 0 auto 0.625rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+
+    /* ── Toggle button ───────────────────────────────────────────────── */
+    /*
+     * ARIA APG Disclosure Pattern:
+     *   • Native <button type="button"> — keyboard (Enter + Space) + role for free.
+     *   • aria-expanded="false/true" toggled by JS synchronously on click.
+     *   • aria-controls references the panel id.
+     *   • Focus STAYS on the button — never moves into the panel on expand.
+     *   • No arrow-key nav — disclosures are independent, not a composite widget.
+     *   • <h3> wraps the button to provide document outline (SC 1.3.1).
+     */
+    .example h3 {
+      margin: 0;
+    }
+
+    .example h3 button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      background: var(--bg-header);
+      border: none;
+      border-bottom: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text);        /* #111827 on #f9fafb = 17.8:1 ✓ SC 1.4.3 */
+      text-align: left;
+      transition: background 0.15s;
+    }
+
+    .example h3 button:hover {
+      background: #e5e7eb;
+    }
+
+    /* Expanded state — visual distinction (background + border) */
+    .example h3 button[aria-expanded="true"] {
+      background: var(--bg-expanded);
+      border-bottom-color: #bfdbfe;
+      color: #1e40af;            /* #1e40af on #eff6ff = 7.02:1 ✓ SC 1.4.3 */
+    }
+
+    /*
+     * Focus ring — :focus-visible = keyboard only (SC 2.4.7 / 2.4.11).
+     * #005fcc outline against adjacent background ≥ 3:1 ✓ SC 1.4.11.
+     */
+    .example h3 button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: -3px;   /* inset so ring doesn't clip at card corners */
+    }
+
+    /* ── Chevron icon ────────────────────────────────────────────────── */
+    /*
+     * aria-hidden="true" — decorative; state is communicated via
+     * aria-expanded on the button, not the icon direction (SC 1.3.1).
+     * focusable="false" — IE11 guard prevents SVG from entering tab order.
+     * CSS rotation conveys open/closed visually; transition respects
+     * prefers-reduced-motion.
+     */
+    .chevron {
+      flex-shrink: 0;
+      width: 1rem;
+      height: 1rem;
+      color: var(--text-muted);  /* #4b5563 on #f9fafb ≈ 6.7:1 ✓ SC 1.4.11 */
+      transition: transform 0.2s ease;
+    }
+
+    button[aria-expanded="true"] .chevron {
+      transform: rotate(180deg);
+      color: #1e40af;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .chevron { transition: none; }
+    }
+
+    /* ── div.details — controlled content panel (as specified) ──────── */
+    /*
+     * Hidden via `hidden` attribute — removes from layout AND accessibility
+     * tree entirely. Preferred over visibility:hidden (leaves in layout) or
+     * aria-hidden alone (hides from AT but still keyboard-reachable).
+     * `.details[hidden] { display:none }` guard prevents accidental CSS
+     * specificity overrides restoring visibility.
+     */
+    .details {
+      padding: 1rem;
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .details[hidden] { display: none; }
+
+    /* Details content helpers */
+    .details p + p   { margin-top: 0.625rem; }
+    .details ul      { padding-left: 1.25rem; margin-top: 0.5rem; }
+    .details li + li { margin-top: 0.25rem; }
+    .details a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .details a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Page header ─────────────────────────────────────────────── -->
+  <!--
+    Skip link omitted intentionally — this is a minimal demo page with
+    no repeated navigation before the main content. In a full page,
+    add <a href="#main-content" class="skip-link"> as the first element.
+  -->
+  <div class="page-header">
+    <h1>Expand / Collapse Widget</h1>
+    <p>
+      Disclosure examples using the ARIA APG Disclosure Pattern.
+      Keyboard: <kbd>Tab</kbd> moves between headings, <kbd>Enter</kbd> or
+      <kbd>Space</kbd> toggles the panel.
+    </p>
+  </div>
+
+  <!--
+    h2 establishes the heading context for the h3 buttons below.
+    Heading hierarchy: H1 → H2 → H3 — no skipped levels (SC 1.3.1).
+  -->
+  <h2 class="group-heading">Frequently Asked Questions</h2>
+
+  <main>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       Example 1 — Return policy
+  ══════════════════════════════════════════════════════════════ -->
+  <!--
+    div.example wraps the full widget as specified.
+
+    Pattern: Disclosure with Heading (WAI APG).
+      • <h3> provides document outline — heading in page (H1 → H2 → H3).
+      • <button> inside the heading is the toggle control.
+      • aria-expanded starts "false" — panel collapsed at load.
+      • aria-controls="details-1" references the panel's unique id.
+      • Unique IDs per instance prevent WCAG 4.1.1 parsing failures.
+  -->
+  <div class="example">
+    <h3>
+      <button
+        type="button"
+        aria-expanded="false"
+        aria-controls="details-1"
+        id="btn-1"
+      >
+        What is your return policy?
+        <!--
+          Chevron SVG:
+            aria-hidden="true" — decorative; state comes from aria-expanded.
+            focusable="false"  — IE11 guard; prevents SVG entering tab order.
+        -->
+        <svg
+          class="chevron"
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+    </h3>
+
+    <!--
+      div.details — controlled panel (as specified).
+      id="details-1" matches aria-controls on the button above.
+      `hidden` attribute: removed by JS on expand; prevents keyboard access
+      and screen-reader announcement when collapsed.
+    -->
+    <div class="details" id="details-1" hidden>
+      <p>
+        We offer a <strong>30-day hassle-free return policy</strong> on all
+        items purchased from our store. Items must be in their original
+        condition and packaging.
+      </p>
+      <ul>
+        <li>Digital downloads are non-refundable.</li>
+        <li>Customised or personalised items cannot be returned.</li>
+        <li>Sale items are final sale unless defective.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       Example 2 — Shipping information
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="example">
+    <h3>
+      <button
+        type="button"
+        aria-expanded="false"
+        aria-controls="details-2"
+        id="btn-2"
+      >
+        How long does shipping take?
+        <svg
+          class="chevron"
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+    </h3>
+
+    <div class="details" id="details-2" hidden>
+      <p>We ship to over 40 countries. Estimated delivery times:</p>
+      <ul>
+        <li><strong>Standard (5–7 business days):</strong> Free on orders over $50</li>
+        <li><strong>Express (2–3 business days):</strong> $9.99</li>
+        <li><strong>Overnight (next business day):</strong> $19.99 — order by 2 pm ET</li>
+        <li><strong>International (7–14 business days):</strong> Calculated at checkout</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       Example 3 — Account and billing
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="example">
+    <h3>
+      <button
+        type="button"
+        aria-expanded="false"
+        aria-controls="details-3"
+        id="btn-3"
+      >
+        How do I update my billing information?
+        <svg
+          class="chevron"
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+    </h3>
+
+    <div class="details" id="details-3" hidden>
+      <p>
+        Log in to your account and navigate to <strong>Settings → Billing</strong>.
+        From there you can update your payment method, billing address, and
+        invoice preferences.
+      </p>
+      <p>
+        Changes take effect on your next billing cycle. For urgent changes,
+        contact <a href="mailto:billing@example.com">billing@example.com</a>.
+      </p>
+    </div>
+  </div>
+
+  </main>
+
+  <script>
+    /*
+     * Disclosure toggle — ARIA APG Disclosure Pattern.
+     *
+     * Per checklist:
+     *   1. Read aria-controls to resolve the panel element.
+     *   2. Toggle `hidden` attribute on the panel (removes from layout + a11y tree).
+     *   3. Set aria-expanded on the button synchronously.
+     *   4. Focus stays on the button — never moves to the panel.
+     *   5. No arrow-key navigation — disclosures are not composite widgets.
+     */
+    document.querySelectorAll('button[aria-expanded][aria-controls]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        const panel    = document.getElementById(btn.getAttribute('aria-controls'));
+        if (!panel) return;
+
+        // Toggle state synchronously — ARIA spec requires this
+        btn.setAttribute('aria-expanded', String(!expanded));
+
+        // `hidden` attribute removes panel from layout + accessibility tree
+        panel.hidden = expanded;   // hide when was open; show when was closed
+      });
+    });
+  </script>
+
+</body>
+</html>

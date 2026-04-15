@@ -1,0 +1,1793 @@
+{
+  "run_id": "my-run",
+  "models": [],
+  "tests": [
+    "disclosure-widget",
+    "single-checkbox",
+    "radio-button-group",
+    "shopping-home-page",
+    "checkbox-group",
+    "modal-dialog",
+    "simple-contact-form"
+  ],
+  "prompts": {
+    "disclosure-widget": "- Generate an HTML file that demonstrates an expand/collapse widget.\n- Wrap each widget with a div that has an `example` class.\n- Give the container for controlled content a `details` class.\n",
+    "single-checkbox": "Create a page that showcases single checkbox examples for standalone choices such as agreeing to terms or subscribing to updates. Include examples with and without helper text. Each example should be wrapped in a div with class \"form-field\". Include a submit button.",
+    "radio-button-group": "Create a page that showcases radio button examples as multiple choice questions. Include examples with and without helper text. Each example should be a single question with its answer choices. Wrap each example in a div with class \"form-field\". Include a submit button.",
+    "shopping-home-page": "Generate an HTML file for the home page of a shopping website. The home page has several sections of content for popular items, deals, and blog posts.\n",
+    "checkbox-group": "Create a page that showcases checkbox group examples as multiple choice questions where more than one answer may be selected. Include examples with and without helper text. Each example should be a single question with its answer choices. Wrap each example in a div with class \"form-field\". Include a submit button.",
+    "modal-dialog": "Create an example of a modal dialog component. It is closed by default, and the button to open it has a `trigger` class.",
+    "simple-contact-form": "Create an HTML file with a contact form containing three text input fields:\n\n- Full Name (required field)\n- Email Address (required field, with helper text explaining the expected format)\n- Phone Number (optional field, with helper text about the preferred format)\n\nWrap each field (label, input, and any helper text) in a div with class `form-field`. Include a submit button.\n"
+  },
+  "results": [
+    {
+      "test_name": "disclosure-widget",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:21.931442",
+      "generation_html_path": "runs/my-run/raw/disclosure-widget/index.html",
+      "screenshot_path": "runs/my-run/screenshots/disclosure-widget__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "All examples have a valid semantics",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Collapsed content is hidden from assistive technology",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 104,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 3,
+        "best_practice_failures": [
+          {
+            "id": "heading-order",
+            "impact": "moderate",
+            "description": "Ensure the order of headings is semantically correct",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/heading-order?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<h3>",
+                "target": [
+                  ".example:nth-child(2) > h3"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.semantics",
+              "best-practice"
+            ]
+          },
+          {
+            "id": "landmark-one-main",
+            "impact": "moderate",
+            "description": "Ensure the document has a main landmark",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<html lang=\"en\">",
+                "target": [
+                  "html"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.semantics",
+              "best-practice"
+            ]
+          },
+          {
+            "id": "region",
+            "impact": "moderate",
+            "description": "Ensure all page content is contained by landmarks",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<div class=\"page-header\">",
+                "target": [
+                  ".page-header"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.keyboard",
+              "best-practice"
+            ]
+          }
+        ]
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "c98e77e2b12603b7",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "control"
+    },
+    {
+      "test_name": "modal-dialog",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:25.636771",
+      "generation_html_path": "runs/my-run/raw/modal-dialog/index.html",
+      "screenshot_path": "runs/my-run/screenshots/modal-dialog__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "Each dialog has a dialog role",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each dialog can be closed by escape key",
+            "status": "pass",
+            "message": null,
+            "type": "BP"
+          },
+          {
+            "name": "Each modal dialog traps keyboard focus",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each modal dialog takes focus when opened",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Focus is not lost when each dialog closes",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each modal dialog hides content behind it while open",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 3472,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 0,
+        "best_practice_failures": []
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "962d0f1908c031d2",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "control"
+    },
+    {
+      "test_name": "shopping-home-page",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:22.174269",
+      "generation_html_path": "runs/my-run/raw/shopping-home-page/index.html",
+      "screenshot_path": "runs/my-run/screenshots/shopping-home-page__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "Has an h1",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has single h1",
+            "status": "pass",
+            "message": null,
+            "type": "BP"
+          },
+          {
+            "name": "Has at least one h2",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single banner",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single maincontent",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has at least one navigation",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single footer",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 54,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 0,
+        "best_practice_failures": []
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "4b8176f240c2a502",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "control"
+    },
+    {
+      "test_name": "simple-contact-form",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:22.124309",
+      "generation_html_path": "runs/my-run/raw/simple-contact-form/index.html",
+      "screenshot_path": "runs/my-run/screenshots/simple-contact-form__index.png",
+      "test_function": {
+        "status": "fail",
+        "assertions": [
+          {
+            "name": "Each text input has an accessible name",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Visible label is included in accessible name",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Each text input has textbox role",
+            "status": "pass",
+            "message": "Text input fields with textbox role found",
+            "type": "R"
+          },
+          {
+            "name": "Helper text is programmatically associated",
+            "status": "fail",
+            "message": "Found `e.g. Jane Smith`",
+            "type": "R"
+          },
+          {
+            "name": "Text inputs are keyboard focusable",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Visual labels are defined and persistent",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Required fields are indicated visually",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Required fields are indicated programmatically",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Inputs use appropriate autocomplete for purpose",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Placeholder text is programmatically defined as a property",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 320,
+        "total_assertion_failures": 1,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 4,
+        "best_practice_failures": [
+          {
+            "id": "landmark-one-main",
+            "impact": "moderate",
+            "description": "Ensure the document has a main landmark",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<html lang=\"en\">",
+                "target": [
+                  "html"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.semantics",
+              "best-practice"
+            ]
+          },
+          {
+            "id": "region",
+            "impact": "moderate",
+            "description": "Ensure all page content is contained by landmarks",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<h1 class=\"form-heading\" id=\"contact-heading\">Contact Us</h1>",
+                "target": [
+                  "#contact-heading"
+                ]
+              },
+              {
+                "html": "<p class=\"form-subheading\">We'll get back to you within 1\u20132 business days.</p>",
+                "target": [
+                  ".form-subheading"
+                ]
+              },
+              {
+                "html": "<p class=\"required-note\" id=\"required-note\">\n      <span class=\"asterisk\" aria-hidden=\"true\">*</span>\n      indicates a required field\n    </p>",
+                "target": [
+                  "#required-note"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.keyboard",
+              "best-practice"
+            ]
+          }
+        ]
+      },
+      "result": "FAIL",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "0e4f3c51a6966e66",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "control"
+    },
+    {
+      "test_name": "disclosure-widget",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:21.966678",
+      "generation_html_path": "runs/my-run/raw_variants/basic/disclosure-widget/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/basic/disclosure-widget__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "All examples have a valid semantics",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Collapsed content is hidden from assistive technology",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 116,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 2,
+        "best_practice_failures": [
+          {
+            "id": "region",
+            "impact": "moderate",
+            "description": "Ensure all page content is contained by landmarks",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<div class=\"page-header\">",
+                "target": [
+                  ".page-header"
+                ]
+              },
+              {
+                "html": "<h2 class=\"group-heading\">Frequently Asked Questions</h2>",
+                "target": [
+                  "h2"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.keyboard",
+              "best-practice"
+            ]
+          }
+        ]
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "c98e77e2b12603b7",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "basic"
+    },
+    {
+      "test_name": "modal-dialog",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:25.612401",
+      "generation_html_path": "runs/my-run/raw_variants/basic/modal-dialog/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/basic/modal-dialog__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "Each dialog has a dialog role",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each dialog can be closed by escape key",
+            "status": "pass",
+            "message": null,
+            "type": "BP"
+          },
+          {
+            "name": "Each modal dialog traps keyboard focus",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each modal dialog takes focus when opened",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Focus is not lost when each dialog closes",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each modal dialog hides content behind it while open",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 3458,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 0,
+        "best_practice_failures": []
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "962d0f1908c031d2",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "basic"
+    },
+    {
+      "test_name": "shopping-home-page",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:22.143114",
+      "generation_html_path": "runs/my-run/raw_variants/basic/shopping-home-page/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/basic/shopping-home-page__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "Has an h1",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has single h1",
+            "status": "pass",
+            "message": null,
+            "type": "BP"
+          },
+          {
+            "name": "Has at least one h2",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single banner",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single maincontent",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has at least one navigation",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single footer",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 38,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 0,
+        "best_practice_failures": []
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "4b8176f240c2a502",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "basic"
+    },
+    {
+      "test_name": "simple-contact-form",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:22.119308",
+      "generation_html_path": "runs/my-run/raw_variants/basic/simple-contact-form/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/basic/simple-contact-form__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "Each text input has an accessible name",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Visible label is included in accessible name",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Each text input has textbox role",
+            "status": "pass",
+            "message": "Text input fields with textbox role found",
+            "type": "R"
+          },
+          {
+            "name": "Helper text is programmatically associated",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Text inputs are keyboard focusable",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Visual labels are defined and persistent",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Required fields are indicated visually",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Required fields are indicated programmatically",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Inputs use appropriate autocomplete for purpose",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Placeholder text is programmatically defined as a property",
+            "status": "na",
+            "message": "No placeholder text present on text inputs",
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 338,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 1,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 3,
+        "best_practice_failures": [
+          {
+            "id": "landmark-one-main",
+            "impact": "moderate",
+            "description": "Ensure the document has a main landmark",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<html lang=\"en\">",
+                "target": [
+                  "html"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.semantics",
+              "best-practice"
+            ]
+          },
+          {
+            "id": "region",
+            "impact": "moderate",
+            "description": "Ensure all page content is contained by landmarks",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<h1 class=\"page-heading\" id=\"page-heading\">Contact Us</h1>",
+                "target": [
+                  "#page-heading"
+                ]
+              },
+              {
+                "html": "<p class=\"page-sub\">\n    Fill in the form below and we'll get back to you within one business day.\n  </p>",
+                "target": [
+                  ".page-sub"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.keyboard",
+              "best-practice"
+            ]
+          }
+        ]
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "0e4f3c51a6966e66",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "basic"
+    },
+    {
+      "test_name": "disclosure-widget",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:21.969969",
+      "generation_html_path": "runs/my-run/raw_variants/detailed/disclosure-widget/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/detailed/disclosure-widget__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "All examples have a valid semantics",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Collapsed content is hidden from assistive technology",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 119,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 0,
+        "best_practice_failures": []
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "c98e77e2b12603b7",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "detailed"
+    },
+    {
+      "test_name": "modal-dialog",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:25.622439",
+      "generation_html_path": "runs/my-run/raw_variants/detailed/modal-dialog/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/detailed/modal-dialog__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "Each dialog has a dialog role",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each dialog can be closed by escape key",
+            "status": "pass",
+            "message": null,
+            "type": "BP"
+          },
+          {
+            "name": "Each modal dialog traps keyboard focus",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each modal dialog takes focus when opened",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Focus is not lost when each dialog closes",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each modal dialog hides content behind it while open",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 3477,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 0,
+        "best_practice_failures": []
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "962d0f1908c031d2",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "detailed"
+    },
+    {
+      "test_name": "shopping-home-page",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:23.025571",
+      "generation_html_path": "runs/my-run/raw_variants/detailed/shopping-home-page/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/detailed/shopping-home-page__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "Has an h1",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has single h1",
+            "status": "pass",
+            "message": null,
+            "type": "BP"
+          },
+          {
+            "name": "Has at least one h2",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single banner",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single maincontent",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has at least one navigation",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single footer",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 44,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 0,
+        "best_practice_failures": []
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "4b8176f240c2a502",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "detailed"
+    },
+    {
+      "test_name": "simple-contact-form",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:22.983521",
+      "generation_html_path": "runs/my-run/raw_variants/detailed/simple-contact-form/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/detailed/simple-contact-form__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "Each text input has an accessible name",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Visible label is included in accessible name",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Each text input has textbox role",
+            "status": "pass",
+            "message": "Text input fields with textbox role found",
+            "type": "R"
+          },
+          {
+            "name": "Helper text is programmatically associated",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Text inputs are keyboard focusable",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Visual labels are defined and persistent",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Required fields are indicated visually",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Required fields are indicated programmatically",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Inputs use appropriate autocomplete for purpose",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Placeholder text is programmatically defined as a property",
+            "status": "na",
+            "message": "No placeholder text present on text inputs",
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 266,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 1,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 0,
+        "best_practice_failures": []
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "0e4f3c51a6966e66",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "detailed"
+    },
+    {
+      "test_name": "disclosure-widget",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:22.876481",
+      "generation_html_path": "runs/my-run/raw_variants/minimal/disclosure-widget/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/minimal/disclosure-widget__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "All examples have a valid semantics",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Collapsed content is hidden from assistive technology",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 84,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 2,
+        "best_practice_failures": [
+          {
+            "id": "region",
+            "impact": "moderate",
+            "description": "Ensure all page content is contained by landmarks",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<div class=\"page-header\">\n    <h1>Expand / Collapse Widget</h1>\n    <p>\n      Disclosure examples using the ARIA APG Disclosure Pattern.\n      Keyboard: <kbd>Tab</kbd> moves between headings, <kbd>Enter</kbd> or\n      <kbd>Space</kbd> toggles the panel.\n    </p>\n  </div>",
+                "target": [
+                  ".page-header"
+                ]
+              },
+              {
+                "html": "<h2 class=\"group-heading\">Frequently Asked Questions</h2>",
+                "target": [
+                  "h2"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.keyboard",
+              "best-practice"
+            ]
+          }
+        ]
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "c98e77e2b12603b7",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "minimal"
+    },
+    {
+      "test_name": "modal-dialog",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:26.531204",
+      "generation_html_path": "runs/my-run/raw_variants/minimal/modal-dialog/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/minimal/modal-dialog__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "Each dialog has a dialog role",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each dialog can be closed by escape key",
+            "status": "pass",
+            "message": null,
+            "type": "BP"
+          },
+          {
+            "name": "Each modal dialog traps keyboard focus",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each modal dialog takes focus when opened",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Focus is not lost when each dialog closes",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Each modal dialog hides content behind it while open",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 3156,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 0,
+        "best_practice_failures": []
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "962d0f1908c031d2",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "minimal"
+    },
+    {
+      "test_name": "shopping-home-page",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:23.194725",
+      "generation_html_path": "runs/my-run/raw_variants/minimal/shopping-home-page/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/minimal/shopping-home-page__index.png",
+      "test_function": {
+        "status": "pass",
+        "assertions": [
+          {
+            "name": "Has an h1",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has single h1",
+            "status": "pass",
+            "message": null,
+            "type": "BP"
+          },
+          {
+            "name": "Has at least one h2",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single banner",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single maincontent",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has at least one navigation",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          },
+          {
+            "name": "Has a single footer",
+            "status": "pass",
+            "message": null,
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 67,
+        "total_assertion_failures": 0,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 0,
+        "best_practice_failures": []
+      },
+      "result": "PASS",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "4b8176f240c2a502",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "minimal"
+    },
+    {
+      "test_name": "simple-contact-form",
+      "model_name": "index",
+      "timestamp": "2026-04-15T17:38:23.107906",
+      "generation_html_path": "runs/my-run/raw_variants/minimal/simple-contact-form/index.html",
+      "screenshot_path": "runs/my-run/screenshots_variants/minimal/simple-contact-form__index.png",
+      "test_function": {
+        "status": "fail",
+        "assertions": [
+          {
+            "name": "Each text input has an accessible name",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Visible label is included in accessible name",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Each text input has textbox role",
+            "status": "pass",
+            "message": "Text input fields with textbox role found",
+            "type": "R"
+          },
+          {
+            "name": "Helper text is programmatically associated",
+            "status": "fail",
+            "message": "Found `e.g. Jane Smith`",
+            "type": "R"
+          },
+          {
+            "name": "Text inputs are keyboard focusable",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Visual labels are defined and persistent",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Required fields are indicated visually",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Required fields are indicated programmatically",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Inputs use appropriate autocomplete for purpose",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          },
+          {
+            "name": "Placeholder text is programmatically defined as a property",
+            "status": "pass",
+            "message": "",
+            "type": "R"
+          }
+        ],
+        "error": null,
+        "duration_ms": 140,
+        "total_assertion_failures": 1,
+        "total_assertion_bp_failures": 0,
+        "total_assertion_na": 0,
+        "total_assertion_bp_na": 0
+      },
+      "axe": {
+        "failure_count": 0,
+        "failures": [],
+        "best_practice_count": 4,
+        "best_practice_failures": [
+          {
+            "id": "landmark-one-main",
+            "impact": "moderate",
+            "description": "Ensure the document has a main landmark",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<html lang=\"en\">",
+                "target": [
+                  "html"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.semantics",
+              "best-practice"
+            ]
+          },
+          {
+            "id": "region",
+            "impact": "moderate",
+            "description": "Ensure all page content is contained by landmarks",
+            "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+            "nodes": [
+              {
+                "html": "<h1 class=\"page-title\">Contact Us</h1>",
+                "target": [
+                  "h1"
+                ]
+              },
+              {
+                "html": "<p class=\"page-desc\">\n      Fill in the form below and we will get back to you within two business days.\n    </p>",
+                "target": [
+                  ".page-desc"
+                ]
+              },
+              {
+                "html": "<p class=\"required-note\">\n        Fields marked <span class=\"req-star\" aria-hidden=\"true\">*</span> are required.\n      </p>",
+                "target": [
+                  ".required-note"
+                ]
+              }
+            ],
+            "tags": [
+              "cat.keyboard",
+              "best-practice"
+            ]
+          }
+        ]
+      },
+      "result": "FAIL",
+      "generation": {
+        "latency_s": 0.0,
+        "prompt_hash": "0e4f3c51a6966e66",
+        "cached": false,
+        "tokens_in": null,
+        "tokens_out": null,
+        "total_tokens": null,
+        "cost_usd": null,
+        "seed": null,
+        "temperature": null,
+        "system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it.",
+        "custom_instructions": null,
+        "effective_system_prompt": "You are generating a single standalone HTML document. Do NOT wrap output in markdown fences. Include <head> and <body>. Do NOT explain the code, just output it."
+      },
+      "sample_index": null,
+      "prompt_variant_id": "minimal"
+    }
+  ],
+  "aggregates": [
+    {
+      "test_name": "disclosure-widget",
+      "model_name": "index",
+      "prompt_variant_id": "control",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552016"
+    },
+    {
+      "test_name": "modal-dialog",
+      "model_name": "index",
+      "prompt_variant_id": "control",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552263"
+    },
+    {
+      "test_name": "shopping-home-page",
+      "model_name": "index",
+      "prompt_variant_id": "control",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552279"
+    },
+    {
+      "test_name": "simple-contact-form",
+      "model_name": "index",
+      "prompt_variant_id": "control",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 0,
+      "pass_at_k": {
+        "1": 0.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552293"
+    },
+    {
+      "test_name": "disclosure-widget",
+      "model_name": "index",
+      "prompt_variant_id": "basic",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552300"
+    },
+    {
+      "test_name": "modal-dialog",
+      "model_name": "index",
+      "prompt_variant_id": "basic",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552308"
+    },
+    {
+      "test_name": "shopping-home-page",
+      "model_name": "index",
+      "prompt_variant_id": "basic",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552313"
+    },
+    {
+      "test_name": "simple-contact-form",
+      "model_name": "index",
+      "prompt_variant_id": "basic",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552319"
+    },
+    {
+      "test_name": "disclosure-widget",
+      "model_name": "index",
+      "prompt_variant_id": "detailed",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552326"
+    },
+    {
+      "test_name": "modal-dialog",
+      "model_name": "index",
+      "prompt_variant_id": "detailed",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552331"
+    },
+    {
+      "test_name": "shopping-home-page",
+      "model_name": "index",
+      "prompt_variant_id": "detailed",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552336"
+    },
+    {
+      "test_name": "simple-contact-form",
+      "model_name": "index",
+      "prompt_variant_id": "detailed",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552341"
+    },
+    {
+      "test_name": "disclosure-widget",
+      "model_name": "index",
+      "prompt_variant_id": "minimal",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552346"
+    },
+    {
+      "test_name": "modal-dialog",
+      "model_name": "index",
+      "prompt_variant_id": "minimal",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552350"
+    },
+    {
+      "test_name": "shopping-home-page",
+      "model_name": "index",
+      "prompt_variant_id": "minimal",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 1,
+      "pass_at_k": {
+        "1": 1.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552355"
+    },
+    {
+      "test_name": "simple-contact-form",
+      "model_name": "index",
+      "prompt_variant_id": "minimal",
+      "n_samples": 1,
+      "n_applicable": 1,
+      "n_not_applicable": 0,
+      "n_pass": 0,
+      "pass_at_k": {
+        "1": 0.0
+      },
+      "k_values": [
+        1
+      ],
+      "computed_at": "2026-04-15T17:38:26.552359"
+    }
+  ],
+  "meta": {
+    "sampling": {
+      "k_values": [
+        1
+      ],
+      "processes": 10
+    },
+    "status": "EVALUATED"
+  }
+}

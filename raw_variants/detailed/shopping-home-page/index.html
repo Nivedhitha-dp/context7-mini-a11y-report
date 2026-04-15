@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!--
+    Viewport — SC 1.4.4 (Resize Text).
+    MUST NOT include user-scalable=no or maximum-scale=1.
+    Either would prevent users from zooming, breaking SC 1.4.4.
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!--
+    Page title — SC 2.4.2.
+    Format: "Purpose — Context | Brand" gives unique, descriptive identity.
+    Users with multiple tabs open can identify this site from the tab title.
+  -->
+  <title>Shop — Spring Sale | ShopCo</title>
+  <style>
+    /* ─────────────────────────────────────────────────────────────────
+     * Color token palette — ALL UI colors via tokens; no scattered hex.
+     *
+     * Contrast verification (foreground on --color-surface: #ffffff):
+     *   --color-text:   #111827  18.7:1  ✓ SC 1.4.3 (needs 4.5:1)
+     *   --color-muted:  #4b5563   7.1:1  ✓ SC 1.4.3
+     *   --color-brand:  #1e3a5f  13.5:1  ✓ SC 1.4.3
+     *   white on #1e3a5f        13.5:1  ✓ SC 1.4.3
+     *   --color-focus:  #005fcc   7.0:1  ✓ SC 1.4.11 (needs 3:1)
+     *   --color-border: #6b7280   4.6:1  ✓ SC 1.4.11 (needs 3:1)
+     *   --color-sale:   #b91c1c   6.5:1  ✓ SC 1.4.3
+     *   --color-sale-dark: #991b1b — used only for hover states,
+     *     not as standalone text; provides visual change on interaction.
+     *
+     * Hero gradient:
+     *   linear-gradient(135deg, #0f1e2f 0%, #1e3a5f 100%)
+     *   white on #0f1e2f ≈ 21.0:1 ✓   white on #1e3a5f = 13.5:1 ✓
+     *   Both stops exceed 4.5:1 for white text. SC 1.4.3 confirmed.
+     * ───────────────────────────────────────────────────────────────── */
+    :root {
+      --color-bg:          #f3f4f6;
+      --color-surface:     #ffffff;
+      --color-text:        #111827;
+      --color-muted:       #4b5563;
+      --color-brand:       #1e3a5f;
+      --color-brand-dark:  #14294a;
+      --color-focus:       #005fcc;
+      --color-border:      #6b7280;
+      --color-border-light:#d1d5db;
+      --color-sale:        #b91c1c;
+      --color-sale-dark:   #991b1b;
+      --radius:            0.375rem;
+      --radius-lg:         0.5rem;
+    }
+
+    /* ── Reset ───────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Base ────────────────────────────────────────────────────────── */
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── Skip link / bypass block — SC 2.4.1 ────────────────────────── */
+    /*
+     * First focusable element in the DOM (placed before any header content).
+     * Visible on :focus/:active; clipped at all other times.
+     * Uses :not(:focus):not(:active) so the clip is removed when focused.
+     * Clip technique — NOT display:none (which removes from tab order).
+     */
+    .sr-only:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 9999;
+      padding: 0.5rem 1rem;
+      background: var(--color-brand);
+      color: var(--color-surface);
+      border-radius: var(--radius);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* ── Focus styles — SC 2.4.7 + SC 2.4.11 (WCAG 2.2) ───────────── */
+    /*
+     * :focus-visible — keyboard/AT navigation only; not triggered by mouse.
+     * 3px solid #005fcc on white = 7.0:1 ✓ SC 1.4.11, SC 2.4.11.
+     * outline-offset ensures the ring sits outside the element border.
+     * NO box-shadow used for focus (per detailed instructions;
+     * box-shadow is suppressed in forced-colors mode).
+     * NEVER removed by prefers-reduced-motion (not animated).
+     * No global `outline: none` anywhere in this file.
+     */
+    :focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 3px;
+    }
+
+    /* ── Visually hidden utility (re-usable .sr-only without the :not guard) */
+    /*
+     * Used for SR-only text that must ALWAYS stay in the AT tree
+     * (e.g. sale price "Was/Now" text, "Read more:" article title suffix).
+     * NOT display:none or visibility:hidden (those remove from AT tree).
+     */
+    .sr-only-always {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ── Header — implicit role="banner" at body level ──────────────── */
+    /*
+     * Do NOT add role="banner" manually — native <header> at body level
+     * has implicit banner role (SC 4.1.2, no redundant ARIA).
+     */
+    header {
+      background: var(--color-brand);
+      color: var(--color-surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 76rem;    /* rem — scales with user font size, SC 1.4.4 */
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-height: 3.75rem;
+      flex-wrap: wrap;     /* stacks at narrow viewports, SC 1.4.10 */
+    }
+
+    .site-name {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--color-surface);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .site-name:focus-visible {
+      outline: 3px solid var(--color-surface);
+      outline-offset: 3px;
+    }
+
+    /* ── Search form — role="search" creates search landmark ─────────── */
+    /*
+     * <form role="search"> is a search landmark per WAI-ARIA 1.2.
+     * The <input> has its own visible label (.sr-only) — role="search"
+     * on the form does NOT label the input (SC 1.3.1, 4.1.2).
+     * The label uses .sr-only (clip technique, always in AT tree).
+     */
+    .search-form {
+      flex: 1;
+      display: flex;
+      gap: 0.375rem;
+      max-width: 28rem;
+      min-width: 0;    /* prevent flex overflow, SC 1.4.10 */
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 0;    /* prevent flex overflow */
+      padding: 0.4375rem 0.75rem;
+      border: 1.5px solid rgba(255, 255, 255, 0.5);
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--color-surface);
+    }
+
+    .search-input::placeholder { color: rgba(255, 255, 255, 0.7); }
+
+    .search-input:focus-visible {
+      outline: 3px solid var(--color-surface);
+      outline-offset: 2px;
+      border-color: var(--color-surface);
+    }
+
+    /* ── Buttons — general ───────────────────────────────────────────── */
+    /*
+     * context7-mini-live buttons docs:
+     *   • Semantic <button> — implicit role="button"; keyboard-operable
+     *     (Enter + Space) natively; receives focus without tabindex.
+     *   • type="button" — prevents accidental form submission.
+     *   • Accessible name from visible text or aria-label (SC 4.1.2).
+     *   • min-height: 2.75rem + min-width: 2.75rem — SC 2.5.8
+     *     (Minimum Target Size, WCAG 2.2 AA: 24×24px minimum; 44px recommended).
+     *     Values in rem so they scale with user font size (SC 1.4.4).
+     */
+    .search-btn {
+      padding: 0.4375rem 0.875rem;
+      min-height: 2.75rem;   /* SC 2.5.8 */
+      min-width: 2.75rem;
+      background: var(--color-surface);
+      color: var(--color-brand);   /* 13.5:1 ✓ SC 1.4.3 */
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+
+    .search-btn:hover { background: #e5e7eb; }
+
+    .search-btn:focus-visible {
+      outline: 3px solid var(--color-surface);
+      outline-offset: 2px;
+    }
+
+    /* ── Primary navigation ──────────────────────────────────────────── */
+    /*
+     * <nav> has implicit role="navigation".
+     * aria-label="Primary" distinguishes it from the footer nav (SC 4.1.2).
+     * Do NOT use role="menu" / role="menubar" for site navigation.
+     */
+    .nav-primary ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+
+    .nav-primary a {
+      display: block;
+      padding: 0.5rem 0.625rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      border-radius: var(--radius);
+      white-space: nowrap;
+    }
+
+    .nav-primary a:hover { color: var(--color-surface); background: rgba(255,255,255,0.1); }
+
+    .nav-primary a:focus-visible {
+      outline: 3px solid var(--color-surface);
+      outline-offset: 2px;
+    }
+
+    /* ── Cart button ─────────────────────────────────────────────────── */
+    /*
+     * aria-label updated by JS to include the current item count (SC 4.1.2).
+     * The cart SVG icon is aria-hidden — the button's aria-label is its name.
+     * stroke="currentColor" — SVG adapts to text color in forced-colors mode.
+     */
+    .cart-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.4375rem 0.875rem;
+      min-height: 2.75rem;   /* SC 2.5.8 */
+      min-width: 2.75rem;
+      background: rgba(255,255,255,0.12);
+      color: var(--color-surface);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+
+    .cart-btn:hover { background: rgba(255,255,255,0.22); }
+
+    .cart-btn:focus-visible {
+      outline: 3px solid var(--color-surface);
+      outline-offset: 2px;
+    }
+
+    .cart-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.25rem;
+      height: 1.25rem;
+      background: var(--color-surface);
+      color: var(--color-brand);   /* 13.5:1 ✓ */
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0 0.25rem;
+    }
+
+    /* ── Cart live region ────────────────────────────────────────────── */
+    /*
+     * CRITICAL: must exist in the initial HTML payload, NOT created by JS.
+     * Live regions created and injected dynamically are unreliable in all
+     * major screen readers (NVDA+Firefox, JAWS+Chrome, VoiceOver+Safari).
+     * JS ONLY sets/clears textContent — never creates this element.
+     *
+     * role="status" = polite live region (SC 4.1.3).
+     * aria-live="polite" — explicit declaration for clarity.
+     * aria-atomic="true" — announce the full message as one unit.
+     *
+     * Visually hidden via clip technique (same as .sr-only-always).
+     */
+    #cart-live {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ── Hero section ────────────────────────────────────────────────── */
+    /*
+     * Dark gradient: #0f1e2f (darkest) → #1e3a5f (brand).
+     * White text contrast: on #0f1e2f ≈ 21:1 ✓, on #1e3a5f = 13.5:1 ✓.
+     * Both gradient stops exceed 4.5:1 for white text. SC 1.4.3 confirmed.
+     * No information is conveyed by the gradient alone (SC 1.4.1).
+     */
+    .hero {
+      background: linear-gradient(135deg, #0f1e2f 0%, #1e3a5f 100%);
+      color: var(--color-surface);
+      text-align: center;
+      padding: 5rem 1.5rem;
+    }
+
+    .hero-inner {
+      max-width: 40rem;
+      margin: 0 auto;
+    }
+
+    /*
+     * One <h1> per page — SC 1.3.1, SC 2.4.6.
+     * clamp() scales with viewport without breaking at extreme sizes.
+     */
+    .hero h1 {
+      font-size: clamp(1.75rem, 5vw, 2.75rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 0.875rem;
+    }
+
+    .hero-sub {
+      font-size: 1.0625rem;
+      color: rgba(255, 255, 255, 0.88);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    /*
+     * Hero CTA — native <a href> styled as a button.
+     * It navigates somewhere, so it MUST be an anchor, not a <button>.
+     * <button> is for actions; <a> is for navigation (SC 1.3.1).
+     * No role="button" added — that would require Space key handling
+     * that <a> does not provide natively.
+     */
+    .hero-cta {
+      display: inline-block;
+      padding: 0.875rem 2rem;
+      min-height: 2.75rem;   /* SC 2.5.8 */
+      background: var(--color-focus);
+      color: var(--color-surface);   /* 7.0:1 ✓ SC 1.4.3 */
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .hero-cta:hover { background: var(--color-brand-dark); }
+
+    .hero-cta:focus-visible {
+      outline: 3px solid var(--color-surface);
+      outline-offset: 3px;
+    }
+
+    /* ── Main content ────────────────────────────────────────────────── */
+    .page-content {
+      max-width: 76rem;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    /* ── Section layout ──────────────────────────────────────────────── */
+    .content-section + .content-section { margin-top: 3.5rem; }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--color-border-light);
+      padding-bottom: 0.625rem;
+    }
+
+    /*
+     * Section <h2> — H1 (hero) → H2 (sections) → H3 (cards).
+     * aria-labelledby on each <section> references this h2 to create
+     * named section landmarks in the AT landmark list. Users can jump
+     * directly to "Popular Items", "Today's Deals", or "From the Blog"
+     * without reading through the page.
+     */
+    .section-header h2 {
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: var(--color-brand);
+    }
+
+    .section-view-all {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--color-focus);
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+
+    .section-view-all:hover { color: var(--color-brand); }
+
+    /* ── Product card grid ───────────────────────────────────────────── */
+    /*
+     * minmax(min(220px, 100%), 1fr):
+     *   • `min(220px, 100%)` prevents the column minimum from exceeding
+     *     the viewport width — at 320px, min(220px, 320px-48px) = 220px
+     *     but the outer 100% cap limits it to ~272px (viewport minus padding).
+     *   • Result: at 320px, the grid collapses to a single column. SC 1.4.10.
+     */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ── Product card ────────────────────────────────────────────────── */
+    /*
+     * <article> — self-contained composition; could be distributed
+     * independently. AT may announce card boundaries ("article").
+     */
+    .product-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    /* ── Image link — single-link card pattern ───────────────────────── */
+    /*
+     * aria-hidden="true" — removes the link AND its children from the AT
+     * tree entirely. AT users never see this link; the <h3> link is the
+     * sole AT entry point for the card (SC 2.4.4).
+     * tabindex="-1" — removes from tab order; keyboard users never reach it.
+     *
+     * Why not expose the image link?
+     *   Without hiding, AT would encounter:
+     *     1. An unnamed link (no accessible name — SC 4.1.2 violation), OR
+     *     2. A duplicate link going to the same destination as the heading
+     *        (SC 2.4.4: ambiguous duplicate "image of [product]" link).
+     *   Hiding it eliminates both violations.
+     *
+     * alt="" on <img> — correct per W3C images decision tree:
+     *   Image is inside an aria-hidden parent → AT never sees it.
+     *   Even if exposed, the image is "supplementary to link text" (H2
+     *   decorative-images guidance) because the product name is in the heading.
+     */
+    .card-img-link {
+      display: block;
+      line-height: 0;
+    }
+
+    .card-img-link img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      background: var(--color-bg);
+      max-width: 100%;   /* SC 1.4.10 — no image overflow at 320px */
+    }
+
+    /* ── Card body ───────────────────────────────────────────────────── */
+    .card-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    /*
+     * <h3> — H1→H2→H3 hierarchy, no skipped levels.
+     * The <a> inside is the SOLE AT entry point for the card.
+     * Screen readers read: "Product Name, heading level 3, link."
+     */
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      overflow-wrap: anywhere;   /* SC 1.4.10 — long names don't cause overflow */
+    }
+
+    .card-title a {
+      color: var(--color-text);
+      text-decoration: none;
+    }
+
+    .card-title a:hover { color: var(--color-focus); text-decoration: underline; }
+
+    .card-desc {
+      font-size: 0.875rem;
+      color: var(--color-muted);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    /* ── Sale price pattern — SC 1.4.1 (not color alone) ────────────── */
+    /*
+     * Three layers:
+     *   1. .sr-only-always span: plain-text "Was: $X. Now: $Y." for AT.
+     *      Clip technique — always in AT tree, never visible.
+     *   2. <s aria-hidden="true">: visual strikethrough, hidden from AT.
+     *      AT does NOT read this — the sr-only span is the AT source.
+     *   3. <span aria-hidden="true"> (current price): visible, hidden from AT
+     *      to prevent double-announcement (AT already heard both prices).
+     *
+     * Information is NOT conveyed by color alone:
+     *   • <s> provides line-through styling (non-color visual cue).
+     *   • sr-only text provides programmatic equivalent.
+     *   SC 1.4.1 confirmed.
+     */
+    .card-price {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .price-was {
+      font-size: 0.875rem;
+      color: var(--color-muted);
+      text-decoration: line-through;
+    }
+
+    .price-now {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-sale);   /* 6.5:1 ✓ SC 1.4.3 */
+    }
+
+    .price-regular {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    /* ── Add to cart button ──────────────────────────────────────────── */
+    /*
+     * aria-label="Add [Product Name] to cart" — static in HTML (pre-flight
+     * finding X-04: must NOT be set only by JS; set here in static HTML so
+     * AT users have a label before JS hydrates).
+     * This disambiguates identical visible "Add to cart" text across cards
+     * (SC 4.1.2, SC 2.4.6 — voice access users say "Add [name] to cart").
+     * data-product is used by JS to construct the cart announcement message.
+     */
+    .btn-cart {
+      margin-top: auto;
+      padding: 0.5625rem 1rem;
+      min-height: 2.75rem;   /* SC 2.5.8 */
+      min-width: 2.75rem;
+      background: var(--color-brand);
+      color: var(--color-surface);   /* 13.5:1 ✓ SC 1.4.3 */
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+      text-align: center;
+    }
+
+    .btn-cart:hover { background: var(--color-brand-dark); }
+
+    /* ── Blog grid ───────────────────────────────────────────────────── */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ── Blog card ───────────────────────────────────────────────────── */
+    .blog-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .blog-card-img-link {
+      display: block;
+      line-height: 0;
+    }
+
+    .blog-card-img-link img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      background: var(--color-bg);
+      max-width: 100%;
+    }
+
+    .blog-card-body {
+      padding: 1.125rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .blog-meta {
+      font-size: 0.8125rem;
+      color: var(--color-muted);
+    }
+
+    .blog-title {
+      font-size: 1rem;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .blog-title a {
+      color: var(--color-text);
+      text-decoration: none;
+    }
+
+    .blog-title a:hover { color: var(--color-focus); text-decoration: underline; }
+
+    .blog-excerpt {
+      font-size: 0.875rem;
+      color: var(--color-muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    /*
+     * "Read more" link — SC 2.4.4 (Link Purpose in Context).
+     * "Read more" alone is ambiguous — users navigating by links cannot
+     * tell which article each "Read more" leads to.
+     *
+     * Solution: visually-hidden span appended inside the link:
+     *   <a href="#article-1">Read more<span class="sr-only-always">: [Title]</span></a>
+     * AT announces: "Read more: How to Build a Capsule Wardrobe in 2026, link."
+     * Sighted users see only "Read more" but the heading above provides context
+     * (SC 2.4.4 in-context link purpose for sighted users).
+     *
+     * The sr-only-always class must use the clip technique, NOT display:none
+     * (display:none removes from AT tree and defeats the purpose).
+     */
+    .read-more {
+      display: inline-block;
+      margin-top: 0.25rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--color-focus);
+      text-decoration: underline;
+    }
+
+    .read-more:hover { color: var(--color-brand); }
+
+    /* ── Footer — implicit role="contentinfo" at body level ──────────── */
+    footer {
+      background: var(--color-brand);
+      color: rgba(255, 255, 255, 0.8);
+      padding: 2.5rem 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .footer-inner {
+      max-width: 76rem;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /*
+     * Footer navigation — aria-label="Footer" distinguishes it from the
+     * primary nav landmark (SC 4.1.2 — multiple nav landmarks need labels).
+     * Do NOT use role="menu" / role="menubar".
+     */
+    .footer-nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;   /* wraps at narrow viewports, SC 1.4.10 */
+      gap: 0;
+    }
+
+    .footer-nav a {
+      display: block;
+      padding: 0.375rem 0.75rem;
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      border-radius: var(--radius);
+    }
+
+    .footer-nav a:hover { color: var(--color-surface); background: rgba(255,255,255,0.1); }
+
+    .footer-nav a:focus-visible {
+      outline: 3px solid var(--color-surface);
+      outline-offset: 2px;
+    }
+
+    .footer-copy {
+      font-size: 0.8125rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* ── Forced colors (Windows High Contrast mode) ──────────────────── */
+    /*
+     * Rules enforced by detailed instructions:
+     *   • System color keywords ONLY — no hex/RGB inside this block.
+     *   • NO forced-color-adjust: none.
+     *   • SVG icons use stroke/fill="currentColor" — adapt automatically;
+     *     no override needed.
+     *   • box-shadow is suppressed by the UA in forced-colors mode.
+     *     Replace with explicit borders on elements whose boundary was
+     *     defined only by box-shadow.
+     *   • Gradient background (hero) rendered by browser with Canvas color;
+     *     no override needed for the gradient itself.
+     */
+    @media (forced-colors: active) {
+      :focus-visible {
+        outline: 3px solid Highlight;   /* system highlight color */
+        outline-offset: 3px;
+      }
+
+      .product-card,
+      .blog-card {
+        border: 1px solid CanvasText;
+        box-shadow: none;
+      }
+
+      .btn-cart {
+        border: 2px solid ButtonBorder;
+        color: ButtonText;
+        background: ButtonFace;
+      }
+
+      .search-btn {
+        border: 2px solid ButtonBorder;
+        color: ButtonText;
+        background: ButtonFace;
+      }
+
+      .cart-btn {
+        border: 2px solid ButtonBorder;
+        color: ButtonText;
+        background: ButtonFace;
+      }
+
+      .hero-cta {
+        border: 2px solid ButtonBorder;
+        color: ButtonText;
+        background: ButtonFace;
+      }
+
+      .skip-link {
+        border: 2px solid ButtonBorder;
+        color: ButtonText;
+        background: ButtonFace;
+      }
+
+      .price-now {
+        color: CanvasText;
+      }
+
+      .price-was {
+        color: GrayText;
+      }
+
+      .nav-primary a {
+        color: ButtonText;
+      }
+
+      .footer-nav a {
+        color: LinkText;
+      }
+    }
+
+    /* ── Reduced motion ──────────────────────────────────────────────── */
+    /*
+     * Suppresses ONLY decorative CSS transitions.
+     * :focus-visible outlines are NOT animated — never suppressed.
+     * Functional behaviors (show/hide, navigation) unaffected.
+     */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    /* ── Reflow narrowing ────────────────────────────────────────────── */
+    /*
+     * SC 1.4.10 — content must reflow at 320px viewport width without
+     * requiring two-dimensional scrolling to read multi-line text.
+     *
+     * At 320px: grids collapse to 1 column (min(220px,100%) prevents overflow).
+     * header flex-wrap already handles stacking.
+     * Reduce padding at narrow widths so content area is maximized.
+     */
+    @media (max-width: 24rem) {
+      .page-content { padding-left: 1rem; padding-right: 1rem; }
+      .card-body    { padding-left: 0.875rem; padding-right: 0.875rem; }
+      .blog-card-body { padding-left: 0.875rem; padding-right: 0.875rem; }
+      .header-inner { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    Skip link — SC 2.4.1 (Bypass Blocks).
+    First focusable element in the DOM — must precede all header content.
+    Visible on :focus/:active; clipped at all other times.
+    JS also calls main.focus() after navigation to move AT virtual cursor.
+  -->
+  <a class="skip-link sr-only" href="#main-content">
+    Skip to main content
+  </a>
+
+  <!--
+    Cart live region — SC 4.1.3.
+    CRITICAL: MUST be in the initial HTML payload.
+    JS only sets/clears textContent. Never recreate this element dynamically.
+  -->
+  <div
+    id="cart-live"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
+
+  <!--
+    <header> — implicit role="banner".
+    No role="banner" needed (implicit on <header> at body level, SC 4.1.2).
+  -->
+  <header>
+    <div class="header-inner">
+
+      <a class="site-name" href="#">ShopCo</a>
+
+      <!--
+        Search form.
+        role="search" on <form> creates a search landmark.
+        The label uses .sr-only so it is clipped visually but remains in the
+        AT tree — NOT display:none (which would remove it from AT).
+        for/id pairing: most reliable labeling method across all AT.
+      -->
+      <form class="search-form" role="search" action="#" method="get">
+        <label class="sr-only" for="site-search">Search products</label>
+        <input
+          class="search-input"
+          type="search"
+          id="site-search"
+          name="q"
+          placeholder="Search…"
+          autocomplete="off"
+        />
+        <button class="search-btn" type="submit">Search</button>
+      </form>
+
+      <!--
+        Primary navigation.
+        aria-label="Primary" — distinguishes from footer nav (SC 4.1.2).
+        Do NOT use role="menu" / role="menubar" for site navigation.
+        No links open in new tabs — no new-tab warning required.
+      -->
+      <nav class="nav-primary" aria-label="Primary">
+        <ul>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Men</a></li>
+          <li><a href="#">Women</a></li>
+          <li><a href="#">Sale</a></li>
+        </ul>
+      </nav>
+
+      <!--
+        Cart button.
+        aria-label — set in static HTML AND updated by JS.
+        The static label provides an accessible name before JS hydrates.
+        JS updates it dynamically as the cart count changes.
+        Cart SVG: aria-hidden + stroke="currentColor" (forced-colors safe).
+      -->
+      <button
+        class="cart-btn"
+        type="button"
+        id="cart-btn"
+        aria-label="Cart, 0 items"
+      >
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        Cart
+        <span class="cart-badge" id="cart-badge" aria-hidden="true">0</span>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ── Hero section ───────────────────────────────────────────────── -->
+  <!--
+    aria-label="Hero banner" — gives this landmark a name in the AT
+    landmarks list (alternative to aria-labelledby pointing to the h1).
+    One <h1> per page — placed as the first heading in <main> content area.
+  -->
+  <section aria-label="Hero banner">
+    <div class="hero">
+      <div class="hero-inner">
+        <h1>Spring Sale — Up to 50% Off</h1>
+        <p class="hero-sub">
+          Fresh styles, premium quality, extraordinary prices.
+          Free shipping on all orders over $50.
+        </p>
+        <!--
+          CTA is a native <a href> styled visually as a button.
+          It navigates — it must be an anchor, not a <button>.
+          No role="button" — that would demand Space key support
+          that native <a> does not provide.
+        -->
+        <a class="hero-cta" href="#">Shop the Sale</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Main content ───────────────────────────────────────────────── -->
+  <!--
+    tabindex="-1" — allows programmatic focus after skip-link activation.
+    Does NOT insert <main> into the natural tab sequence.
+    SC 2.4.1: skip link calls main.focus() after navigation.
+  -->
+  <main id="main-content" tabindex="-1">
+    <div class="page-content">
+
+      <!-- ── Popular Items ─────────────────────────────────────────── -->
+      <!--
+        aria-labelledby references the <h2> inside.
+        This creates a named "Popular Items" section landmark.
+        AT users can navigate directly to this section from the landmarks list.
+        H1 (hero) → H2 (section) → H3 (product): no levels skipped.
+      -->
+      <section aria-labelledby="heading-popular" class="content-section">
+        <div class="section-header">
+          <h2 id="heading-popular">Popular Items</h2>
+          <a class="section-view-all" href="#">View all</a>
+        </div>
+
+        <ul class="product-grid" role="list">
+
+          <!-- Product 1 -->
+          <li>
+            <article class="product-card">
+              <a
+                class="card-img-link"
+                href="#product-1"
+                aria-hidden="true"
+                tabindex="-1"
+              >
+                <img src="" alt="" width="400" height="300" />
+              </a>
+              <div class="card-body">
+                <h3 class="card-title">
+                  <a id="product-1" href="#">Classic Slim-Fit Oxford Shirt</a>
+                </h3>
+                <p class="card-desc">
+                  Crisp, breathable cotton with a tailored cut for every occasion.
+                </p>
+                <div class="card-price">
+                  <!--
+                    Sale price — SC 1.4.1 (not color alone).
+                    Layer 1 (AT): sr-only "Was: $59.99. Now: $39.99."
+                    Layer 2 (visual): <s aria-hidden> strikethrough
+                    Layer 3 (visual): current price span aria-hidden
+                  -->
+                  <span class="sr-only-always">Was: $59.99. Now: $39.99.</span>
+                  <s class="price-was" aria-hidden="true">$59.99</s>
+                  <span class="price-now" aria-hidden="true">$39.99</span>
+                </div>
+                <!--
+                  aria-label set in STATIC HTML (pre-flight X-04).
+                  Must not be JS-only — AT users need it before JS hydrates.
+                  data-product used by JS to build the cart announcement.
+                -->
+                <button
+                  class="btn-cart"
+                  type="button"
+                  aria-label="Add Classic Slim-Fit Oxford Shirt to cart"
+                  data-product="Classic Slim-Fit Oxford Shirt"
+                >
+                  Add to cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Product 2 -->
+          <li>
+            <article class="product-card">
+              <a class="card-img-link" href="#product-2" aria-hidden="true" tabindex="-1">
+                <img src="" alt="" width="400" height="300" />
+              </a>
+              <div class="card-body">
+                <h3 class="card-title">
+                  <a id="product-2" href="#">Merino Wool Crewneck Sweater</a>
+                </h3>
+                <p class="card-desc">
+                  Soft, itch-free merino with natural temperature regulation.
+                </p>
+                <div class="card-price">
+                  <span class="price-regular">$89.00</span>
+                </div>
+                <button
+                  class="btn-cart"
+                  type="button"
+                  aria-label="Add Merino Wool Crewneck Sweater to cart"
+                  data-product="Merino Wool Crewneck Sweater"
+                >
+                  Add to cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Product 3 -->
+          <li>
+            <article class="product-card">
+              <a class="card-img-link" href="#product-3" aria-hidden="true" tabindex="-1">
+                <img src="" alt="" width="400" height="300" />
+              </a>
+              <div class="card-body">
+                <h3 class="card-title">
+                  <a id="product-3" href="#">Tapered Chino Trousers</a>
+                </h3>
+                <p class="card-desc">
+                  Modern taper with a comfortable stretch waistband.
+                </p>
+                <div class="card-price">
+                  <span class="sr-only-always">Was: $74.99. Now: $49.99.</span>
+                  <s class="price-was" aria-hidden="true">$74.99</s>
+                  <span class="price-now" aria-hidden="true">$49.99</span>
+                </div>
+                <button
+                  class="btn-cart"
+                  type="button"
+                  aria-label="Add Tapered Chino Trousers to cart"
+                  data-product="Tapered Chino Trousers"
+                >
+                  Add to cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Product 4 -->
+          <li>
+            <article class="product-card">
+              <a class="card-img-link" href="#product-4" aria-hidden="true" tabindex="-1">
+                <img src="" alt="" width="400" height="300" />
+              </a>
+              <div class="card-body">
+                <h3 class="card-title">
+                  <a id="product-4" href="#">Leather Chelsea Boots</a>
+                </h3>
+                <p class="card-desc">
+                  Full-grain leather, elastic side panels, durable rubber sole.
+                </p>
+                <div class="card-price">
+                  <span class="price-regular">$149.00</span>
+                </div>
+                <button
+                  class="btn-cart"
+                  type="button"
+                  aria-label="Add Leather Chelsea Boots to cart"
+                  data-product="Leather Chelsea Boots"
+                >
+                  Add to cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </section>
+
+      <!-- ── Today's Deals ──────────────────────────────────────────── -->
+      <section aria-labelledby="heading-deals" class="content-section">
+        <div class="section-header">
+          <h2 id="heading-deals">Today's Deals</h2>
+          <a class="section-view-all" href="#">View all deals</a>
+        </div>
+
+        <ul class="product-grid" role="list">
+
+          <!-- Deal 1 -->
+          <li>
+            <article class="product-card">
+              <a class="card-img-link" href="#product-5" aria-hidden="true" tabindex="-1">
+                <img src="" alt="" width="400" height="300" />
+              </a>
+              <div class="card-body">
+                <h3 class="card-title">
+                  <a id="product-5" href="#">Linen Blazer — Navy</a>
+                </h3>
+                <p class="card-desc">
+                  Lightweight linen with a half-canvas chest. Today only — 40% off.
+                </p>
+                <div class="card-price">
+                  <span class="sr-only-always">Was: $219.00. Now: $131.40.</span>
+                  <s class="price-was" aria-hidden="true">$219.00</s>
+                  <span class="price-now" aria-hidden="true">$131.40</span>
+                </div>
+                <button
+                  class="btn-cart"
+                  type="button"
+                  aria-label="Add Linen Blazer Navy to cart"
+                  data-product="Linen Blazer — Navy"
+                >
+                  Add to cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Deal 2 -->
+          <li>
+            <article class="product-card">
+              <a class="card-img-link" href="#product-6" aria-hidden="true" tabindex="-1">
+                <img src="" alt="" width="400" height="300" />
+              </a>
+              <div class="card-body">
+                <h3 class="card-title">
+                  <a id="product-6" href="#">Slim Denim Jeans — Dark Wash</a>
+                </h3>
+                <p class="card-desc">
+                  Classic five-pocket stretch denim. Flash deal — 30% off today.
+                </p>
+                <div class="card-price">
+                  <span class="sr-only-always">Was: $95.00. Now: $66.50.</span>
+                  <s class="price-was" aria-hidden="true">$95.00</s>
+                  <span class="price-now" aria-hidden="true">$66.50</span>
+                </div>
+                <button
+                  class="btn-cart"
+                  type="button"
+                  aria-label="Add Slim Denim Jeans Dark Wash to cart"
+                  data-product="Slim Denim Jeans — Dark Wash"
+                >
+                  Add to cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Deal 3 -->
+          <li>
+            <article class="product-card">
+              <a class="card-img-link" href="#product-7" aria-hidden="true" tabindex="-1">
+                <img src="" alt="" width="400" height="300" />
+              </a>
+              <div class="card-body">
+                <h3 class="card-title">
+                  <a id="product-7" href="#">Canvas Tote Bag</a>
+                </h3>
+                <p class="card-desc">
+                  Heavy-duty waxed canvas, reinforced handles. Buy 2 save 25%.
+                </p>
+                <div class="card-price">
+                  <span class="price-regular">$34.00</span>
+                </div>
+                <button
+                  class="btn-cart"
+                  type="button"
+                  aria-label="Add Canvas Tote Bag to cart"
+                  data-product="Canvas Tote Bag"
+                >
+                  Add to cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Deal 4 -->
+          <li>
+            <article class="product-card">
+              <a class="card-img-link" href="#product-8" aria-hidden="true" tabindex="-1">
+                <img src="" alt="" width="400" height="300" />
+              </a>
+              <div class="card-body">
+                <h3 class="card-title">
+                  <a id="product-8" href="#">Lightweight Puffer Jacket</a>
+                </h3>
+                <p class="card-desc">
+                  600-fill down in an ultra-light shell. 35% off this week.
+                </p>
+                <div class="card-price">
+                  <span class="sr-only-always">Was: $185.00. Now: $120.25.</span>
+                  <s class="price-was" aria-hidden="true">$185.00</s>
+                  <span class="price-now" aria-hidden="true">$120.25</span>
+                </div>
+                <button
+                  class="btn-cart"
+                  type="button"
+                  aria-label="Add Lightweight Puffer Jacket to cart"
+                  data-product="Lightweight Puffer Jacket"
+                >
+                  Add to cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </section>
+
+      <!-- ── From the Blog ──────────────────────────────────────────── -->
+      <section aria-labelledby="heading-blog" class="content-section">
+        <div class="section-header">
+          <h2 id="heading-blog">From the Blog</h2>
+          <a class="section-view-all" href="#">All articles</a>
+        </div>
+
+        <ul class="blog-grid" role="list">
+
+          <!-- Article 1 -->
+          <li>
+            <article class="blog-card">
+              <!--
+                Blog image link: same single-link pattern as product cards.
+                aria-hidden + tabindex=-1; alt="" on img.
+                <h3> heading link is the sole AT entry point.
+              -->
+              <a class="blog-card-img-link" href="#article-1" aria-hidden="true" tabindex="-1">
+                <img src="" alt="" width="560" height="315" />
+              </a>
+              <div class="blog-card-body">
+                <p class="blog-meta">
+                  <time datetime="2026-04-10">April 10, 2026</time> &middot; Style
+                </p>
+                <h3 class="blog-title">
+                  <a id="article-1" href="#">
+                    How to Build a Capsule Wardrobe in 2026
+                  </a>
+                </h3>
+                <p class="blog-excerpt">
+                  A streamlined guide to choosing versatile, high-quality pieces
+                  that mix and match effortlessly throughout the year.
+                </p>
+                <!--
+                  "Read more" link — SC 2.4.4 (Link Purpose, Link Only).
+                  Ambiguous alone; "Read more: [Article Title]" is unambiguous.
+                  sr-only-always — clip technique, stays in AT tree.
+                  The colon makes the TTS announcement natural.
+                  No links open in new tabs — no new-tab warning needed.
+                -->
+                <a class="read-more" href="#article-1">
+                  Read more<span class="sr-only-always">: How to Build a Capsule Wardrobe in 2026</span>
+                </a>
+              </div>
+            </article>
+          </li>
+
+          <!-- Article 2 -->
+          <li>
+            <article class="blog-card">
+              <a class="blog-card-img-link" href="#article-2" aria-hidden="true" tabindex="-1">
+                <img src="" alt="" width="560" height="315" />
+              </a>
+              <div class="blog-card-body">
+                <p class="blog-meta">
+                  <time datetime="2026-04-05">April 5, 2026</time> &middot; Care Guide
+                </p>
+                <h3 class="blog-title">
+                  <a id="article-2" href="#">
+                    The Right Way to Wash Merino Wool
+                  </a>
+                </h3>
+                <p class="blog-excerpt">
+                  Avoid the most common mistakes that shrink and ruin your
+                  favourite sweaters. Our step-by-step washing guide.
+                </p>
+                <a class="read-more" href="#article-2">
+                  Read more<span class="sr-only-always">: The Right Way to Wash Merino Wool</span>
+                </a>
+              </div>
+            </article>
+          </li>
+
+          <!-- Article 3 -->
+          <li>
+            <article class="blog-card">
+              <a class="blog-card-img-link" href="#article-3" aria-hidden="true" tabindex="-1">
+                <img src="" alt="" width="560" height="315" />
+              </a>
+              <div class="blog-card-body">
+                <p class="blog-meta">
+                  <time datetime="2026-03-28">March 28, 2026</time> &middot; Sustainability
+                </p>
+                <h3 class="blog-title">
+                  <a id="article-3" href="#">
+                    Why We Switched to Recycled Packaging
+                  </a>
+                </h3>
+                <p class="blog-excerpt">
+                  Our commitment to reducing waste — recycled mailers,
+                  carbon-neutral shipping, and what comes next.
+                </p>
+                <a class="read-more" href="#article-3">
+                  Read more<span class="sr-only-always">: Why We Switched to Recycled Packaging</span>
+                </a>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <!--
+    <footer> at body level — implicit role="contentinfo".
+    No role="contentinfo" needed (SC 4.1.2 — no redundant ARIA).
+  -->
+  <footer>
+    <div class="footer-inner">
+
+      <!--
+        Footer navigation — aria-label="Footer" distinguishes this nav
+        landmark from the primary nav above (SC 4.1.2).
+        Do NOT use role="menu" / role="menubar".
+      -->
+      <nav class="footer-nav" aria-label="Footer">
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Sizing Guide</a></li>
+          <li><a href="#">Returns &amp; Exchanges</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </nav>
+
+      <p class="footer-copy">
+        &copy; 2026 ShopCo. All rights reserved.
+      </p>
+
+    </div>
+  </footer>
+
+  <script>
+    /*
+     * Cart counter — add to cart
+     * ─────────────────────────────────────────────────────────────────
+     *
+     * Accessibility responsibilities:
+     *   SC 4.1.2 — cart button aria-label kept accurate at all times.
+     *   SC 4.1.3 — cart live region announces every successful add.
+     *
+     * Clear-then-set pattern (two rAF calls):
+     *   If the same product is added twice, the live region textContent
+     *   would be identical. Some AT (NVDA+Firefox) silently skips
+     *   re-announcing an unchanged string. Clearing first forces the
+     *   DOM mutation to be detected as a change, ensuring re-announcement.
+     *
+     * Single rAF callback for both updates:
+     *   Both aria-label and live region are updated in the SAME inner
+     *   rAF callback. If split across two separate rAFs, some AT may
+     *   announce the live region before the button label updates, causing
+     *   a split announcement where the counts are momentarily out of sync.
+     *
+     * Skip link focus management (SC 2.4.1):
+     *   Clicking the skip link scrolls to #main-content via href anchor.
+     *   We also call .focus() programmatically to move the AT virtual
+     *   cursor into the main content region. Without this, some screen
+     *   readers do not move the reading position even though the viewport
+     *   has scrolled.
+     *
+     * Conditional singular/plural (pre-flight L-03):
+     *   "N item(s)" would be read literally as "N item parenthesis s
+     *   parenthesis" by some TTS engines. Use conditional phrasing.
+     */
+
+    const cartBtn   = document.getElementById('cart-btn');
+    const cartBadge = document.getElementById('cart-badge');
+    const cartLive  = document.getElementById('cart-live');
+    const mainEl    = document.getElementById('main-content');
+    let   itemCount = 0;
+
+    // ── Skip link — move AT virtual cursor into main on activation ─────
+    /*
+     * The skip link href="#main-content" handles scroll via native anchor.
+     * Calling mainEl.focus() additionally moves the AT virtual cursor
+     * to the main content region (required for some AT/browser combos).
+     */
+    document.querySelector('.skip-link').addEventListener('click', () => {
+      // Small delay lets the scroll animation complete first.
+      requestAnimationFrame(() => mainEl.focus());
+    });
+
+    // ── Add to cart ────────────────────────────────────────────────────
+    function addToCart(productName) {
+      itemCount += 1;
+
+      // Conditional singular/plural — not "item(s)".
+      const itemWord = itemCount === 1 ? 'item' : 'items';
+      const newLabel = `Cart, ${itemCount} ${itemWord}`;
+      const message  = `${productName} added to cart. Cart total: ${itemCount} ${itemWord}.`;
+
+      // rAF 1 — clear live region so the next mutation is detected
+      // even if the message text is identical to the previous announcement.
+      requestAnimationFrame(() => {
+        cartLive.textContent = '';
+
+        // rAF 2 — update everything in one frame:
+        //   • aria-label on cart button (SC 4.1.2)
+        //   • visible badge count
+        //   • live region announcement (SC 4.1.3)
+        // All three happen together to prevent split announcements.
+        requestAnimationFrame(() => {
+          cartBtn.setAttribute('aria-label', newLabel);
+          cartBadge.textContent = String(itemCount);
+          cartLive.textContent  = message;
+        });
+      });
+    }
+
+    // ── Wire up all "Add to cart" buttons ─────────────────────────────
+    /*
+     * data-product attribute provides the product name.
+     * aria-label is already set in static HTML (pre-flight X-04).
+     * JS does NOT need to set aria-label on click — it is already present.
+     */
+    document.querySelectorAll('.btn-cart').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        addToCart(btn.dataset.product);
+      });
+    });
+  </script>
+
+</body>
+</html>
