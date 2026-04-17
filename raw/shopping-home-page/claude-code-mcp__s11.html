@@ -1,0 +1,1299 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopNest — Home</title>
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f5f4f0;
+      --color-border: #d4d0c8;
+      --color-text: #1a1814;
+      --color-text-muted: #4a4640;
+      --color-accent: #c0392b;        /* 5.4:1 on white */
+      --color-accent-dark: #922b21;   /* 7.1:1 on white */
+      --color-accent-light: #f9ebea;
+      --color-deal: #1a6b3c;          /* 5.8:1 on white */
+      --color-deal-bg: #eafaf1;
+      --color-focus: #0057b8;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-card: 0 2px 8px rgba(0,0,0,.10), 0 0 1px rgba(0,0,0,.06);
+      --shadow-hover: 0 6px 20px rgba(0,0,0,.14), 0 0 1px rgba(0,0,0,.08);
+      --transition: 200ms ease;
+      --max-width: 1200px;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: var(--color-accent-dark); }
+    a:hover { color: var(--color-accent); }
+    ul { list-style: none; }
+
+    /* ── Skip link ── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      background: var(--color-focus);
+      color: #fff;
+      padding: .5rem 1rem;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      font-weight: 700;
+      font-size: .9rem;
+      text-decoration: none;
+      z-index: 9999;
+      transition: top var(--transition);
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Focus styles ── */
+    :focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    /* ── Visually hidden (screen-reader only) ── */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ── Layout helpers ── */
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: 1.75rem;
+    }
+    .section-header h2 { font-size: clamp(1.3rem, 2.5vw, 1.75rem); }
+    .view-all-link {
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--color-accent-dark);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .view-all-link:hover { text-decoration: underline; }
+
+    /* ── Header / Navbar ── */
+    .site-header {
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      height: 64px;
+    }
+    .site-logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--color-accent);
+      text-decoration: none;
+      letter-spacing: -.5px;
+      flex-shrink: 0;
+    }
+    .site-logo:hover { color: var(--color-accent-dark); }
+
+    /* Search */
+    .search-form {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      max-width: 520px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: border-color var(--transition);
+    }
+    .search-form:focus-within { border-color: var(--color-focus); }
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: .5rem 1rem;
+      font-size: .95rem;
+      background: transparent;
+      color: var(--color-text);
+    }
+    .search-input::placeholder { color: var(--color-text-muted); }
+    .search-btn {
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      padding: .5rem 1rem;
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: 600;
+      transition: background var(--transition);
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+    }
+    .search-btn:hover { background: var(--color-accent-dark); }
+    .search-btn:focus-visible { outline-offset: -3px; }
+
+    /* Nav links */
+    .nav-links { display: flex; gap: .25rem; margin-left: auto; flex-shrink: 0; }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .45rem .75rem;
+      border-radius: var(--radius-sm);
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--color-text);
+      text-decoration: none;
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-link:hover { background: var(--color-surface); color: var(--color-accent); }
+    .nav-link[aria-current="page"] { color: var(--color-accent); background: var(--color-accent-light); }
+    .cart-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+      line-height: 1;
+      padding: 2px 5px;
+      border-radius: 99px;
+      min-width: 18px;
+    }
+
+    /* ── Hero Banner ── */
+    .hero {
+      background: linear-gradient(135deg, #1a1814 0%, #3d2b1f 60%, #6b3a2a 100%);
+      color: #fff;
+      padding: clamp(3rem, 8vw, 6rem) 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #f5c9c3;
+      margin-bottom: .5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.15;
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+    .hero h1 span { color: #f5c9c3; }
+    .hero-desc { font-size: 1.1rem; color: #d4cfc9; margin-bottom: 2rem; max-width: 44ch; }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--color-accent);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: .85rem 2rem;
+      border-radius: var(--radius-lg);
+      transition: background var(--transition), transform var(--transition);
+    }
+    .hero-cta:hover { background: #e74c3c; transform: translateY(-2px); color: #fff; }
+    .hero-img-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    .hero-img-placeholder {
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 4/3;
+      background: rgba(255,255,255,.07);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .75rem;
+      color: rgba(255,255,255,.5);
+      font-size: .85rem;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .hero-img-placeholder svg { opacity: .4; }
+
+    /* ── Category Pills ── */
+    .categories-section { padding: 2rem 0; border-bottom: 1px solid var(--color-border); }
+    .category-list { display: flex; gap: .75rem; overflow-x: auto; padding-bottom: .25rem; }
+    .category-list::-webkit-scrollbar { height: 4px; }
+    .category-list::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 99px; }
+    .category-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .5rem 1.1rem;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--color-text);
+      text-decoration: none;
+      white-space: nowrap;
+      background: var(--color-bg);
+      transition: border-color var(--transition), background var(--transition), color var(--transition);
+    }
+    .category-pill:hover { border-color: var(--color-accent); color: var(--color-accent); background: var(--color-accent-light); }
+
+    /* ── Product Cards ── */
+    .products-section { padding: 3.5rem 0; }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .product-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: box-shadow var(--transition), transform var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+    .product-img {
+      aspect-ratio: 1;
+      background: var(--color-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-muted);
+      font-size: .8rem;
+      text-align: center;
+      padding: 1rem;
+      position: relative;
+    }
+    .product-img svg { opacity: .35; }
+    .badge {
+      position: absolute;
+      top: .75rem;
+      left: .75rem;
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      padding: 3px 8px;
+      border-radius: 99px;
+      text-transform: uppercase;
+    }
+    .badge-new { background: #0057b8; color: #fff; }
+    .badge-sale { background: var(--color-accent); color: #fff; }
+    .badge-popular { background: var(--color-deal); color: #fff; }
+    .product-info { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: .35rem; }
+    .product-category { font-size: .75rem; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+    .product-name { font-size: 1rem; font-weight: 700; line-height: 1.3; }
+    .product-name a { color: var(--color-text); text-decoration: none; }
+    .product-name a:hover { color: var(--color-accent); text-decoration: underline; }
+    .product-rating { display: flex; align-items: center; gap: .35rem; font-size: .82rem; color: var(--color-text-muted); }
+    .stars { color: #d4a017; letter-spacing: 1px; }
+    .product-price-row { display: flex; align-items: baseline; gap: .5rem; margin-top: auto; padding-top: .5rem; }
+    .price { font-size: 1.15rem; font-weight: 800; color: var(--color-text); }
+    .price-original { font-size: .85rem; color: var(--color-text-muted); text-decoration: line-through; }
+    .add-to-cart {
+      display: block;
+      width: 100%;
+      margin-top: .85rem;
+      padding: .6rem;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: .875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .add-to-cart:hover { background: var(--color-accent-dark); }
+
+    /* ── Deals Section ── */
+    .deals-section {
+      background: var(--color-surface);
+      padding: 3.5rem 0;
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .deals-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .deal-card {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      box-shadow: var(--shadow-card);
+      transition: box-shadow var(--transition);
+    }
+    .deal-card:hover { box-shadow: var(--shadow-hover); }
+    .deal-card--featured { grid-row: span 2; }
+    .deal-img {
+      flex: 1;
+      min-height: 140px;
+      background: linear-gradient(135deg, #f5e6e0, #fce4ec);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: .8rem;
+    }
+    .deal-card--featured .deal-img { min-height: 220px; background: linear-gradient(135deg, #e8f8f5, #d5f5e3); }
+    .deal-body { padding: 1.1rem; }
+    .deal-tag {
+      display: inline-block;
+      background: var(--color-deal-bg);
+      color: var(--color-deal);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-bottom: .5rem;
+    }
+    .deal-name { font-size: .95rem; font-weight: 700; margin-bottom: .25rem; color: var(--color-text); }
+    .deal-card--featured .deal-name { font-size: 1.2rem; }
+    .deal-savings {
+      font-size: .82rem;
+      color: var(--color-deal);
+      font-weight: 700;
+      margin-bottom: .6rem;
+    }
+    .deal-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+    .deal-price { font-size: 1.1rem; font-weight: 800; }
+    .deal-cta {
+      display: inline-block;
+      background: var(--color-deal);
+      color: #fff;
+      text-decoration: none;
+      font-size: .8rem;
+      font-weight: 700;
+      padding: .4rem .9rem;
+      border-radius: var(--radius-sm);
+      transition: background var(--transition);
+    }
+    .deal-cta:hover { background: #145a32; color: #fff; }
+
+    /* Countdown timer */
+    .countdown { display: flex; gap: .5rem; align-items: center; margin: .75rem 0; font-size: .82rem; color: var(--color-text-muted); }
+    .countdown-unit { display: flex; flex-direction: column; align-items: center; }
+    .countdown-num { font-size: 1.5rem; font-weight: 800; color: var(--color-accent); line-height: 1; }
+    .countdown-label { font-size: .65rem; text-transform: uppercase; letter-spacing: .06em; }
+    .countdown-sep { font-size: 1.2rem; font-weight: 700; color: var(--color-accent); line-height: 1; margin-top: -6px; }
+
+    /* ── Blog Section ── */
+    .blog-section { padding: 3.5rem 0; }
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .blog-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow var(--transition);
+    }
+    .blog-card:hover { box-shadow: var(--shadow-hover); }
+    .blog-img {
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-muted);
+      font-size: .8rem;
+      padding: 1rem;
+    }
+    .blog-card:nth-child(2) .blog-img { background: linear-gradient(135deg, #fce4ec, #f8bbd0); }
+    .blog-card:nth-child(3) .blog-img { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+    .blog-content { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .blog-meta { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--color-text-muted); margin-bottom: .5rem; flex-wrap: wrap; }
+    .blog-tag {
+      background: var(--color-accent-light);
+      color: var(--color-accent-dark);
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 99px;
+      font-size: .72rem;
+    }
+    .blog-title { font-size: 1.05rem; font-weight: 700; line-height: 1.35; margin-bottom: .5rem; }
+    .blog-title a { color: var(--color-text); text-decoration: none; }
+    .blog-title a:hover { color: var(--color-accent); text-decoration: underline; }
+    .blog-excerpt { font-size: .875rem; color: var(--color-text-muted); line-height: 1.6; flex: 1; margin-bottom: 1rem; }
+    .blog-read-more {
+      align-self: flex-start;
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--color-accent-dark);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    .blog-read-more:hover { text-decoration: underline; }
+    .blog-read-more:hover svg { transform: translateX(3px); }
+    .blog-read-more svg { transition: transform var(--transition); }
+
+    /* ── Trust Bar ── */
+    .trust-bar {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      padding: 1.75rem 0;
+    }
+    .trust-list {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+    .trust-icon { color: var(--color-deal); flex-shrink: 0; }
+
+    /* ── Newsletter ── */
+    .newsletter-section { padding: 3.5rem 0; background: #1a1814; color: #f0ede8; text-align: center; }
+    .newsletter-section h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin-bottom: .5rem; }
+    .newsletter-section p { color: #a09890; max-width: 44ch; margin: 0 auto 1.5rem; }
+    .newsletter-form {
+      display: flex;
+      gap: .75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .newsletter-input {
+      flex: 1;
+      min-width: 220px;
+      padding: .75rem 1.1rem;
+      border: 2px solid #3a3630;
+      border-radius: var(--radius-lg);
+      background: #2a2520;
+      color: #f0ede8;
+      font-size: .95rem;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .newsletter-input::placeholder { color: #6a6460; }
+    .newsletter-input:focus { border-color: var(--color-focus); }
+    .newsletter-input:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+    .newsletter-btn {
+      padding: .75rem 1.5rem;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--transition);
+      white-space: nowrap;
+    }
+    .newsletter-btn:hover { background: var(--color-accent-dark); }
+    .newsletter-note { font-size: .78rem; color: #6a6460; margin-top: .75rem; }
+
+    /* ── Footer ── */
+    .site-footer {
+      background: #111;
+      color: #a09890;
+      padding: 3rem 0 1.5rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .footer-brand .site-logo { color: var(--color-accent); font-size: 1.3rem; margin-bottom: .75rem; display: inline-block; }
+    .footer-brand p { font-size: .875rem; line-height: 1.7; max-width: 28ch; }
+    .footer-col h3 { color: #f0ede8; font-size: .875rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 1rem; }
+    .footer-links { display: flex; flex-direction: column; gap: .5rem; }
+    .footer-links a { font-size: .875rem; color: #a09890; text-decoration: none; transition: color var(--transition); }
+    .footer-links a:hover { color: #f0ede8; }
+    .footer-bottom {
+      border-top: 1px solid #2a2520;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .75rem;
+      font-size: .8rem;
+    }
+    .footer-bottom a { color: #a09890; }
+    .footer-bottom a:hover { color: #f0ede8; }
+    .social-links { display: flex; gap: .5rem; }
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px; height: 34px;
+      border: 1px solid #3a3630;
+      border-radius: var(--radius-sm);
+      color: #a09890;
+      text-decoration: none;
+      transition: border-color var(--transition), color var(--transition);
+    }
+    .social-link:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-img-wrap { display: none; }
+      .deals-grid { grid-template-columns: 1fr 1fr; }
+      .deal-card--featured { grid-column: span 2; grid-row: span 1; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav-inner { gap: .75rem; }
+      .nav-link span { display: none; }
+      .deals-grid { grid-template-columns: 1fr; }
+      .deal-card--featured { grid-column: span 1; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip-link: lets keyboard users jump past repeated navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ════════════════════════════════════════
+       HEADER
+       ════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <nav class="nav-inner" aria-label="Primary navigation">
+        <a href="/" class="site-logo" aria-label="ShopNest — go to home page">ShopNest</a>
+
+        <!-- search-form: labelled via aria-label on the input -->
+        <form class="search-form" role="search" action="/search" method="get">
+          <label for="site-search" class="sr-only">Search products</label>
+          <input
+            id="site-search"
+            class="search-input"
+            type="search"
+            name="q"
+            placeholder="Search products…"
+            autocomplete="off"
+            aria-label="Search products"
+          >
+          <button class="search-btn" type="submit" aria-label="Submit search">
+            <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span>Search</span>
+          </button>
+        </form>
+
+        <ul class="nav-links" role="list">
+          <li>
+            <a href="/" class="nav-link" aria-current="page">
+              <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="/account" class="nav-link" aria-label="My account">
+              <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>Account</span>
+            </a>
+          </li>
+          <li>
+            <a href="/cart" class="nav-link" aria-label="Cart, 3 items">
+              <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              <span>Cart</span>
+              <!-- aria-hidden: number announced via parent link label -->
+              <span class="cart-badge" aria-hidden="true">3</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════ -->
+  <main id="main-content" tabindex="-1">
+
+    <!-- ─── Hero Banner ─── -->
+    <section aria-label="Featured promotion" class="hero">
+      <div class="container">
+        <div class="hero-inner">
+          <div class="hero-text">
+            <p class="hero-eyebrow" aria-hidden="true">Spring Collection 2026</p>
+            <h1>Find Your <span>Perfect</span> Style This Season</h1>
+            <p class="hero-desc">Thousands of curated products — from everyday essentials to standout pieces — all with free 2-day shipping over $50.</p>
+            <a href="/shop" class="hero-cta">
+              Shop Now
+              <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+          <!-- decorative image placeholder; role="img" with descriptive alt -->
+          <div class="hero-img-wrap">
+            <div class="hero-img-placeholder" role="img" aria-label="Lifestyle photo of curated fashion and accessories">
+              <svg aria-hidden="true" focusable="false" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Hero Image
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Category Pills ─── -->
+    <section aria-label="Browse by category" class="categories-section">
+      <div class="container">
+        <ul class="category-list" role="list" aria-label="Product categories">
+          <li><a href="/electronics" class="category-pill">
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            Electronics
+          </a></li>
+          <li><a href="/clothing" class="category-pill">
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>
+            Clothing
+          </a></li>
+          <li><a href="/home-garden" class="category-pill">
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            Home &amp; Garden
+          </a></li>
+          <li><a href="/beauty" class="category-pill">
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            Beauty
+          </a></li>
+          <li><a href="/sports" class="category-pill">
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            Sports &amp; Outdoors
+          </a></li>
+          <li><a href="/books" class="category-pill">
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            Books
+          </a></li>
+          <li><a href="/toys" class="category-pill">
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            Toys &amp; Games
+          </a></li>
+          <li><a href="/kitchen" class="category-pill">
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            Kitchen
+          </a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── Popular Items ─── -->
+    <section aria-labelledby="popular-heading" class="products-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="popular-heading">Popular Right Now</h2>
+          <a href="/popular" class="view-all-link" aria-label="View all popular items">
+            View all
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <ul class="product-grid" role="list" aria-label="Popular products">
+
+          <li>
+            <article class="product-card" aria-label="Wireless Noise-Cancelling Headphones">
+              <div class="product-img" role="img" aria-label="Wireless Noise-Cancelling Headphones product image">
+                <span class="badge badge-popular">Popular</span>
+                <svg aria-hidden="true" focusable="false" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3z"/><path d="M3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Electronics</p>
+                <h3 class="product-name"><a href="/products/headphones-pro">Wireless Noise-Cancelling Headphones</a></h3>
+                <div class="product-rating">
+                  <!-- aria-hidden on visual stars; text alternative follows -->
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span>4.8 <span class="sr-only">out of 5 stars,</span> (2,341 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price" aria-label="Price: $79.99">$79.99</span>
+                  <span class="price-original" aria-label="Original price: $120.00"><s>$120.00</s></span>
+                </div>
+                <button class="add-to-cart" type="button" aria-label="Add Wireless Noise-Cancelling Headphones to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-label="Minimalist Leather Tote Bag">
+              <div class="product-img" role="img" aria-label="Minimalist Leather Tote Bag product image">
+                <span class="badge badge-new">New</span>
+                <svg aria-hidden="true" focusable="false" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Clothing &amp; Accessories</p>
+                <h3 class="product-name"><a href="/products/leather-tote">Minimalist Leather Tote Bag</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★½</span>
+                  <span>4.6 <span class="sr-only">out of 5 stars,</span> (876 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price" aria-label="Price: $54.95">$54.95</span>
+                </div>
+                <button class="add-to-cart" type="button" aria-label="Add Minimalist Leather Tote Bag to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-label="Smart Desk Lamp with USB-C Charging">
+              <div class="product-img" role="img" aria-label="Smart Desk Lamp with USB-C Charging product image">
+                <svg aria-hidden="true" focusable="false" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0018 8 6 6 0 006 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 018.91 14"/></svg>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Home &amp; Office</p>
+                <h3 class="product-name"><a href="/products/smart-desk-lamp">Smart Desk Lamp with USB-C Charging</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span>4.9 <span class="sr-only">out of 5 stars,</span> (1,108 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price" aria-label="Price: $34.99">$34.99</span>
+                </div>
+                <button class="add-to-cart" type="button" aria-label="Add Smart Desk Lamp with USB-C Charging to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-label="Insulated Stainless Steel Water Bottle">
+              <div class="product-img" role="img" aria-label="Insulated Stainless Steel Water Bottle product image">
+                <span class="badge badge-sale">Sale</span>
+                <svg aria-hidden="true" focusable="false" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="2" x2="16" y2="2"/><path d="M9 11l-1 9h8l-1-9"/><path d="M7 11V5a1 1 0 011-1h8a1 1 0 011 1v6H7z"/></svg>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Sports &amp; Outdoors</p>
+                <h3 class="product-name"><a href="/products/water-bottle">Insulated Stainless Steel Water Bottle</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span>4.7 <span class="sr-only">out of 5 stars,</span> (4,562 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price" aria-label="Price: $22.49">$22.49</span>
+                  <span class="price-original" aria-label="Original price: $29.99"><s>$29.99</s></span>
+                </div>
+                <button class="add-to-cart" type="button" aria-label="Add Insulated Stainless Steel Water Bottle to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-label="Organic Cotton Bed Sheet Set">
+              <div class="product-img" role="img" aria-label="Organic Cotton Bed Sheet Set product image">
+                <svg aria-hidden="true" focusable="false" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 012 2v10"/><path d="M2 17h20"/><path d="M6 8V4"/></svg>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Home &amp; Garden</p>
+                <h3 class="product-name"><a href="/products/bed-sheet-set">Organic Cotton Bed Sheet Set</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span>4.8 <span class="sr-only">out of 5 stars,</span> (989 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price" aria-label="Price: $49.00">$49.00</span>
+                </div>
+                <button class="add-to-cart" type="button" aria-label="Add Organic Cotton Bed Sheet Set to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-label="Portable Blender for Smoothies">
+              <div class="product-img" role="img" aria-label="Portable Blender for Smoothies product image">
+                <span class="badge badge-new">New</span>
+                <svg aria-hidden="true" focusable="false" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Kitchen</p>
+                <h3 class="product-name"><a href="/products/portable-blender">Portable Blender for Smoothies</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★½</span>
+                  <span>4.5 <span class="sr-only">out of 5 stars,</span> (712 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price" aria-label="Price: $38.00">$38.00</span>
+                </div>
+                <button class="add-to-cart" type="button" aria-label="Add Portable Blender for Smoothies to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-label="Yoga Mat with Alignment Lines">
+              <div class="product-img" role="img" aria-label="Yoga Mat with Alignment Lines product image">
+                <svg aria-hidden="true" focusable="false" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="12" rx="10" ry="4"/><path d="M2 12v6c0 2.2 4.5 4 10 4s10-1.8 10-4v-6"/></svg>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Sports &amp; Outdoors</p>
+                <h3 class="product-name"><a href="/products/yoga-mat">Yoga Mat with Alignment Lines</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span>4.9 <span class="sr-only">out of 5 stars,</span> (3,204 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price" aria-label="Price: $29.99">$29.99</span>
+                </div>
+                <button class="add-to-cart" type="button" aria-label="Add Yoga Mat with Alignment Lines to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-label="Scented Soy Candle Gift Set">
+              <div class="product-img" role="img" aria-label="Scented Soy Candle Gift Set product image">
+                <span class="badge badge-popular">Popular</span>
+                <svg aria-hidden="true" focusable="false" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="2" x2="12" y2="4"/><path d="M9 7a3 3 0 106 0c0-1.5-1-2-1-4"/><rect x="7" y="10" width="10" height="10" rx="1"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Home &amp; Garden</p>
+                <h3 class="product-name"><a href="/products/candle-set">Scented Soy Candle Gift Set</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span>4.8 <span class="sr-only">out of 5 stars,</span> (1,490 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price" aria-label="Price: $42.00">$42.00</span>
+                </div>
+                <button class="add-to-cart" type="button" aria-label="Add Scented Soy Candle Gift Set to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── Deals of the Day ─── -->
+    <section aria-labelledby="deals-heading" class="deals-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="deals-heading">Deals of the Day</h2>
+          <a href="/deals" class="view-all-link" aria-label="View all deals">
+            View all
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <!-- countdown: purely visual decoration; screen reader text is separate -->
+        <div class="countdown" aria-label="Deal ends in 5 hours 42 minutes 17 seconds" role="timer" aria-live="off">
+          <span aria-hidden="true">Ends in:</span>
+          <span class="sr-only">Ends in</span>
+          <span class="countdown-unit">
+            <span class="countdown-num" aria-hidden="true" id="cd-hrs">05</span>
+            <span class="countdown-label" aria-hidden="true">hrs</span>
+          </span>
+          <span class="countdown-sep" aria-hidden="true">:</span>
+          <span class="countdown-unit">
+            <span class="countdown-num" aria-hidden="true" id="cd-min">42</span>
+            <span class="countdown-label" aria-hidden="true">min</span>
+          </span>
+          <span class="countdown-sep" aria-hidden="true">:</span>
+          <span class="countdown-unit">
+            <span class="countdown-num" aria-hidden="true" id="cd-sec">17</span>
+            <span class="countdown-label" aria-hidden="true">sec</span>
+          </span>
+        </div>
+
+        <ul class="deals-grid" role="list" aria-label="Today's deals">
+
+          <!-- Featured deal -->
+          <li>
+            <article class="deal-card deal-card--featured" aria-label="Featured deal: Premium Stand Mixer — 45% off">
+              <div class="deal-img" role="img" aria-label="Premium Stand Mixer 6.5-Quart in Matte Black product image">
+                <svg aria-hidden="true" focusable="false" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.4"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              </div>
+              <div class="deal-body">
+                <span class="deal-tag">Featured Deal — 45% Off</span>
+                <p class="deal-name">Premium Stand Mixer 6.5-Quart</p>
+                <p class="deal-savings">You save $135.00</p>
+                <div class="deal-meta">
+                  <span class="deal-price" aria-label="Deal price: $164.99, was $299.99">$164.99 <small style="font-weight:400;font-size:.8rem;color:var(--color-text-muted);text-decoration:line-through">$299.99</small></span>
+                  <a href="/deals/stand-mixer" class="deal-cta" aria-label="Shop the Premium Stand Mixer deal">Shop Deal</a>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <!-- Small deals -->
+          <li>
+            <article class="deal-card" aria-label="Deal: Bamboo Cutting Board Set — 30% off">
+              <div class="deal-img" role="img" aria-label="Bamboo Cutting Board Set of 3 product image">
+                <svg aria-hidden="true" focusable="false" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div class="deal-body">
+                <span class="deal-tag">30% Off</span>
+                <p class="deal-name">Bamboo Cutting Board Set (3-Piece)</p>
+                <p class="deal-savings">Save $12.00</p>
+                <div class="deal-meta">
+                  <span class="deal-price" aria-label="Deal price: $27.99, was $39.99">$27.99</span>
+                  <a href="/deals/cutting-board" class="deal-cta" aria-label="Shop the Bamboo Cutting Board Set deal">Shop</a>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="deal-card" aria-label="Deal: Faux Leather Office Chair — 25% off">
+              <div class="deal-img" role="img" aria-label="Ergonomic Faux Leather Office Chair in Black product image">
+                <svg aria-hidden="true" focusable="false" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+              </div>
+              <div class="deal-body">
+                <span class="deal-tag">25% Off</span>
+                <p class="deal-name">Ergonomic Faux Leather Office Chair</p>
+                <p class="deal-savings">Save $50.00</p>
+                <div class="deal-meta">
+                  <span class="deal-price" aria-label="Deal price: $149.99, was $199.99">$149.99</span>
+                  <a href="/deals/office-chair" class="deal-cta" aria-label="Shop the Ergonomic Office Chair deal">Shop</a>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="deal-card" aria-label="Deal: Wireless Charging Pad 3-in-1 — 40% off">
+              <div class="deal-img" role="img" aria-label="Wireless Charging Pad 3-in-1 for iPhone, AirPods, Apple Watch product image">
+                <svg aria-hidden="true" focusable="false" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </div>
+              <div class="deal-body">
+                <span class="deal-tag">40% Off</span>
+                <p class="deal-name">Wireless Charging Pad 3-in-1</p>
+                <p class="deal-savings">Save $24.00</p>
+                <div class="deal-meta">
+                  <span class="deal-price" aria-label="Deal price: $35.99, was $59.99">$35.99</span>
+                  <a href="/deals/charging-pad" class="deal-cta" aria-label="Shop the Wireless Charging Pad 3-in-1 deal">Shop</a>
+                </div>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── Trust Bar ─── -->
+    <aside class="trust-bar" aria-label="Shopping guarantees">
+      <div class="container">
+        <ul class="trust-list" role="list">
+          <li class="trust-item">
+            <svg class="trust-icon" aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span>Free shipping over $50</span>
+          </li>
+          <li class="trust-item">
+            <svg class="trust-icon" aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            <span>30-day free returns</span>
+          </li>
+          <li class="trust-item">
+            <svg class="trust-icon" aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Secure checkout</span>
+          </li>
+          <li class="trust-item">
+            <svg class="trust-icon" aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>24/7 customer support</span>
+          </li>
+          <li class="trust-item">
+            <svg class="trust-icon" aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Price-match guarantee</span>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ─── Blog Posts ─── -->
+    <section aria-labelledby="blog-heading" class="blog-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="blog-heading">From the ShopNest Blog</h2>
+          <a href="/blog" class="view-all-link" aria-label="View all blog posts">
+            View all
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <ul class="blog-grid" role="list" aria-label="Recent blog posts">
+
+          <li>
+            <article class="blog-card" aria-labelledby="post-1-title">
+              <!-- decorative: alt="" -->
+              <div class="blog-img" role="img" aria-label="Decorative cover image for blog post about home office setup"></div>
+              <div class="blog-content">
+                <div class="blog-meta">
+                  <span class="blog-tag">Home Office</span>
+                  <time datetime="2026-04-12">April 12, 2026</time>
+                  <span aria-hidden="true">·</span>
+                  <span>5 min read</span>
+                </div>
+                <h3 class="blog-title" id="post-1-title">
+                  <a href="/blog/home-office-upgrade-2026">10 Affordable Upgrades for Your Home Office in 2026</a>
+                </h3>
+                <p class="blog-excerpt">
+                  Working from home doesn't mean compromising on comfort or productivity. We rounded up the best budget-friendly upgrades that make a real difference.
+                </p>
+                <a href="/blog/home-office-upgrade-2026" class="blog-read-more" aria-label="Read full article: 10 Affordable Upgrades for Your Home Office in 2026">
+                  Read article
+                  <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="blog-card" aria-labelledby="post-2-title">
+              <div class="blog-img" role="img" aria-label="Decorative cover image for skincare guide blog post"></div>
+              <div class="blog-content">
+                <div class="blog-meta">
+                  <span class="blog-tag">Beauty</span>
+                  <time datetime="2026-04-08">April 8, 2026</time>
+                  <span aria-hidden="true">·</span>
+                  <span>4 min read</span>
+                </div>
+                <h3 class="blog-title" id="post-2-title">
+                  <a href="/blog/spring-skincare-guide">The Complete Spring Skincare Refresh Guide</a>
+                </h3>
+                <p class="blog-excerpt">
+                  As temperatures rise, your skincare routine should evolve too. Here's what dermatologists recommend swapping out this season — and why.
+                </p>
+                <a href="/blog/spring-skincare-guide" class="blog-read-more" aria-label="Read full article: The Complete Spring Skincare Refresh Guide">
+                  Read article
+                  <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="blog-card" aria-labelledby="post-3-title">
+              <div class="blog-img" role="img" aria-label="Decorative cover image for sustainable shopping blog post"></div>
+              <div class="blog-content">
+                <div class="blog-meta">
+                  <span class="blog-tag">Sustainability</span>
+                  <time datetime="2026-04-03">April 3, 2026</time>
+                  <span aria-hidden="true">·</span>
+                  <span>7 min read</span>
+                </div>
+                <h3 class="blog-title" id="post-3-title">
+                  <a href="/blog/sustainable-shopping-habits">How to Build a More Sustainable Shopping Habit in 5 Steps</a>
+                </h3>
+                <p class="blog-excerpt">
+                  Small changes in how and what you buy add up quickly. We spoke with eco-conscious brands to bring you actionable, affordable strategies.
+                </p>
+                <a href="/blog/sustainable-shopping-habits" class="blog-read-more" aria-label="Read full article: How to Build a More Sustainable Shopping Habit in 5 Steps">
+                  Read article
+                  <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── Newsletter ─── -->
+    <section aria-labelledby="newsletter-heading" class="newsletter-section">
+      <div class="container">
+        <h2 id="newsletter-heading">Get Exclusive Deals in Your Inbox</h2>
+        <p>Join over 200,000 shoppers who get early access to sales, restocks, and member-only discounts.</p>
+        <form class="newsletter-form" action="/newsletter/subscribe" method="post" aria-label="Newsletter sign-up form" novalidate>
+          <div>
+            <label for="newsletter-email" class="sr-only">Email address</label>
+            <input
+              id="newsletter-email"
+              class="newsletter-input"
+              type="email"
+              name="email"
+              placeholder="Your email address"
+              autocomplete="email"
+              required
+              aria-required="true"
+              aria-describedby="newsletter-note"
+            >
+          </div>
+          <button class="newsletter-btn" type="submit">Subscribe</button>
+        </form>
+        <p class="newsletter-note" id="newsletter-note">No spam, ever. Unsubscribe anytime. We respect your privacy.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ════════════════════════════════════════
+       FOOTER
+       ════════════════════════════════════════ -->
+  <footer class="site-footer" aria-label="Site footer">
+    <div class="container">
+      <div class="footer-grid">
+
+        <div class="footer-brand">
+          <a href="/" class="site-logo" aria-label="ShopNest — go to home page">ShopNest</a>
+          <p>Your everyday destination for quality products at honest prices. Shipped fast, returned easy.</p>
+        </div>
+
+        <nav aria-label="Shop categories">
+          <h3>Shop</h3>
+          <ul class="footer-links" role="list">
+            <li><a href="/new-arrivals">New Arrivals</a></li>
+            <li><a href="/deals">Deals &amp; Offers</a></li>
+            <li><a href="/bestsellers">Best Sellers</a></li>
+            <li><a href="/brands">Featured Brands</a></li>
+            <li><a href="/gift-cards">Gift Cards</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Customer service">
+          <h3>Support</h3>
+          <ul class="footer-links" role="list">
+            <li><a href="/help">Help Center</a></li>
+            <li><a href="/returns">Returns &amp; Refunds</a></li>
+            <li><a href="/track-order">Track Your Order</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/accessibility">Accessibility</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Company information">
+          <h3>Company</h3>
+          <ul class="footer-links" role="list">
+            <li><a href="/about">About ShopNest</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/press">Press</a></li>
+            <li><a href="/sustainability">Sustainability</a></li>
+          </ul>
+        </nav>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>
+          &copy; 2026 ShopNest, Inc. &nbsp;·&nbsp;
+          <a href="/privacy">Privacy Policy</a> &nbsp;·&nbsp;
+          <a href="/terms">Terms of Use</a> &nbsp;·&nbsp;
+          <a href="/sitemap">Sitemap</a>
+        </p>
+        <nav aria-label="Social media links">
+          <ul class="social-links" role="list">
+            <li>
+              <a href="https://twitter.com/shopnest" class="social-link" aria-label="ShopNest on Twitter" rel="noopener noreferrer" target="_blank">
+                <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://instagram.com/shopnest" class="social-link" aria-label="ShopNest on Instagram" rel="noopener noreferrer" target="_blank">
+                <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://pinterest.com/shopnest" class="social-link" aria-label="ShopNest on Pinterest" rel="noopener noreferrer" target="_blank">
+                <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Countdown timer - updates every second
+    (function () {
+      var end = Date.now() + (5 * 3600 + 42 * 60 + 17) * 1000;
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function tick() {
+        var diff = Math.max(0, Math.floor((end - Date.now()) / 1000));
+        var h = Math.floor(diff / 3600);
+        var m = Math.floor((diff % 3600) / 60);
+        var s = diff % 60;
+
+        var hEl = document.getElementById('cd-hrs');
+        var mEl = document.getElementById('cd-min');
+        var sEl = document.getElementById('cd-sec');
+
+        if (hEl) hEl.textContent = pad(h);
+        if (mEl) mEl.textContent = pad(m);
+        if (sEl) sEl.textContent = pad(s);
+
+        // Update accessible label on the timer element so screen readers
+        // can optionally announce it via aria-live="polite" if user requests
+        var timer = document.querySelector('[role="timer"]');
+        if (timer) {
+          timer.setAttribute('aria-label', 'Deal ends in ' + h + ' hours ' + m + ' minutes ' + s + ' seconds');
+        }
+
+        if (diff > 0) requestAnimationFrame(function () { setTimeout(tick, 1000); });
+      }
+
+      tick();
+    })();
+  </script>
+
+</body>
+</html>

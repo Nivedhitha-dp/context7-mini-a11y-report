@@ -1,0 +1,387 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form</title>
+  <style>
+    /* CSS custom properties for easy theming and high-contrast overrides */
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f8f9fa;
+      --color-border: #6b7280;
+      --color-border-focus: #1d4ed8;
+      --color-text: #111827;
+      --color-text-muted: #4b5563;
+      --color-required: #b91c1c;
+      --color-error: #b91c1c;
+      --color-error-bg: #fef2f2;
+      --color-error-border: #f87171;
+      --color-btn: #1d4ed8;
+      --color-btn-hover: #1e40af;
+      --color-btn-text: #ffffff;
+      --radius: 6px;
+      --spacing: 1.5rem;
+    }
+
+    /* skip-link: lets keyboard users bypass repeated nav and jump to content */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 9999;
+      padding: 0.5rem 1rem;
+      background: var(--color-btn);
+      color: var(--color-btn-text);
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      transition: top 0.1s;
+    }
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+
+    main {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--color-text);
+    }
+
+    .form-intro {
+      color: var(--color-text-muted);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    /* Required legend: explains asterisk meaning to all users, not just sighted */
+    .required-note {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1.75rem;
+    }
+    .required-note abbr {
+      text-decoration: none;
+      color: var(--color-required);
+      font-weight: 700;
+      margin-right: 0.25rem;
+    }
+
+    /* Each field wrapped in .form-field for layout and error state scoping */
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: var(--spacing);
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-text);
+    }
+
+    /* aria-required is set on inputs; visual asterisk is presentational */
+    label .required-marker {
+      color: var(--color-required);
+      font-weight: 700;
+      margin-left: 0.2rem;
+      /* aria-hidden so screen readers use aria-required on the input instead */
+    }
+
+    /* helper text associated via aria-describedby — always visible for cognitive accessibility */
+    .helper-text {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 0.625rem 0.75rem;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--color-text);
+      background: var(--color-bg);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      /* minimum 44px touch target height */
+      min-height: 44px;
+    }
+
+    /* Visible focus ring: 3px offset outline, passes 3:1 contrast on white */
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus {
+      outline: 3px solid var(--color-border-focus);
+      outline-offset: 2px;
+      border-color: var(--color-border-focus);
+    }
+
+    /* Error state styles triggered by aria-invalid="true" — avoids color-only cue */
+    input[aria-invalid="true"] {
+      border-color: var(--color-error-border);
+      background: var(--color-error-bg);
+    }
+    input[aria-invalid="true"]:focus {
+      outline-color: var(--color-error);
+    }
+
+    /* Inline error message — hidden until validation fires */
+    .error-message {
+      display: none;
+      font-size: 0.8rem;
+      color: var(--color-error);
+      font-weight: 600;
+    }
+    .error-message::before {
+      /* Icon supplementing color to avoid color-only error signaling */
+      content: "⚠ ";
+    }
+    .error-message[aria-live="polite"] {
+      display: block;
+    }
+    .form-field[data-error="true"] .error-message {
+      display: block;
+    }
+
+    /* Submit button: minimum 44px height, clear action label */
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 44px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--color-btn-text);
+      background: var(--color-btn);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.15s;
+    }
+    .btn-submit:hover {
+      background: var(--color-btn-hover);
+    }
+    /* Focus ring on button */
+    .btn-submit:focus-visible {
+      outline: 3px solid var(--color-border-focus);
+      outline-offset: 3px;
+    }
+
+    /* Respect user motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+      input,
+      .btn-submit,
+      .skip-link {
+        transition: none;
+      }
+    }
+
+    /* Ensure layout holds at 320px and 200% zoom */
+    @media (max-width: 360px) {
+      body {
+        padding: 1.5rem 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- skip-link: allows keyboard users to jump past repeated page chrome -->
+  <a href="#contact-form" class="skip-link">Skip to form</a>
+
+  <main>
+    <h1>Contact Us</h1>
+    <p class="form-intro">Fill out the form below and we'll get back to you shortly.</p>
+
+    <!-- required-note: explains asterisk convention to all users before the form -->
+    <p class="required-note">
+      <abbr aria-hidden="true">*</abbr> Indicates a required field
+    </p>
+
+    <form
+      id="contact-form"
+      novalidate
+      aria-label="Contact form"
+      onsubmit="handleSubmit(event)"
+    >
+
+      <!-- Full Name field -->
+      <div class="form-field" id="field-name">
+        <label for="full-name">
+          Full Name
+          <!-- aria-hidden: screen readers use aria-required on the input instead -->
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="full-name"
+          name="full-name"
+          autocomplete="name"
+          aria-required="true"
+          aria-describedby="name-error"
+          aria-invalid="false"
+        >
+        <!-- error container: aria-live so screen readers announce it when it appears -->
+        <span
+          id="name-error"
+          class="error-message"
+          role="alert"
+        >Please enter your full name.</span>
+      </div>
+
+      <!-- Email Address field -->
+      <div class="form-field" id="field-email">
+        <label for="email-address">
+          Email Address
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="email"
+          id="email-address"
+          name="email-address"
+          autocomplete="email"
+          aria-required="true"
+          <!-- aria-describedby chains helper text and error; both are announced by screen readers -->
+          aria-describedby="email-hint email-error"
+          aria-invalid="false"
+        >
+        <span id="email-hint" class="helper-text">
+          Enter a valid email address, for example: name@example.com
+        </span>
+        <span
+          id="email-error"
+          class="error-message"
+          role="alert"
+        >Please enter a valid email address (e.g. name@example.com).</span>
+      </div>
+
+      <!-- Phone Number field — optional -->
+      <div class="form-field" id="field-phone">
+        <label for="phone-number">
+          Phone Number
+          <!-- No required-marker: field is optional -->
+        </label>
+        <input
+          type="tel"
+          id="phone-number"
+          name="phone-number"
+          autocomplete="tel"
+          aria-required="false"
+          aria-describedby="phone-hint phone-error"
+          aria-invalid="false"
+        >
+        <span id="phone-hint" class="helper-text">
+          Optional. Preferred format: (555) 000-0000
+        </span>
+        <span
+          id="phone-error"
+          class="error-message"
+          role="alert"
+        >Please enter a valid phone number, e.g. (555) 000-0000.</span>
+      </div>
+
+      <!-- Submit button: descriptive label, not just "Submit" -->
+      <button type="submit" class="btn-submit">
+        Send Message
+      </button>
+
+    </form>
+  </main>
+
+  <script>
+    // Validate a single field and toggle error/aria-invalid state
+    function validateField(input, errorId, fieldId, validator) {
+      const error = document.getElementById(errorId);
+      const field = document.getElementById(fieldId);
+      const isValid = validator(input.value.trim());
+
+      // aria-invalid communicates validity to screen readers
+      input.setAttribute('aria-invalid', isValid ? 'false' : 'true');
+      // data-error drives the CSS visibility of the error message
+      field.dataset.error = isValid ? 'false' : 'true';
+
+      return isValid;
+    }
+
+    function isNonEmpty(val) {
+      return val.length > 0;
+    }
+
+    function isValidEmail(val) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    }
+
+    function isValidPhone(val) {
+      // Optional: allow empty, or a recognizable phone pattern
+      return val === '' || /^[\d\s().+-]{7,20}$/.test(val);
+    }
+
+    function handleSubmit(event) {
+      event.preventDefault();
+
+      const nameInput  = document.getElementById('full-name');
+      const emailInput = document.getElementById('email-address');
+      const phoneInput = document.getElementById('phone-number');
+
+      const nameOk  = validateField(nameInput,  'name-error',  'field-name',  isNonEmpty);
+      const emailOk = validateField(emailInput, 'email-error', 'field-email', isValidEmail);
+      const phoneOk = validateField(phoneInput, 'phone-error', 'field-phone', isValidPhone);
+
+      if (!nameOk || !emailOk || !phoneOk) {
+        // Move focus to first invalid field so keyboard/screen reader users know where to look
+        if (!nameOk)       nameInput.focus();
+        else if (!emailOk) emailInput.focus();
+        else               phoneInput.focus();
+        return;
+      }
+
+      // All valid — proceed with form submission
+      alert('Form submitted successfully!');
+    }
+
+    // Validate on blur so errors appear after the user leaves a field (not while typing)
+    document.getElementById('full-name').addEventListener('blur', function () {
+      validateField(this, 'name-error', 'field-name', isNonEmpty);
+    });
+    document.getElementById('email-address').addEventListener('blur', function () {
+      validateField(this, 'email-error', 'field-email', isValidEmail);
+    });
+    document.getElementById('phone-number').addEventListener('blur', function () {
+      validateField(this, 'phone-error', 'field-phone', isValidPhone);
+    });
+  </script>
+</body>
+</html>

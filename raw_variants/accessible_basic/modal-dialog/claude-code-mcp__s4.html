@@ -1,0 +1,221 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Dialog Example</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    button.trigger {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background: #1a56db;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button.trigger:hover { background: #1e429f; }
+    button.trigger:focus-visible {
+      outline: 3px solid #1a56db;
+      outline-offset: 3px;
+    }
+
+    /* Backdrop */
+    [role="dialog"] {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    [role="dialog"].is-open { display: flex; }
+
+    .dialog-box {
+      background: #fff;
+      border-radius: 8px;
+      padding: 2rem;
+      width: min(480px, 90vw);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      position: relative;
+    }
+
+    .dialog-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #111;
+    }
+
+    .dialog-body {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .dialog-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary {
+      padding: 0.6rem 1.25rem;
+      font-size: 0.95rem;
+      background: transparent;
+      color: #1a56db;
+      border: 2px solid #1a56db;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-secondary:hover { background: #eff6ff; }
+    .btn-secondary:focus-visible {
+      outline: 3px solid #1a56db;
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      padding: 0.6rem 1.25rem;
+      font-size: 0.95rem;
+      background: #1a56db;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: #1e429f; }
+    .btn-primary:focus-visible {
+      outline: 3px solid #1a56db;
+      outline-offset: 2px;
+    }
+
+    .dialog-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0.35rem;
+      line-height: 1;
+      color: #555;
+      border-radius: 4px;
+      font-size: 1.25rem;
+    }
+    .dialog-close:hover { background: #f0f0f0; color: #111; }
+    .dialog-close:focus-visible {
+      outline: 3px solid #1a56db;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="trigger" type="button" aria-haspopup="dialog">
+    Open Dialog
+  </button>
+
+  <div
+    role="dialog"
+    id="example-dialog"
+    aria-modal="true"
+    aria-labelledby="dialog-title"
+    aria-describedby="dialog-desc"
+  >
+    <div class="dialog-box">
+      <button class="dialog-close" type="button" aria-label="Close dialog">&#10005;</button>
+
+      <h2 class="dialog-title" id="dialog-title">Confirm Action</h2>
+
+      <p class="dialog-body" id="dialog-desc">
+        Are you sure you want to proceed? This action cannot be undone.
+        Review the details carefully before confirming.
+      </p>
+
+      <div class="dialog-actions">
+        <button class="btn-secondary" type="button" data-close>Cancel</button>
+        <button class="btn-primary" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dialog = document.getElementById('example-dialog');
+    const trigger = document.querySelector('button.trigger');
+    const closeButtons = dialog.querySelectorAll('[data-close], .dialog-close');
+
+    const FOCUSABLE = [
+      'a[href]',
+      'button:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(', ');
+
+    function getFocusable() {
+      return [...dialog.querySelectorAll(FOCUSABLE)];
+    }
+
+    function openDialog() {
+      dialog.classList.add('is-open');
+      const focusable = getFocusable();
+      if (focusable.length) focusable[0].focus();
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDialog() {
+      dialog.classList.remove('is-open');
+      document.body.style.overflow = '';
+      trigger.focus();
+    }
+
+    trigger.addEventListener('click', openDialog);
+
+    closeButtons.forEach(btn => btn.addEventListener('click', closeDialog));
+
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeDialog();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        const focusable = getFocusable();
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    });
+
+    // Close on backdrop click
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) closeDialog();
+    });
+  </script>
+
+</body>
+</html>

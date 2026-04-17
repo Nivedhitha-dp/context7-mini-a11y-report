@@ -1,0 +1,152 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 640px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      color: #1a1a1a;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .example {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+    }
+
+    .example button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: #f5f5f5;
+      border: none;
+      border-bottom: 1px solid transparent;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .example button:focus-visible {
+      outline: 3px solid #005fcc;
+      outline-offset: -3px;
+    }
+
+    .example button:hover {
+      background: #e8e8e8;
+    }
+
+    .example button[aria-expanded="true"] {
+      border-bottom-color: #ccc;
+    }
+
+    .example button .icon {
+      width: 1rem;
+      height: 1rem;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .example button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .details {
+      padding: 1rem;
+      background: #fff;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details p {
+      margin: 0;
+      line-height: 1.6;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <h1>Expand/Collapse Examples</h1>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="section1-content"
+      id="section1-btn"
+    >
+      What is accessible web design?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 5l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="details" id="section1-content" role="region" aria-labelledby="section1-btn" hidden>
+      <p>Accessible web design means creating websites and applications that can be used by people with a wide range of abilities and disabilities. It follows WCAG guidelines to ensure content is perceivable, operable, understandable, and robust.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="section2-content"
+      id="section2-btn"
+    >
+      Why does keyboard navigation matter?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 5l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="details" id="section2-content" role="region" aria-labelledby="section2-btn" hidden>
+      <p>Many users navigate the web exclusively via keyboard — including people with motor disabilities, power users, and those using assistive technologies like screen readers. Every interactive element must be reachable and operable without a mouse.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="section3-content"
+      id="section3-btn"
+    >
+      What is ARIA and when should I use it?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 5l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="details" id="section3-content" role="region" aria-labelledby="section3-btn" hidden>
+      <p>ARIA (Accessible Rich Internet Applications) is a set of attributes that supplement HTML semantics for assistive technologies. The first rule of ARIA is to use native HTML elements whenever possible — only reach for ARIA when no native equivalent exists.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.example button[aria-controls]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        var panel = document.getElementById(this.getAttribute('aria-controls'));
+        if (expanded) {
+          panel.setAttribute('hidden', '');
+        } else {
+          panel.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .example {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .example + .example {
+      margin-top: 0;
+    }
+
+    .disclosure-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .disclosure-trigger:focus-visible {
+      outline: 3px solid #2563eb;
+      outline-offset: -3px;
+    }
+
+    .disclosure-trigger:hover {
+      background: #f0f4ff;
+    }
+
+    .disclosure-trigger .icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+      color: #6b7280;
+    }
+
+    .disclosure-trigger[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .details {
+      border-top: 1px solid #e5e7eb;
+      padding: 1rem 1.25rem;
+      color: #374151;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details p + p {
+      margin-top: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Expand / Collapse Widgets</h1>
+
+  <div class="example">
+    <button
+      class="disclosure-trigger"
+      aria-expanded="false"
+      aria-controls="panel-1"
+      id="trigger-1"
+    >
+      What is WCAG?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-1" role="region" aria-labelledby="trigger-1" hidden>
+      <p>The Web Content Accessibility Guidelines (WCAG) are a set of internationally recognized standards developed by the W3C to make web content more accessible to people with disabilities.</p>
+      <p>WCAG 2.1 AA is the most widely adopted conformance level, covering perceivability, operability, understandability, and robustness.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      class="disclosure-trigger"
+      aria-expanded="false"
+      aria-controls="panel-2"
+      id="trigger-2"
+    >
+      Why does keyboard navigation matter?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-2" role="region" aria-labelledby="trigger-2" hidden>
+      <p>Many users rely solely on a keyboard to navigate the web — including people with motor disabilities, power users, and assistive-technology users such as screen reader users.</p>
+      <p>All interactive controls must be reachable and operable via keyboard, with a clearly visible focus indicator at all times.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      class="disclosure-trigger"
+      aria-expanded="true"
+      aria-controls="panel-3"
+      id="trigger-3"
+    >
+      What is ARIA?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-3" role="region" aria-labelledby="trigger-3">
+      <p>Accessible Rich Internet Applications (ARIA) is a set of HTML attributes that communicate roles, states, and properties to assistive technologies when native semantics are insufficient.</p>
+      <p>The first rule of ARIA: use native HTML elements before reaching for ARIA roles and attributes.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.disclosure-trigger').forEach(function(trigger) {
+      trigger.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        var panelId = this.getAttribute('aria-controls');
+        var panel = document.getElementById(panelId);
+
+        this.setAttribute('aria-expanded', String(!expanded));
+        panel.hidden = expanded;
+      });
+    });
+  </script>
+</body>
+</html>

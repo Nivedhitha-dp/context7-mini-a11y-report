@@ -1,0 +1,13 @@
+The `accessibility-agents:accessibility-lead` agent type referenced by the hook doesn't exist in this environment — only `Explore`, `general-purpose`, `Plan`, and `statusline-setup` are available. The edit gate can't be satisfied.
+
+**What's happening:** The `PreToolUse` hook in your Claude Code settings blocks writes to UI files until an Agent call with `subagent_type: "accessibility-agents:accessibility-lead"` completes. Since that agent type isn't registered, the gate can never unlock automatically.
+
+**Options to unblock this:**
+
+1. **Register the agent** — Add an `accessibility-agents:accessibility-lead` agent definition to your Claude Code agent config so the subagent_type resolves.
+
+2. **Modify the hook** — Edit `~/.claude/settings.json` (or the project `.claude/settings.json`) to relax or remove the `a11y-enforce-edit.sh` PreToolUse hook for this session.
+
+3. **Use the `update-config` skill** — Type `/update-config` and I can help you adjust the hook or permissions.
+
+The HTML I drafted is ready — it has all the required accessibility features (skip link, landmarks, `aria-required`, `aria-describedby` for helper/error text, `aria-live="polite"` for inline errors, focus management on submit, forced-colors support, and reflow layout). Once the gate is unblocked, I can write it immediately.

@@ -1,0 +1,204 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expand/Collapse Widget Examples</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background: #f5f5f5;
+    padding: 2rem 1rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+    color: #111;
+  }
+
+  h2 {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+
+  .example {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+  }
+
+  /* ── Native <details> styling ── */
+  details.details {
+    border: 1px solid #767676;
+    border-radius: 0.375rem;
+    background: #fafafa;
+  }
+
+  details.details > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: #1a1a1a;
+    list-style: none; /* remove default marker in Firefox */
+    user-select: none;
+  }
+
+  /* Remove webkit disclosure triangle */
+  details.details > summary::-webkit-details-marker { display: none; }
+
+  details.details > summary:focus-visible {
+    outline: 3px solid #0066cc;
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  details.details > summary:hover {
+    background: #eef4ff;
+  }
+
+  /* Custom chevron icon via CSS */
+  details.details > summary::after {
+    content: '';
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    margin-right: 0.25rem;
+  }
+
+  details.details[open] > summary::after {
+    transform: rotate(-135deg);
+  }
+
+  .details-body {
+    padding: 1rem;
+    border-top: 1px solid #ccc;
+    color: #222;
+  }
+
+  .details-body p + p {
+    margin-top: 0.75rem;
+  }
+
+  .details-body ul {
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .details-body li + li {
+    margin-top: 0.25rem;
+  }
+
+  /* ── Accordion group ── */
+  .accordion-group {
+    border: 1px solid #767676;
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
+
+  .accordion-group details.details {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+    background: #fafafa;
+  }
+
+  .accordion-group details.details:last-child {
+    border-bottom: none;
+  }
+
+  .accordion-group details.details > summary {
+    border-radius: 0;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Expand / Collapse Widget Examples</h1>
+
+  <!-- Example 1: Basic standalone disclosure -->
+  <section>
+    <h2>Basic Disclosure</h2>
+    <div class="example">
+      <details class="details">
+        <summary>What is WCAG?</summary>
+        <div class="details-body">
+          <p>The Web Content Accessibility Guidelines (WCAG) are developed through the W3C process in cooperation with individuals and organisations around the world, with a goal of providing a single shared standard for web content accessibility.</p>
+          <p>WCAG 2.2 builds on prior versions and adds new success criteria focused on mobile, cognitive, and low-vision users.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Example 2: Open by default -->
+  <section>
+    <h2>Open by Default</h2>
+    <div class="example">
+      <details class="details" open>
+        <summary>Getting Started</summary>
+        <div class="details-body">
+          <p>This panel is expanded on page load using the <code>open</code> attribute on the <code>&lt;details&gt;</code> element.</p>
+          <ul>
+            <li>No JavaScript required</li>
+            <li>Keyboard operable (Enter or Space on the summary)</li>
+            <li>Screen readers announce expanded/collapsed state natively</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Example 3: Accordion group (multiple items) -->
+  <section>
+    <h2>Accordion Group</h2>
+    <div class="example">
+      <div class="accordion-group" role="list">
+        <details class="details" role="listitem">
+          <summary>Section One — Semantic HTML</summary>
+          <div class="details-body">
+            <p>Use the most meaningful HTML element for each piece of content. Semantic HTML conveys structure and meaning to assistive technologies without extra ARIA.</p>
+          </div>
+        </details>
+
+        <details class="details" role="listitem">
+          <summary>Section Two — Keyboard Navigation</summary>
+          <div class="details-body">
+            <p>Every interactive element must be reachable and operable using a keyboard alone. Users navigate with Tab, activate with Enter or Space, and should always see a visible focus indicator.</p>
+          </div>
+        </details>
+
+        <details class="details" role="listitem">
+          <summary>Section Three — Color Contrast</summary>
+          <div class="details-body">
+            <p>Normal text must meet a 4.5:1 contrast ratio against its background. Large text (18 pt or 14 pt bold) and UI component boundaries require at least 3:1.</p>
+          </div>
+        </details>
+
+        <details class="details" role="listitem">
+          <summary>Section Four — Focus Management</summary>
+          <div class="details-body">
+            <p>Whenever dynamic content appears or disappears, move keyboard focus to an appropriate element so that keyboard-only and screen-reader users are not disoriented.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

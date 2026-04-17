@@ -1,0 +1,379 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Example Organization</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f5f5f5;
+      --color-text: #1a1a1a;
+      --color-muted: #595959;
+      --color-border: #595959;
+      --color-focus: #005fcc;
+      --color-focus-border: #003d82;
+      --color-danger: #b91c1c;
+      --color-danger-bg: #fff5f5;
+      --color-success-text: #14532d;
+      --color-success-bg: #f0fdf4;
+      --color-success-border: #166534;
+      --color-btn: #0057b8;
+      --color-btn-text: #ffffff;
+      --color-btn-hover: #003d82;
+      --color-btn-active: #002a5c;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+
+    .skip-link {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: .5rem 1rem;
+      background: var(--color-btn);
+      color: var(--color-btn-text);
+      font-weight: 700;
+      text-decoration: none;
+      z-index: 100;
+      border-radius: 0 0 4px 0;
+    }
+
+    .skip-link:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      width: 1px;
+      overflow: hidden;
+      white-space: nowrap;
+      position: absolute;
+    }
+
+    .site-header {
+      padding: 1rem 1.5rem;
+      background: var(--color-surface);
+      border-bottom: 1px solid #c7c7c7;
+    }
+
+    .site-header p {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      width: 100%;
+    }
+
+    main:focus {
+      outline: none;
+    }
+
+    h1 {
+      margin: 0 0 .5rem;
+      font-size: 1.75rem;
+      line-height: 1.2;
+    }
+
+    .intro {
+      margin: 0 0 1.5rem;
+      color: var(--color-muted);
+    }
+
+    .success-message {
+      padding: 1rem 1.25rem;
+      background: var(--color-success-bg);
+      border: 2px solid var(--color-success-border);
+      border-radius: 4px;
+      color: var(--color-success-text);
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    .success-message[hidden] {
+      display: none;
+    }
+
+    .required-note {
+      margin: 0 0 1.5rem;
+      font-size: .875rem;
+      color: var(--color-muted);
+    }
+
+    .req-star {
+      color: var(--color-danger);
+      font-weight: 700;
+    }
+
+    .form-field {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: .25rem;
+    }
+
+    .opt-label {
+      font-weight: 400;
+      font-size: .875rem;
+      color: var(--color-muted);
+    }
+
+    .helper-text {
+      margin: .2rem 0 .35rem;
+      font-size: .875rem;
+      color: var(--color-muted);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      padding: .5rem .75rem;
+      font-size: 1rem;
+      font-family: inherit;
+      line-height: 1.5;
+      color: var(--color-text);
+      background: var(--color-bg);
+      border: 2px solid var(--color-border);
+      border-radius: 4px;
+    }
+
+    input:focus {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 2px;
+      border-color: var(--color-focus-border);
+    }
+
+    input[aria-invalid="true"] {
+      border-color: var(--color-danger);
+      background: var(--color-danger-bg);
+    }
+
+    input[aria-invalid="true"]:focus {
+      outline-color: var(--color-danger);
+    }
+
+    .error-msg {
+      display: block;
+      min-height: 1.25rem;
+      margin-top: .375rem;
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--color-danger);
+    }
+
+    .btn-submit {
+      display: inline-block;
+      padding: .65rem 2rem;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--color-btn-text);
+      background: var(--color-btn);
+      border: 2px solid transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      min-width: 140px;
+    }
+
+    .btn-submit:hover {
+      background: var(--color-btn-hover);
+    }
+
+    .btn-submit:active {
+      background: var(--color-btn-active);
+    }
+
+    .btn-submit:focus {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    @media (forced-colors: active) {
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"] {
+        border: 2px solid ButtonBorder;
+      }
+
+      .btn-submit {
+        border: 2px solid ButtonBorder;
+      }
+
+      input[aria-invalid="true"] {
+        border-width: 3px;
+        outline: 2px dotted Highlight;
+        outline-offset: 2px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      main {
+        padding: 1.5rem 1rem;
+      }
+
+      h1 {
+        font-size: 1.375rem;
+      }
+
+      .btn-submit {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#maincontent" class="skip-link">Skip to main content</a>
+
+<header class="site-header">
+  <p>Example Organization</p>
+</header>
+
+<main id="maincontent" tabindex="-1">
+  <h1>Contact Us</h1>
+  <p class="intro">Complete the form below and we will get back to you as soon as possible.</p>
+
+  <div class="success-message" id="success-msg" tabindex="-1" hidden>
+    Thank you for reaching out. Your message has been received and we will be in touch soon.
+  </div>
+
+  <p class="required-note">
+    Fields marked with <span class="req-star" aria-hidden="true">*</span>
+    <span style="clip:rect(0,0,0,0);clip-path:inset(50%);height:1px;overflow:hidden;position:absolute;white-space:nowrap;width:1px">asterisk</span>
+    are required.
+  </p>
+
+  <form id="contact-form" novalidate>
+
+    <div class="form-field">
+      <label for="full-name">
+        Full Name <span class="req-star" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="text"
+        id="full-name"
+        name="full-name"
+        autocomplete="name"
+        aria-required="true"
+        aria-describedby="full-name-err"
+        spellcheck="false"
+      >
+      <span class="error-msg" id="full-name-err" role="alert"></span>
+    </div>
+
+    <div class="form-field">
+      <label for="email">
+        Email Address <span class="req-star" aria-hidden="true">*</span>
+      </label>
+      <p class="helper-text" id="email-hint">Format: name@example.com</p>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        autocomplete="email"
+        aria-required="true"
+        aria-describedby="email-hint email-err"
+        inputmode="email"
+        spellcheck="false"
+      >
+      <span class="error-msg" id="email-err" role="alert"></span>
+    </div>
+
+    <div class="form-field">
+      <label for="phone">
+        Phone Number <span class="opt-label">(optional)</span>
+      </label>
+      <p class="helper-text" id="phone-hint">Preferred format: (555) 555-5555</p>
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        autocomplete="tel"
+        aria-describedby="phone-hint"
+        inputmode="tel"
+      >
+    </div>
+
+    <div class="form-field">
+      <button type="submit" class="btn-submit">Submit</button>
+    </div>
+
+  </form>
+</main>
+
+<script>
+  var form = document.getElementById('contact-form');
+  var successMsg = document.getElementById('success-msg');
+
+  function setError(inputId, errId, msg) {
+    document.getElementById(inputId).setAttribute('aria-invalid', 'true');
+    document.getElementById(errId).textContent = msg;
+  }
+
+  function clearError(inputId, errId) {
+    document.getElementById(inputId).removeAttribute('aria-invalid');
+    document.getElementById(errId).textContent = '';
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    clearError('full-name', 'full-name-err');
+    clearError('email', 'email-err');
+
+    var nameVal = document.getElementById('full-name').value.trim();
+    var emailVal = document.getElementById('email').value.trim();
+    var firstInvalid = null;
+
+    if (!nameVal) {
+      setError('full-name', 'full-name-err', 'Please enter your full name.');
+      firstInvalid = firstInvalid || document.getElementById('full-name');
+    }
+
+    if (!emailVal) {
+      setError('email', 'email-err', 'Please enter your email address.');
+      firstInvalid = firstInvalid || document.getElementById('email');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+      setError('email', 'email-err', 'Please enter a valid email address (for example, name@example.com).');
+      firstInvalid = firstInvalid || document.getElementById('email');
+    }
+
+    if (firstInvalid) {
+      firstInvalid.focus();
+      return;
+    }
+
+    form.hidden = true;
+    successMsg.hidden = false;
+    successMsg.focus();
+  });
+
+  document.getElementById('full-name').addEventListener('input', function () {
+    if (this.getAttribute('aria-invalid')) clearError('full-name', 'full-name-err');
+  });
+
+  document.getElementById('email').addEventListener('input', function () {
+    if (this.getAttribute('aria-invalid')) clearError('email', 'email-err');
+  });
+</script>
+
+</body>
+</html>

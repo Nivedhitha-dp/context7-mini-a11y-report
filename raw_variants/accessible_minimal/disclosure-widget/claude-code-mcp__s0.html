@@ -1,0 +1,176 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 640px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      background: #fff;
+      color: #1a1a1a;
+    }
+
+    h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+
+    .example {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+    }
+
+    .example button[aria-expanded] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: #f5f5f5;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+      gap: 0.5rem;
+    }
+
+    .example button[aria-expanded]:hover {
+      background: #e8e8e8;
+    }
+
+    .example button[aria-expanded]:focus-visible {
+      outline: 3px solid #005fcc;
+      outline-offset: -3px;
+    }
+
+    .example button[aria-expanded] .icon {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      /* triangle pointing right */
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+      background: #555;
+    }
+
+    .example button[aria-expanded="true"] .icon {
+      transform: rotate(90deg);
+    }
+
+    .details {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details-inner {
+      padding: 1rem;
+      border-top: 1px solid #ccc;
+    }
+
+    .details p { margin: 0 0 0.75rem; }
+    .details p:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+  <h1>Expand/Collapse Widget</h1>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="section1-content"
+      id="section1-btn"
+    >
+      What is WCAG?
+      <span class="icon" aria-hidden="true"></span>
+    </button>
+    <div
+      class="details"
+      id="section1-content"
+      role="region"
+      aria-labelledby="section1-btn"
+      hidden
+    >
+      <div class="details-inner">
+        <p>WCAG stands for Web Content Accessibility Guidelines. They are published by the W3C and define how to make web content more accessible to people with disabilities.</p>
+        <p>WCAG 2.1 Level AA is the most widely adopted accessibility standard, referenced in legal frameworks around the world.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="section2-content"
+      id="section2-btn"
+    >
+      Why use semantic HTML?
+      <span class="icon" aria-hidden="true"></span>
+    </button>
+    <div
+      class="details"
+      id="section2-content"
+      role="region"
+      aria-labelledby="section2-btn"
+      hidden
+    >
+      <div class="details-inner">
+        <p>Semantic HTML communicates meaning to browsers, assistive technologies, and search engines. Elements like <code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, and <code>&lt;main&gt;</code> convey their purpose without extra ARIA.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="true"
+      aria-controls="section3-content"
+      id="section3-btn"
+    >
+      Keyboard navigation basics
+      <span class="icon" aria-hidden="true"></span>
+    </button>
+    <div
+      class="details"
+      id="section3-content"
+      role="region"
+      aria-labelledby="section3-btn"
+    >
+      <div class="details-inner">
+        <p>All interactive elements must be reachable and operable by keyboard alone. This section starts expanded to show default open state.</p>
+        <p>Use <kbd>Tab</kbd> to move between focusable elements and <kbd>Enter</kbd> or <kbd>Space</kbd> to activate buttons.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('button[aria-expanded]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        var contentId = this.getAttribute('aria-controls');
+        var content = document.getElementById(contentId);
+        this.setAttribute('aria-expanded', String(!expanded));
+        if (expanded) {
+          content.setAttribute('hidden', '');
+        } else {
+          content.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

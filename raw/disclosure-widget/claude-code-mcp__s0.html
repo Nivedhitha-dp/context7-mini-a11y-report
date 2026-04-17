@@ -1,0 +1,130 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget Examples</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 640px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      color: #1a1a1a;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+    .example {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .example button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f5f5f5;
+      border: none;
+      padding: 0.85rem 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+    }
+    .example button:focus-visible {
+      outline: 3px solid #005fcc;
+      outline-offset: -3px;
+    }
+    .example button:hover {
+      background: #e8e8e8;
+    }
+    .example button .icon {
+      font-size: 0.8rem;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .example button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+    .details {
+      padding: 1rem;
+      border-top: 1px solid #ccc;
+      background: #fff;
+    }
+    .details[hidden] {
+      display: none;
+    }
+    .details p { margin: 0 0 0.5rem; }
+    .details p:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <h1>Expand/Collapse Widget</h1>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-1"
+      id="btn-1"
+    >
+      What is WCAG?
+      <span class="icon" aria-hidden="true">&#9660;</span>
+    </button>
+    <div class="details" id="details-1" role="region" aria-labelledby="btn-1" hidden>
+      <p>WCAG stands for Web Content Accessibility Guidelines. It is published by the W3C and defines standards for making web content accessible to people with disabilities.</p>
+      <p>The current version is WCAG 2.2, with conformance levels A, AA, and AAA.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-2"
+      id="btn-2"
+    >
+      Why is keyboard accessibility important?
+      <span class="icon" aria-hidden="true">&#9660;</span>
+    </button>
+    <div class="details" id="details-2" role="region" aria-labelledby="btn-2" hidden>
+      <p>Many users rely solely on keyboards to navigate the web, including people with motor disabilities who cannot use a mouse.</p>
+      <p>All interactive elements must be reachable via Tab and operable with Enter or Space.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-3"
+      id="btn-3"
+    >
+      What is a sufficient color contrast ratio?
+      <span class="icon" aria-hidden="true">&#9660;</span>
+    </button>
+    <div class="details" id="details-3" role="region" aria-labelledby="btn-3" hidden>
+      <p>WCAG AA requires a minimum contrast ratio of 4.5:1 for normal text and 3:1 for large text (18pt or 14pt bold).</p>
+      <p>UI components and graphical objects also require a 3:1 ratio against adjacent colors.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.example button[aria-controls]').forEach(function(btn) {
+      var targetId = btn.getAttribute('aria-controls');
+      var target = document.getElementById(targetId);
+
+      btn.addEventListener('click', function() {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        if (expanded) {
+          target.setAttribute('hidden', '');
+        } else {
+          target.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

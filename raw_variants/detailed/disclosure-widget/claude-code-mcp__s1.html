@@ -1,0 +1,494 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand / Collapse Widget - Component Examples</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f5f5f5;
+      --color-text: #1a1a1a;
+      --color-muted-text: #595959;
+      --color-border: #767676;
+      --color-focus: #0057b8;
+      --color-focus-bg: #e8f0fd;
+      --color-btn-bg: #0057b8;
+      --color-btn-text: #ffffff;
+      --color-btn-hover-bg: #003e8a;
+      --color-btn-border: #003e8a;
+      --color-heading: #1a1a1a;
+      --color-divider: #d0d0d0;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Skip link */
+    .sr-only:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    .sr-only {
+      position: absolute;
+      background: var(--color-btn-bg);
+      color: var(--color-btn-text);
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      font-weight: 600;
+      z-index: 100;
+    }
+
+    header {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-divider);
+      padding: 1rem 1.5rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--color-heading);
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    main:focus {
+      outline: none;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      color: var(--color-heading);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--color-divider);
+      padding-bottom: 0.5rem;
+    }
+
+    /* Example wrapper */
+    .example {
+      margin-bottom: 2rem;
+    }
+
+    /* Disclosure button */
+    .disclosure-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      background: var(--color-btn-bg);
+      color: var(--color-btn-text);
+      border: 2px solid var(--color-btn-border);
+      border-radius: 4px;
+      padding: 0.625rem 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.4;
+    }
+
+    .disclosure-btn:hover {
+      background: var(--color-btn-hover-bg);
+      border-color: var(--color-btn-hover-bg);
+    }
+
+    .disclosure-btn:focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    .disclosure-btn[aria-expanded="true"] .icon-chevron {
+      transform: rotate(180deg);
+    }
+
+    .icon-chevron {
+      flex-shrink: 0;
+      width: 1.25em;
+      height: 1.25em;
+      transition: transform 0.2s ease;
+      fill: currentColor;
+      stroke: none;
+    }
+
+    /* Accordion variant */
+    .accordion {
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .accordion-item {
+      border-top: 1px solid var(--color-border);
+    }
+
+    .accordion-item:first-child {
+      border-top: none;
+    }
+
+    .accordion-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: var(--color-surface);
+      color: var(--color-text);
+      border: none;
+      padding: 0.875rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.4;
+    }
+
+    .accordion-btn:hover {
+      background: var(--color-focus-bg);
+    }
+
+    .accordion-btn:focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: -3px;
+    }
+
+    .accordion-btn[aria-expanded="true"] {
+      background: var(--color-focus-bg);
+    }
+
+    .accordion-btn[aria-expanded="true"] .icon-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Details region */
+    .details {
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details-inner {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--color-divider);
+    }
+
+    .details-inner p {
+      margin-top: 0;
+    }
+
+    .details-inner p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Standalone disclosure details */
+    .disclosure-details-inner {
+      padding: 1rem 0;
+    }
+
+    .disclosure-details-inner p {
+      margin-top: 0;
+    }
+
+    .disclosure-details-inner p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Description text */
+    .example-desc {
+      color: var(--color-muted-text);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--color-divider);
+      padding: 1rem 1.5rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--color-muted-text);
+    }
+
+    /* Forced-colors support */
+    @media (forced-colors: active) {
+      .disclosure-btn,
+      .accordion-btn {
+        border: 2px solid ButtonBorder;
+        forced-color-adjust: none;
+        background: ButtonFace;
+        color: ButtonText;
+      }
+
+      .disclosure-btn:focus-visible,
+      .accordion-btn:focus-visible {
+        outline: 3px solid Highlight;
+        outline-offset: 2px;
+      }
+
+      .accordion {
+        border: 1px solid ButtonBorder;
+      }
+
+      .accordion-item {
+        border-top-color: ButtonBorder;
+      }
+
+      .details[hidden] {
+        display: none;
+      }
+    }
+
+    /* Reflow at 320px */
+    @media (max-width: 360px) {
+      main {
+        padding: 1rem;
+      }
+
+      header {
+        padding: 0.75rem 1rem;
+      }
+
+      .disclosure-btn,
+      .accordion-btn {
+        font-size: 0.95rem;
+        padding: 0.5rem 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="#maincontent" class="sr-only">Skip to main content</a>
+    <h1>Expand / Collapse Widget Examples</h1>
+  </header>
+
+  <main id="maincontent" tabindex="-1">
+
+    <h2>Standalone Disclosure</h2>
+    <p class="example-desc">A single button that reveals or hides a section of content.</p>
+
+    <div class="example">
+      <button
+        type="button"
+        class="disclosure-btn"
+        aria-expanded="false"
+        aria-controls="disclosure-1-details"
+        id="disclosure-1-btn"
+      >
+        <svg class="icon-chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+        What is web accessibility?
+      </button>
+      <div
+        id="disclosure-1-details"
+        class="details"
+        role="region"
+        aria-labelledby="disclosure-1-btn"
+        hidden
+      >
+        <div class="disclosure-details-inner">
+          <p>Web accessibility means that websites, tools, and technologies are designed and developed so that people with disabilities can use them. More specifically, people can perceive, understand, navigate, and interact with the web, and they can contribute to the web.</p>
+          <p>Accessibility encompasses all disabilities that affect access to the web, including auditory, cognitive, neurological, physical, speech, and visual disabilities.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="example">
+      <button
+        type="button"
+        class="disclosure-btn"
+        aria-expanded="false"
+        aria-controls="disclosure-2-details"
+        id="disclosure-2-btn"
+      >
+        <svg class="icon-chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+        Why does accessibility matter?
+      </button>
+      <div
+        id="disclosure-2-details"
+        class="details"
+        role="region"
+        aria-labelledby="disclosure-2-btn"
+        hidden
+      >
+        <div class="disclosure-details-inner">
+          <p>Accessibility matters because it enables equal access and opportunity for people with disabilities. An estimated 1.3 billion people globally experience some form of disability, and many depend on accessible digital products to participate in education, employment, civic life, and daily activities.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Accordion</h2>
+    <p class="example-desc">A set of vertically stacked disclosure buttons where each controls a related panel.</p>
+
+    <div class="example">
+      <div class="accordion" role="list">
+
+        <div class="accordion-item" role="listitem">
+          <button
+            type="button"
+            class="accordion-btn"
+            aria-expanded="false"
+            aria-controls="acc-panel-1"
+            id="acc-btn-1"
+          >
+            Perceivable
+            <svg class="icon-chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <div
+            id="acc-panel-1"
+            class="details"
+            role="region"
+            aria-labelledby="acc-btn-1"
+            hidden
+          >
+            <div class="details-inner">
+              <p>Information and user interface components must be presentable to users in ways they can perceive. This means providing text alternatives for non-text content, captions for audio and video, and ensuring content can be presented in different ways without losing meaning.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item" role="listitem">
+          <button
+            type="button"
+            class="accordion-btn"
+            aria-expanded="false"
+            aria-controls="acc-panel-2"
+            id="acc-btn-2"
+          >
+            Operable
+            <svg class="icon-chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <div
+            id="acc-panel-2"
+            class="details"
+            role="region"
+            aria-labelledby="acc-btn-2"
+            hidden
+          >
+            <div class="details-inner">
+              <p>User interface components and navigation must be operable by everyone. All functionality must be available from a keyboard. Users need enough time to read and use content, and content should not cause seizures or physical reactions.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item" role="listitem">
+          <button
+            type="button"
+            class="accordion-btn"
+            aria-expanded="false"
+            aria-controls="acc-panel-3"
+            id="acc-btn-3"
+          >
+            Understandable
+            <svg class="icon-chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <div
+            id="acc-panel-3"
+            class="details"
+            role="region"
+            aria-labelledby="acc-btn-3"
+            hidden
+          >
+            <div class="details-inner">
+              <p>Information and the operation of the user interface must be understandable. Text must be readable and understandable, content must appear and operate in predictable ways, and users must be helped to avoid and correct mistakes.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item" role="listitem">
+          <button
+            type="button"
+            class="accordion-btn"
+            aria-expanded="false"
+            aria-controls="acc-panel-4"
+            id="acc-btn-4"
+          >
+            Robust
+            <svg class="icon-chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <div
+            id="acc-panel-4"
+            class="details"
+            role="region"
+            aria-labelledby="acc-btn-4"
+            hidden
+          >
+            <div class="details-inner">
+              <p>Content must be robust enough that it can be interpreted by a wide variety of user agents, including assistive technologies. As technologies evolve, content should remain accessible.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Expand/collapse examples — manual review with assistive technology is recommended.</p>
+  </footer>
+
+  <script>
+    // Standalone disclosure buttons
+    document.querySelectorAll('.disclosure-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        var panelId = this.getAttribute('aria-controls');
+        var panel = document.getElementById(panelId);
+
+        this.setAttribute('aria-expanded', String(!expanded));
+        if (expanded) {
+          panel.hidden = true;
+        } else {
+          panel.hidden = false;
+        }
+      });
+    });
+
+    // Accordion buttons
+    document.querySelectorAll('.accordion-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        var panelId = this.getAttribute('aria-controls');
+        var panel = document.getElementById(panelId);
+
+        this.setAttribute('aria-expanded', String(!expanded));
+        panel.hidden = expanded;
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,142 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 640px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      color: #1a1a1a;
+    }
+
+    .example {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+    }
+
+    .example button[aria-expanded] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #f5f5f5;
+      border: none;
+      border-radius: 4px 4px 0 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .example button[aria-expanded]:focus-visible {
+      outline: 3px solid #005fcc;
+      outline-offset: 2px;
+    }
+
+    .example button[aria-expanded]:hover {
+      background: #e8e8e8;
+    }
+
+    .example button[aria-expanded] .icon {
+      width: 1em;
+      height: 1em;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .example button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .example .details {
+      padding: 1rem;
+      border-top: 1px solid #ccc;
+    }
+
+    .example .details[hidden] {
+      display: none;
+    }
+
+    .example button[aria-expanded="false"] + .details {
+      border-top: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Expand/Collapse Widget</h1>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="section1-content"
+      id="section1-btn"
+    >
+      What is an accordion?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="4 6 8 10 12 6"/>
+      </svg>
+    </button>
+    <div class="details" id="section1-content" hidden>
+      <p>An accordion is a vertically stacked set of interactive headings that each reveal a section of content. They reduce scrolling and help users focus on relevant information.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="section2-content"
+      id="section2-btn"
+    >
+      Why use semantic HTML?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="4 6 8 10 12 6"/>
+      </svg>
+    </button>
+    <div class="details" id="section2-content" hidden>
+      <p>Semantic HTML elements carry built-in meaning for browsers, search engines, and assistive technologies. Using the right element for the right job improves accessibility and maintainability without extra ARIA.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="true"
+      aria-controls="section3-content"
+      id="section3-btn"
+    >
+      Keyboard interaction
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="4 6 8 10 12 6"/>
+      </svg>
+    </button>
+    <div class="details" id="section3-content">
+      <ul>
+        <li><kbd>Enter</kbd> or <kbd>Space</kbd> — toggle the panel open or closed</li>
+        <li><kbd>Tab</kbd> — move focus to the next focusable element</li>
+        <li><kbd>Shift + Tab</kbd> — move focus to the previous focusable element</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('button[aria-expanded]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        var panel = document.getElementById(this.getAttribute('aria-controls'));
+        if (panel) {
+          panel.hidden = expanded;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

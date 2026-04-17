@@ -1,0 +1,1184 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopNest — Home</title>
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f7f7f8;
+      --color-border: #dddde3;
+      --color-text: #1a1a2e;
+      --color-text-muted: #4a4a6a;
+      --color-accent: #1a56db;
+      --color-accent-dark: #1044b5;
+      --color-accent-light: #e8effd;
+      --color-deal: #b91c1c;
+      --color-deal-bg: #fef2f2;
+      --color-deal-border: #fecaca;
+      --color-success: #166534;
+      --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-card: 0 2px 8px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.06);
+      --shadow-card-hover: 0 8px 24px rgba(0,0,0,0.12), 0 0 1px rgba(0,0,0,0.08);
+      --transition: 200ms ease;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: var(--color-accent); }
+    a:hover { color: var(--color-accent-dark); }
+    ul { list-style: none; }
+
+    /* ── Skip link (keyboard users bypass nav) ── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 9999;
+      padding: 0.75rem 1.25rem;
+      background: var(--color-accent);
+      color: #fff;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: top var(--transition);
+    }
+    .skip-link:focus { top: 1rem; outline: 3px solid #fff; outline-offset: 2px; }
+
+    /* ── Focus styles (visible for keyboard users, less intrusive for mouse) ── */
+    :focus-visible {
+      outline: 3px solid var(--color-accent);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+    :focus:not(:focus-visible) { outline: none; }
+
+    /* ── Layout utilities ── */
+    .container { max-width: 1200px; margin-inline: auto; padding-inline: 1.25rem; }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.75rem;
+    }
+    .section-header h2 { font-size: clamp(1.35rem, 3vw, 1.75rem); font-weight: 800; letter-spacing: -0.02em; }
+    .view-all-link {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .view-all-link:hover { text-decoration: underline; }
+
+    /* ── Header / Nav ── */
+    .site-header {
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding-block: 0.875rem;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--color-text);
+      text-decoration: none;
+      letter-spacing: -0.03em;
+      flex-shrink: 0;
+    }
+    .logo span { color: var(--color-accent); }
+    .site-nav { flex: 1; }
+    .site-nav ul {
+      display: flex;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+    .site-nav a {
+      display: block;
+      padding: 0.45rem 0.8rem;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      transition: background var(--transition), color var(--transition);
+    }
+    .site-nav a:hover, .site-nav a[aria-current="page"] {
+      background: var(--color-accent-light);
+      color: var(--color-accent-dark);
+    }
+    .site-nav a[aria-current="page"] { font-weight: 700; }
+
+    /* Search form in header */
+    .header-search {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .search-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .search-input {
+      padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+      border: 1.5px solid var(--color-border);
+      border-radius: 999px;
+      font-size: 0.9rem;
+      width: 220px;
+      background: var(--color-surface);
+      color: var(--color-text);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .search-input:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-light); outline: none; }
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      pointer-events: none;
+      color: var(--color-text-muted);
+      width: 16px; height: 16px;
+    }
+    .btn-search {
+      padding: 0.5rem 1rem;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .btn-search:hover { background: var(--color-accent-dark); }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .icon-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.8rem;
+      border: none;
+      background: transparent;
+      color: var(--color-text);
+      font-size: 0.88rem;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--transition);
+      text-decoration: none;
+    }
+    .icon-btn:hover { background: var(--color-surface); }
+    .icon-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .cart-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px; height: 18px;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 50%;
+      margin-left: -6px;
+      margin-top: -10px;
+      vertical-align: top;
+    }
+
+    /* ── Hero banner ── */
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #1a56db 100%);
+      color: #fff;
+      padding-block: 4rem 3.5rem;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      opacity: 0.88;
+      max-width: 520px;
+      margin-inline: auto;
+      margin-bottom: 2rem;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      background: #fff;
+      color: var(--color-accent-dark);
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); color: var(--color-accent-dark); }
+    .hero-cta:focus-visible { outline-color: #fff; }
+
+    /* ── Category chips ── */
+    .categories { padding-block: 1.75rem; border-bottom: 1px solid var(--color-border); }
+    .category-list {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+      scrollbar-width: thin;
+    }
+    .category-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-text);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: border-color var(--transition), background var(--transition);
+      cursor: pointer;
+    }
+    .category-chip:hover, .category-chip[aria-pressed="true"] {
+      border-color: var(--color-accent);
+      background: var(--color-accent-light);
+      color: var(--color-accent-dark);
+    }
+    .category-chip span[aria-hidden="true"] { font-size: 1.5rem; }
+
+    /* ── Product cards grid ── */
+    .section { padding-block: 3rem; }
+    .section + .section { border-top: 1px solid var(--color-border); }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .product-card {
+      background: var(--color-bg);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .product-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-3px); }
+    .product-img-wrap {
+      position: relative;
+      background: var(--color-surface);
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .product-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 300ms ease; }
+    .product-card:hover .product-img-wrap img { transform: scale(1.04); }
+    .product-badge {
+      position: absolute;
+      top: 0.6rem;
+      left: 0.6rem;
+      padding: 0.25rem 0.6rem;
+      background: var(--color-deal);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .wishlist-btn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.92);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      transition: background var(--transition), color var(--transition);
+    }
+    .wishlist-btn:hover, .wishlist-btn[aria-pressed="true"] { background: #fff; color: var(--color-deal); }
+    .wishlist-btn svg { width: 16px; height: 16px; }
+    .product-body { padding: 1rem; }
+    .product-category { font-size: 0.72rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+    .product-name { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
+    .product-name a { color: var(--color-text); text-decoration: none; }
+    .product-name a:hover { color: var(--color-accent); text-decoration: underline; }
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.6rem;
+    }
+    .stars { color: #f59e0b; font-size: 0.85rem; letter-spacing: 0.05em; }
+    .rating-count { font-size: 0.78rem; color: var(--color-text-muted); }
+    .product-price {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 0.875rem;
+    }
+    .price-current { font-size: 1.1rem; font-weight: 800; color: var(--color-text); }
+    .price-original { font-size: 0.88rem; color: var(--color-text-muted); text-decoration: line-through; }
+    .price-save { font-size: 0.78rem; font-weight: 700; color: var(--color-deal); }
+    .btn-add-cart {
+      width: 100%;
+      padding: 0.6rem;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .btn-add-cart:hover { background: var(--color-accent-dark); }
+
+    /* ── Deals banner ── */
+    .deals-banner {
+      background: var(--color-deal-bg);
+      border: 1.5px solid var(--color-deal-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .deals-banner-text h2 { font-size: 1.4rem; font-weight: 800; color: var(--color-deal); }
+    .deals-banner-text p { color: #7f1d1d; font-size: 0.92rem; margin-top: 0.25rem; }
+    .deals-timer {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .timer-block {
+      text-align: center;
+      background: #fff;
+      border: 1.5px solid var(--color-deal-border);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem 0.75rem;
+      min-width: 56px;
+    }
+    .timer-value {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--color-deal);
+      line-height: 1;
+    }
+    .timer-label { font-size: 0.65rem; font-weight: 600; color: #7f1d1d; text-transform: uppercase; letter-spacing: 0.06em; }
+    .timer-sep { font-size: 1.5rem; font-weight: 900; color: var(--color-deal); }
+
+    /* ── Blog posts ── */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .blog-card {
+      background: var(--color-bg);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .blog-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-3px); }
+    .blog-img-wrap { aspect-ratio: 16/9; overflow: hidden; background: var(--color-surface); }
+    .blog-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 300ms ease; }
+    .blog-card:hover .blog-img-wrap img { transform: scale(1.04); }
+    .blog-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .blog-tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: var(--color-accent-light);
+      color: var(--color-accent-dark);
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.6rem;
+      align-self: flex-start;
+    }
+    .blog-title { font-size: 1rem; font-weight: 700; line-height: 1.35; margin-bottom: 0.6rem; }
+    .blog-title a { color: var(--color-text); text-decoration: none; }
+    .blog-title a:hover { color: var(--color-accent); text-decoration: underline; }
+    .blog-excerpt { font-size: 0.88rem; color: var(--color-text-muted); line-height: 1.55; flex: 1; }
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding-top: 0.875rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+    .blog-author { font-weight: 600; color: var(--color-text); }
+
+    /* ── Newsletter ── */
+    .newsletter {
+      background: linear-gradient(135deg, #1a1a2e 0%, #1a56db 100%);
+      color: #fff;
+      padding-block: 3.5rem;
+    }
+    .newsletter .container { max-width: 600px; text-align: center; }
+    .newsletter h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin-bottom: 0.6rem; }
+    .newsletter p { opacity: 0.88; margin-bottom: 1.75rem; }
+    .newsletter-form { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+    .newsletter-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.75rem 1rem;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 0.95rem;
+      transition: border-color var(--transition);
+    }
+    .newsletter-input::placeholder { color: rgba(255,255,255,0.6); }
+    .newsletter-input:focus { border-color: #fff; outline: none; box-shadow: 0 0 0 3px rgba(255,255,255,0.25); }
+    .newsletter-btn {
+      padding: 0.75rem 1.75rem;
+      background: #fff;
+      color: var(--color-accent-dark);
+      border: none;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .newsletter-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
+    .newsletter-btn:focus-visible { outline-color: #fff; }
+    .newsletter-privacy { font-size: 0.78rem; opacity: 0.7; margin-top: 0.875rem; }
+    .newsletter-privacy a { color: #fff; }
+    /* announce live region for form submission */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      background: #0f0f1a;
+      color: #c8c8d8;
+      padding-block: 3rem 1.5rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .footer-brand p { font-size: 0.88rem; line-height: 1.6; margin-top: 0.75rem; opacity: 0.75; }
+    .footer-logo { font-size: 1.4rem; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: -0.03em; }
+    .footer-logo span { color: #60a5fa; }
+    .footer-col h3 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #fff; margin-bottom: 0.875rem; }
+    .footer-col ul { display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer-col a { font-size: 0.88rem; color: #c8c8d8; text-decoration: none; transition: color var(--transition); }
+    .footer-col a:hover { color: #fff; text-decoration: underline; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.82rem;
+    }
+    .footer-bottom p { opacity: 0.6; }
+    .social-links { display: flex; gap: 0.75rem; }
+    .social-link {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+      color: #c8c8d8;
+      text-decoration: none;
+      transition: background var(--transition), color var(--transition);
+    }
+    .social-link:hover { background: var(--color-accent); color: #fff; }
+    .social-link svg { width: 16px; height: 16px; }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .header-inner { flex-wrap: wrap; }
+      .site-nav { order: 3; width: 100%; }
+    }
+    @media (max-width: 600px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .deals-banner { flex-direction: column; align-items: flex-start; }
+      .header-search { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip-link: lets keyboard users bypass repeated navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- live region for dynamic announcements (cart adds, form submissions) -->
+  <div aria-live="polite" aria-atomic="true" class="sr-only" id="live-region"></div>
+
+  <!-- ── Site header ── -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="/" class="logo" aria-label="ShopNest — go to homepage">Shop<span>Nest</span></a>
+
+      <!-- primary navigation -->
+      <nav class="site-nav" aria-label="Primary navigation">
+        <ul role="list">
+          <li><a href="/" aria-current="page">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/deals">Deals</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      </nav>
+
+      <!-- search form -->
+      <div class="header-search">
+        <form role="search" action="/search" method="get" aria-label="Product search">
+          <div class="search-wrapper">
+            <!-- icon is decorative — aria-hidden -->
+            <svg class="search-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <label for="site-search" class="sr-only">Search products</label>
+            <input id="site-search" class="search-input" type="search" name="q" placeholder="Search products…" autocomplete="off" />
+          </div>
+          <button type="submit" class="btn-search">Search</button>
+        </form>
+      </div>
+
+      <!-- header action buttons -->
+      <div class="header-actions" role="group" aria-label="Account and cart">
+        <a href="/account" class="icon-btn" aria-label="My account">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          Account
+        </a>
+        <a href="/cart" class="icon-btn" aria-label="Shopping cart, 3 items">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          Cart
+          <!-- badge value is also in the aria-label above, so screen readers don't double-read -->
+          <span class="cart-badge" aria-hidden="true">3</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main content ── -->
+  <main id="main-content" tabindex="-1">
+
+    <!-- ── Hero ── -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container">
+        <h1 id="hero-heading">Everything You Need,<br>Delivered to Your Door</h1>
+        <p>Discover thousands of products from trusted brands — with fast shipping, easy returns, and unbeatable prices.</p>
+        <a href="/shop" class="hero-cta">
+          Shop Now
+          <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── Browse by category ── -->
+    <section class="categories" aria-labelledby="categories-heading">
+      <div class="container">
+        <h2 id="categories-heading" class="sr-only">Browse by Category</h2>
+        <!-- role="list" restores list semantics stripped by CSS in some browsers -->
+        <ul class="category-list" role="list" aria-label="Product categories">
+          <li>
+            <a href="/category/electronics" class="category-chip">
+              <span aria-hidden="true">📱</span>Electronics
+            </a>
+          </li>
+          <li>
+            <a href="/category/fashion" class="category-chip">
+              <span aria-hidden="true">👗</span>Fashion
+            </a>
+          </li>
+          <li>
+            <a href="/category/home" class="category-chip">
+              <span aria-hidden="true">🏠</span>Home &amp; Living
+            </a>
+          </li>
+          <li>
+            <a href="/category/sports" class="category-chip">
+              <span aria-hidden="true">⚽</span>Sports
+            </a>
+          </li>
+          <li>
+            <a href="/category/beauty" class="category-chip">
+              <span aria-hidden="true">💄</span>Beauty
+            </a>
+          </li>
+          <li>
+            <a href="/category/books" class="category-chip">
+              <span aria-hidden="true">📚</span>Books
+            </a>
+          </li>
+          <li>
+            <a href="/category/toys" class="category-chip">
+              <span aria-hidden="true">🧸</span>Toys
+            </a>
+          </li>
+          <li>
+            <a href="/category/garden" class="category-chip">
+              <span aria-hidden="true">🌿</span>Garden
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── Popular Items ── -->
+    <section class="section" aria-labelledby="popular-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="popular-heading">Popular Right Now</h2>
+          <a href="/shop?sort=popular" class="view-all-link" aria-label="View all popular items">View All →</a>
+        </div>
+        <ul class="products-grid" role="list" aria-label="Popular products">
+
+          <!-- Product card 1 -->
+          <li>
+            <article class="product-card" aria-labelledby="prod1-name">
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop" alt="Minimalist silver watch with a clean white dial" loading="lazy" />
+                <span class="product-badge" aria-label="Best seller badge">Best Seller</span>
+                <button class="wishlist-btn" aria-pressed="false" aria-label="Add Classic Silver Watch to wishlist">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Accessories</p>
+                <h3 class="product-name" id="prod1-name"><a href="/product/classic-silver-watch">Classic Silver Watch</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="sr-only">Rated 5 out of 5 stars.</span>
+                  <span class="rating-count">(1,284)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-current" aria-label="Current price: $89.99">$89.99</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Classic Silver Watch to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Product card 2 -->
+          <li>
+            <article class="product-card" aria-labelledby="prod2-name">
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&h=400&fit=crop" alt="Assorted skincare bottles and tubes with clean white packaging" loading="lazy" />
+                <button class="wishlist-btn" aria-pressed="false" aria-label="Add Glow Skincare Set to wishlist">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Beauty</p>
+                <h3 class="product-name" id="prod2-name"><a href="/product/glow-skincare-set">Glow Skincare Set</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="sr-only">Rated 4 out of 5 stars.</span>
+                  <span class="rating-count">(892)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-current" aria-label="Current price: $54.00">$54.00</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Glow Skincare Set to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Product card 3 -->
+          <li>
+            <article class="product-card" aria-labelledby="prod3-name">
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&h=400&fit=crop" alt="White and blue running sneakers with a lightweight mesh upper" loading="lazy" />
+                <button class="wishlist-btn" aria-pressed="false" aria-label="Add AirRun Pro Sneakers to wishlist">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Sports</p>
+                <h3 class="product-name" id="prod3-name"><a href="/product/airrun-pro-sneakers">AirRun Pro Sneakers</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="sr-only">Rated 5 out of 5 stars.</span>
+                  <span class="rating-count">(3,107)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-current" aria-label="Current price: $119.00">$119.00</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add AirRun Pro Sneakers to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Product card 4 -->
+          <li>
+            <article class="product-card" aria-labelledby="prod4-name">
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop" alt="Black wireless over-ear headphones with padded ear cushions" loading="lazy" />
+                <button class="wishlist-btn" aria-pressed="false" aria-label="Add SoundWave Headphones to wishlist">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Electronics</p>
+                <h3 class="product-name" id="prod4-name"><a href="/product/soundwave-headphones">SoundWave Headphones</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="sr-only">Rated 4 out of 5 stars.</span>
+                  <span class="rating-count">(2,451)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-current" aria-label="Current price: $149.99">$149.99</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add SoundWave Headphones to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── Deals ── -->
+    <section class="section" aria-labelledby="deals-heading">
+      <div class="container">
+        <!-- countdown timer — decorative, values managed by JS; sr text below -->
+        <div class="deals-banner" role="region" aria-label="Flash sale countdown">
+          <div class="deals-banner-text">
+            <h2 id="deals-heading">Flash Sale — Up to 60% Off</h2>
+            <p>Limited stock. Ends in:</p>
+          </div>
+          <div class="deals-timer" aria-label="Time remaining: 4 hours, 32 minutes, 17 seconds">
+            <div class="timer-block">
+              <span class="timer-value" id="timer-hours" aria-hidden="true">04</span>
+              <span class="timer-label">Hrs</span>
+            </div>
+            <span class="timer-sep" aria-hidden="true">:</span>
+            <div class="timer-block">
+              <span class="timer-value" id="timer-mins" aria-hidden="true">32</span>
+              <span class="timer-label">Min</span>
+            </div>
+            <span class="timer-sep" aria-hidden="true">:</span>
+            <div class="timer-block">
+              <span class="timer-value" id="timer-secs" aria-hidden="true">17</span>
+              <span class="timer-label">Sec</span>
+            </div>
+          </div>
+        </div>
+
+        <ul class="products-grid" role="list" aria-label="Sale products">
+
+          <!-- Deal card 1 -->
+          <li>
+            <article class="product-card" aria-labelledby="deal1-name">
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop" alt="Instant camera in white with a rainbow stripe detail" loading="lazy" />
+                <span class="product-badge" aria-label="Sale badge">−40%</span>
+                <button class="wishlist-btn" aria-pressed="false" aria-label="Add Instant Camera to wishlist">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Electronics</p>
+                <h3 class="product-name" id="deal1-name"><a href="/product/instant-camera">Instant Camera</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="sr-only">Rated 4 out of 5 stars.</span>
+                  <span class="rating-count">(640)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-current" aria-label="Sale price: $59.99">$59.99</span>
+                  <span class="price-original" aria-label="Original price: $99.99">$99.99</span>
+                  <span class="price-save" aria-label="You save $40">Save $40</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Instant Camera to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Deal card 2 -->
+          <li>
+            <article class="product-card" aria-labelledby="deal2-name">
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=400&fit=crop" alt="Tan leather backpack with multiple zip pockets and padded straps" loading="lazy" />
+                <span class="product-badge" aria-label="Sale badge">−35%</span>
+                <button class="wishlist-btn" aria-pressed="false" aria-label="Add Leather Backpack to wishlist">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Fashion</p>
+                <h3 class="product-name" id="deal2-name"><a href="/product/leather-backpack">Leather Backpack</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="sr-only">Rated 5 out of 5 stars.</span>
+                  <span class="rating-count">(1,002)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-current" aria-label="Sale price: $64.99">$64.99</span>
+                  <span class="price-original" aria-label="Original price: $99.99">$99.99</span>
+                  <span class="price-save" aria-label="You save $35">Save $35</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Leather Backpack to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Deal card 3 -->
+          <li>
+            <article class="product-card" aria-labelledby="deal3-name">
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" alt="Stainless steel insulated water bottle in matte black finish" loading="lazy" />
+                <span class="product-badge" aria-label="Sale badge">−60%</span>
+                <button class="wishlist-btn" aria-pressed="false" aria-label="Add Insulated Water Bottle to wishlist">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Sports</p>
+                <h3 class="product-name" id="deal3-name"><a href="/product/insulated-water-bottle">Insulated Water Bottle</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="sr-only">Rated 5 out of 5 stars.</span>
+                  <span class="rating-count">(3,889)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-current" aria-label="Sale price: $15.99">$15.99</span>
+                  <span class="price-original" aria-label="Original price: $39.99">$39.99</span>
+                  <span class="price-save" aria-label="You save $24">Save $24</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Insulated Water Bottle to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Deal card 4 -->
+          <li>
+            <article class="product-card" aria-labelledby="deal4-name">
+              <div class="product-img-wrap">
+                <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&h=400&fit=crop" alt="Smart speaker with a fabric cover in charcoal grey" loading="lazy" />
+                <span class="product-badge" aria-label="Sale badge">−50%</span>
+                <button class="wishlist-btn" aria-pressed="false" aria-label="Add Smart Speaker to wishlist">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Electronics</p>
+                <h3 class="product-name" id="deal4-name"><a href="/product/smart-speaker">Smart Speaker</a></h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="sr-only">Rated 4 out of 5 stars.</span>
+                  <span class="rating-count">(2,119)</span>
+                </div>
+                <div class="product-price">
+                  <span class="price-current" aria-label="Sale price: $29.99">$29.99</span>
+                  <span class="price-original" aria-label="Original price: $59.99">$59.99</span>
+                  <span class="price-save" aria-label="You save $30">Save $30</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Smart Speaker to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── Blog posts ── -->
+    <section class="section" aria-labelledby="blog-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="blog-heading">From the Blog</h2>
+          <a href="/blog" class="view-all-link" aria-label="View all blog posts">View All →</a>
+        </div>
+        <ul class="blog-grid" role="list" aria-label="Blog posts">
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog1-title">
+              <div class="blog-img-wrap">
+                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=340&fit=crop" alt="Flat-lay of tech gadgets including headphones, a phone, and a laptop on a wooden desk" loading="lazy" />
+              </div>
+              <div class="blog-body">
+                <span class="blog-tag">Tech</span>
+                <h3 class="blog-title" id="blog1-title">
+                  <a href="/blog/best-tech-gifts-2025">The Best Tech Gifts of 2025 — Our Editors' Picks</a>
+                </h3>
+                <p class="blog-excerpt">From smart home devices to wearables, we've rounded up the most innovative gadgets worth gifting this year.</p>
+                <div class="blog-meta">
+                  <span><span class="blog-author">Jamie Lee</span> · Apr 10, 2025</span>
+                  <span>5 min read</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog2-title">
+              <div class="blog-img-wrap">
+                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=340&fit=crop" alt="Colourful clothing items hanging on a rail in a bright, minimalist room" loading="lazy" />
+              </div>
+              <div class="blog-body">
+                <span class="blog-tag">Style</span>
+                <h3 class="blog-title" id="blog2-title">
+                  <a href="/blog/summer-fashion-trends">Summer 2025 Fashion Trends You'll Actually Wear</a>
+                </h3>
+                <p class="blog-excerpt">Linen sets, bold prints, and elevated basics — here's what stylists say will dominate the season.</p>
+                <div class="blog-meta">
+                  <span><span class="blog-author">Priya Mehta</span> · Apr 7, 2025</span>
+                  <span>4 min read</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog3-title">
+              <div class="blog-img-wrap">
+                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=340&fit=crop" alt="Bright kitchen with modern utensils and fresh ingredients on the counter" loading="lazy" />
+              </div>
+              <div class="blog-body">
+                <span class="blog-tag">Home</span>
+                <h3 class="blog-title" id="blog3-title">
+                  <a href="/blog/kitchen-upgrade-essentials">10 Kitchen Upgrades Under $50 That Make a Real Difference</a>
+                </h3>
+                <p class="blog-excerpt">You don't need a full renovation. These affordable swaps will transform how you cook and entertain.</p>
+                <div class="blog-meta">
+                  <span><span class="blog-author">Carlos Ruiz</span> · Apr 2, 2025</span>
+                  <span>6 min read</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── Newsletter ── -->
+    <section class="newsletter" aria-labelledby="newsletter-heading">
+      <div class="container">
+        <h2 id="newsletter-heading">Get Deals Before Anyone Else</h2>
+        <p>Join 200,000+ shoppers who receive exclusive discounts, new arrivals, and style tips straight to their inbox.</p>
+        <form
+          class="newsletter-form"
+          action="/newsletter/subscribe"
+          method="post"
+          aria-label="Newsletter sign-up"
+          novalidate
+          id="newsletter-form"
+        >
+          <label for="newsletter-email" class="sr-only">Your email address</label>
+          <input
+            id="newsletter-email"
+            class="newsletter-input"
+            type="email"
+            name="email"
+            placeholder="your@email.com"
+            autocomplete="email"
+            required
+            aria-required="true"
+            aria-describedby="newsletter-hint newsletter-error"
+          />
+          <!-- describedby hint (always visible to AT) -->
+          <span id="newsletter-hint" class="sr-only">We'll send you weekly deals and new arrivals. Unsubscribe anytime.</span>
+          <!-- error region: hidden until JS validation fires -->
+          <span id="newsletter-error" class="sr-only" role="alert" aria-live="assertive"></span>
+          <button type="submit" class="newsletter-btn">Subscribe Free</button>
+        </form>
+        <p class="newsletter-privacy">We respect your privacy. <a href="/privacy">Privacy Policy</a>.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo" aria-label="ShopNest — go to homepage">Shop<span>Nest</span></a>
+          <p>Your trusted destination for quality products at great prices. Fast shipping, easy returns, and 24/7 support.</p>
+        </div>
+        <nav class="footer-col" aria-label="Shop links">
+          <h3>Shop</h3>
+          <ul role="list">
+            <li><a href="/shop/new">New Arrivals</a></li>
+            <li><a href="/deals">Today's Deals</a></li>
+            <li><a href="/shop/bestsellers">Best Sellers</a></li>
+            <li><a href="/gift-cards">Gift Cards</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Customer service links">
+          <h3>Support</h3>
+          <ul role="list">
+            <li><a href="/help">Help Center</a></li>
+            <li><a href="/returns">Returns &amp; Refunds</a></li>
+            <li><a href="/track">Track Order</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Company links">
+          <h3>Company</h3>
+          <ul role="list">
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/press">Press</a></li>
+            <li><a href="/sustainability">Sustainability</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 ShopNest, Inc. All rights reserved. <a href="/privacy" style="color:#c8c8d8;">Privacy</a> · <a href="/terms" style="color:#c8c8d8;">Terms</a> · <a href="/accessibility" style="color:#c8c8d8;">Accessibility</a></p>
+        <nav class="social-links" aria-label="Social media links">
+          <a href="https://twitter.com/shopnest" class="social-link" aria-label="ShopNest on Twitter">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://instagram.com/shopnest" class="social-link" aria-label="ShopNest on Instagram">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://facebook.com/shopnest" class="social-link" aria-label="ShopNest on Facebook">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Wishlist toggle ──
+    // Toggles aria-pressed and announces state to screen readers via live region
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pressed = btn.getAttribute('aria-pressed') === 'true';
+        btn.setAttribute('aria-pressed', String(!pressed));
+        const productName = btn.closest('article').querySelector('.product-name a').textContent.trim();
+        const liveRegion = document.getElementById('live-region');
+        liveRegion.textContent = pressed
+          ? `${productName} removed from wishlist.`
+          : `${productName} added to wishlist.`;
+      });
+    });
+
+    // ── Add to cart ──
+    document.querySelectorAll('.btn-add-cart').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const productName = btn.closest('article').querySelector('.product-name a').textContent.trim();
+        document.getElementById('live-region').textContent = `${productName} added to cart.`;
+      });
+    });
+
+    // ── Newsletter form ──
+    document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('newsletter-email');
+      const errorEl = document.getElementById('newsletter-error');
+      if (!emailInput.validity.valid) {
+        emailInput.setAttribute('aria-invalid', 'true');
+        errorEl.textContent = 'Please enter a valid email address.';
+        emailInput.focus();
+        return;
+      }
+      emailInput.removeAttribute('aria-invalid');
+      errorEl.textContent = '';
+      document.getElementById('live-region').textContent = 'Thanks! You\'re subscribed to our newsletter.';
+      emailInput.value = '';
+    });
+
+    // ── Flash sale countdown timer ──
+    // Countdown from a fixed end time; updates aria-label on wrapper every second
+    (function() {
+      const end = new Date(Date.now() + ((4 * 3600 + 32 * 60 + 17) * 1000));
+      const hoursEl = document.getElementById('timer-hours');
+      const minsEl = document.getElementById('timer-mins');
+      const secsEl = document.getElementById('timer-secs');
+      const wrapper = hoursEl && hoursEl.closest('[aria-label]');
+
+      function tick() {
+        const diff = Math.max(0, end - Date.now());
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        const pad = n => String(n).padStart(2, '0');
+        if (hoursEl) hoursEl.textContent = pad(h);
+        if (minsEl) minsEl.textContent = pad(m);
+        if (secsEl) secsEl.textContent = pad(s);
+        // Update accessible label only every 10s to avoid overwhelming screen readers
+        if (wrapper && s % 10 === 0) {
+          wrapper.setAttribute('aria-label', `Time remaining: ${h} hours, ${m} minutes, ${s} seconds`);
+        }
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
+
+</body>
+</html>

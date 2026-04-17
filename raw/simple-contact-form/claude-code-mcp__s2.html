@@ -1,0 +1,346 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* skip-link: lets keyboard users bypass repeated nav */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      padding: 0.5rem 1rem;
+      background: #1a1a2e;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 0 0 6px 6px;
+      z-index: 100;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 0; }
+
+    :root {
+      --color-bg: #f5f5f7;
+      --color-surface: #ffffff;
+      --color-text: #1a1a2e;        /* 16.7:1 on white */
+      --color-muted: #595959;       /* 7.0:1 on white — passes AA for small text */
+      --color-accent: #2563eb;      /* 4.7:1 on white — passes AA */
+      --color-accent-dark: #1d4ed8;
+      --color-error: #b91c1c;       /* 5.9:1 on white */
+      --color-border: #6b7280;      /* 3.3:1 on white — passes AA for UI */
+      --color-focus-outline: #2563eb;
+      --radius: 6px;
+      --spacing: 1.5rem;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    main {
+      background: var(--color-surface);
+      border-radius: 12px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--color-text);
+    }
+
+    .form-intro {
+      color: var(--color-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Required fields legend */
+    .required-note {
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      margin-bottom: 1.5rem;
+    }
+    .required-note abbr {
+      color: var(--color-error);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    form { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .form-field { display: flex; flex-direction: column; gap: 0.35rem; }
+
+    label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    /* Required marker — aria-hidden so screen readers use aria-required instead */
+    .req-marker {
+      color: var(--color-error);
+      font-weight: 700;
+      margin-left: 0.2rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 0.65rem 0.875rem;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      color: var(--color-text);
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      /* 44px min touch target height */
+      min-height: 44px;
+    }
+
+    input:focus {
+      outline: 3px solid var(--color-focus-outline);
+      outline-offset: 2px;
+      border-color: var(--color-accent);
+    }
+
+    /* aria-invalid styling for error state */
+    input[aria-invalid="true"] {
+      border-color: var(--color-error);
+    }
+
+    /* helper / hint text linked via aria-describedby */
+    .helper-text {
+      font-size: 0.8rem;
+      color: var(--color-muted);
+    }
+
+    button[type="submit"] {
+      margin-top: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      min-height: 44px;       /* min touch target */
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      /* sufficient contrast: white on #2563eb = 4.7:1 */
+    }
+
+    button[type="submit"]:hover { background: var(--color-accent-dark); }
+
+    button[type="submit"]:focus {
+      outline: 3px solid var(--color-focus-outline);
+      outline-offset: 3px;
+    }
+
+    /* status message announced to screen readers after submission */
+    #form-status[role="status"] {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    #form-status.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    #form-status.error-summary {
+      background: #fee2e2;
+      color: var(--color-error);
+    }
+
+    /* Reduced motion: remove transitions for users who prefer it */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+
+    /* Responsive: readable at 320px wide and 200% zoom */
+    @media (max-width: 420px) {
+      main { padding: 1.5rem 1rem; }
+      h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip-link: lets keyboard users jump past chrome directly to the form -->
+  <a href="#contact-form" class="skip-link">Skip to form</a>
+
+  <main>
+    <h1>Contact Us</h1>
+    <p class="form-intro">Fill out the form below and we'll get back to you shortly.</p>
+
+    <!-- required-note: informs users upfront which fields are mandatory -->
+    <p class="required-note">
+      Fields marked <abbr title="required" aria-hidden="true">*</abbr> are required.
+    </p>
+
+    <!--
+      novalidate: we handle validation ourselves to give accessible error messages;
+      browser default bubbles are not reliably announced by screen readers.
+    -->
+    <form id="contact-form" novalidate aria-label="Contact form">
+
+      <!-- Full Name -->
+      <div class="form-field">
+        <label for="full-name">
+          Full Name
+          <!-- aria-hidden: screen readers use aria-required on the input, not this symbol -->
+          <span class="req-marker" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="full-name"
+          name="full-name"
+          autocomplete="name"
+          required
+          aria-required="true"
+          aria-describedby="full-name-error"
+          spellcheck="false"
+        >
+        <!-- error placeholder: hidden until validation runs -->
+        <span id="full-name-error" class="helper-text" role="alert" aria-live="polite" hidden></span>
+      </div>
+
+      <!-- Email Address -->
+      <div class="form-field">
+        <label for="email">
+          Email Address
+          <span class="req-marker" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          required
+          aria-required="true"
+          inputmode="email"
+          aria-describedby="email-hint email-error"
+          spellcheck="false"
+        >
+        <!-- aria-describedby points here: hint is read after the label on focus -->
+        <span id="email-hint" class="helper-text">
+          Use the format: <strong>name@example.com</strong>
+        </span>
+        <span id="email-error" class="helper-text" role="alert" aria-live="polite" hidden></span>
+      </div>
+
+      <!-- Phone Number (optional) -->
+      <div class="form-field">
+        <label for="phone">Phone Number</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autocomplete="tel"
+          inputmode="tel"
+          aria-describedby="phone-hint"
+        >
+        <!-- no aria-required since this field is optional -->
+        <span id="phone-hint" class="helper-text">
+          Optional &mdash; preferred format: <strong>(555) 555-5555</strong>
+        </span>
+      </div>
+
+      <button type="submit">Send Message</button>
+
+      <!--
+        role="status": polite live region — announced after submission
+        without stealing focus from the current element
+      -->
+      <div id="form-status" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('contact-form');
+    const statusEl = document.getElementById('form-status');
+
+    function showError(inputEl, errorElId, message) {
+      const errorEl = document.getElementById(errorElId);
+      errorEl.textContent = message;
+      errorEl.hidden = false;
+      // aria-invalid signals the invalid state to assistive technology
+      inputEl.setAttribute('aria-invalid', 'true');
+    }
+
+    function clearError(inputEl, errorElId) {
+      const errorEl = document.getElementById(errorElId);
+      errorEl.textContent = '';
+      errorEl.hidden = true;
+      inputEl.removeAttribute('aria-invalid');
+    }
+
+    // Clear errors as the user corrects each field
+    document.getElementById('full-name').addEventListener('input', function () {
+      if (this.value.trim()) clearError(this, 'full-name-error');
+    });
+    document.getElementById('email').addEventListener('input', function () {
+      if (this.validity.valid) clearError(this, 'email-error');
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nameEl  = document.getElementById('full-name');
+      const emailEl = document.getElementById('email');
+      let firstInvalid = null;
+
+      // Validate name
+      if (!nameEl.value.trim()) {
+        showError(nameEl, 'full-name-error', 'Full Name is required.');
+        firstInvalid = firstInvalid || nameEl;
+      } else {
+        clearError(nameEl, 'full-name-error');
+      }
+
+      // Validate email
+      if (!emailEl.value.trim()) {
+        showError(emailEl, 'email-error', 'Email Address is required.');
+        firstInvalid = firstInvalid || emailEl;
+      } else if (!emailEl.validity.valid) {
+        showError(emailEl, 'email-error', 'Enter a valid email address, e.g. name@example.com.');
+        firstInvalid = firstInvalid || emailEl;
+      } else {
+        clearError(emailEl, 'email-error');
+      }
+
+      if (firstInvalid) {
+        // Move focus to the first invalid field so screen reader users land in the right place
+        firstInvalid.focus();
+        statusEl.className = '';
+        statusEl.textContent = '';
+        return;
+      }
+
+      // Announce success via the live region (role=status, aria-live=polite)
+      statusEl.className = 'success';
+      statusEl.textContent = 'Your message has been sent. We\u2019ll be in touch soon!';
+      form.reset();
+    });
+  </script>
+
+</body>
+</html>

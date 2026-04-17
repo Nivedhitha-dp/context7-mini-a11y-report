@@ -1,0 +1,190 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* skip link: lets keyboard users bypass repeated nav */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      padding: 0.5rem 1rem;
+      background: #1a1a2e;
+      color: #fff;
+      border-radius: 0 0 4px 4px;
+      font-weight: 600;
+      z-index: 1000;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f7fa;
+      color: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: #1a1a2e;
+    }
+
+    .form-subtitle {
+      color: #555e7a;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #1a1a2e;
+    }
+
+    /* required asterisk via CSS so it's paired with aria-required on the input */
+    label .required-marker {
+      color: #c0392b;
+      margin-left: 0.2rem;
+      aria-hidden: true;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      padding: 0.65rem 0.85rem;
+      border: 2px solid #c8cdd8;
+      border-radius: 6px;
+      font-size: 1rem;
+      color: #1a1a2e;
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      width: 100%;
+    }
+
+    /* 3:1 contrast focus ring on non-white background */
+    input:focus {
+      outline: 3px solid #3b5bdb;
+      outline-offset: 2px;
+      border-color: #3b5bdb;
+    }
+
+    .helper-text {
+      font-size: 0.82rem;
+      color: #555e7a;  /* #555e7a on #fff = 5.9:1 — passes AA */
+      line-height: 1.4;
+    }
+
+    button[type="submit"] {
+      display: block;
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.5rem;
+      background: #3b5bdb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    /* #2f4ac4 on #fff = 6.1:1 — passes AA for large/bold text */
+    button[type="submit"]:hover { background: #2f4ac4; }
+
+    button[type="submit"]:focus {
+      outline: 3px solid #1a1a2e;
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- skip link for keyboard users -->
+  <a href="#contact-form" class="skip-link">Skip to form</a>
+
+  <div class="card">
+    <h1>Contact Us</h1>
+    <p class="form-subtitle">Fields marked with <span aria-hidden="true">*</span><span class="visually-hidden">an asterisk</span> are required.</p>
+
+    <form id="contact-form" novalidate>
+
+      <div class="form-field">
+        <!-- label explicitly associated with input via for/id -->
+        <label for="full-name">
+          Full Name <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="full-name"
+          name="full-name"
+          autocomplete="name"
+          required
+          aria-required="true"
+        >
+      </div>
+
+      <div class="form-field">
+        <label for="email">
+          Email Address <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <!-- aria-describedby links the helper text to the input for screen readers -->
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          required
+          aria-required="true"
+          aria-describedby="email-hint"
+        >
+        <span id="email-hint" class="helper-text">Enter a valid email address, e.g. name@example.com</span>
+      </div>
+
+      <div class="form-field">
+        <label for="phone">Phone Number</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autocomplete="tel"
+          aria-describedby="phone-hint"
+        >
+        <span id="phone-hint" class="helper-text">Optional. Preferred format: (555) 555-5555</span>
+      </div>
+
+      <button type="submit">Send Message</button>
+
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget Examples</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .example {
+      background: #ffffff;
+      border: 1px solid #d0d0d0;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .example button[aria-expanded] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 1rem 1.25rem;
+      background: #ffffff;
+      border: none;
+      border-bottom: 1px solid transparent;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s;
+    }
+
+    .example button[aria-expanded]:hover {
+      background: #f0f4ff;
+    }
+
+    .example button[aria-expanded]:focus-visible {
+      outline: 3px solid #2563eb;
+      outline-offset: -3px;
+    }
+
+    .example button[aria-expanded="true"] {
+      border-bottom-color: #d0d0d0;
+    }
+
+    .example button[aria-expanded] .icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      transition: transform 0.2s;
+      color: #555;
+    }
+
+    .example button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .details {
+      padding: 1.25rem;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details p {
+      margin: 0 0 0.75rem;
+    }
+
+    .details p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Variant: accent header */
+    .example.accent button[aria-expanded] {
+      background: #1e40af;
+      color: #ffffff;
+      border-bottom-color: transparent;
+    }
+
+    .example.accent button[aria-expanded]:hover {
+      background: #1d3a9e;
+    }
+
+    .example.accent button[aria-expanded="true"] {
+      border-bottom-color: #93c5fd;
+    }
+
+    .example.accent button[aria-expanded] .icon {
+      color: #bfdbfe;
+    }
+
+    .example.accent button[aria-expanded]:focus-visible {
+      outline: 3px solid #fbbf24;
+      outline-offset: -3px;
+    }
+
+    /* Variant: minimal */
+    .example.minimal {
+      border: none;
+      background: transparent;
+    }
+
+    .example.minimal button[aria-expanded] {
+      background: transparent;
+      padding: 0.75rem 0;
+      border-bottom: 2px solid #e5e7eb;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .example.minimal button[aria-expanded]:hover {
+      color: #1d4ed8;
+      background: transparent;
+    }
+
+    .example.minimal button[aria-expanded="true"] {
+      border-bottom-color: #2563eb;
+    }
+
+    .example.minimal .details {
+      padding: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Expand/Collapse Widgets</h1>
+
+  <!-- Example 1: Default -->
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-1"
+    >
+      What is WCAG?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="details" id="details-1" hidden>
+      <p>WCAG stands for Web Content Accessibility Guidelines. It is published by the World Wide Web Consortium (W3C) as part of the Web Accessibility Initiative (WAI).</p>
+      <p>The guidelines provide a single shared standard for web content accessibility that meets the needs of individuals, organizations, and governments internationally.</p>
+    </div>
+  </div>
+
+  <!-- Example 2: Starts expanded -->
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="true"
+      aria-controls="details-2"
+    >
+      Why does keyboard accessibility matter?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="details" id="details-2">
+      <p>Many users rely exclusively on a keyboard to navigate the web — including people with motor disabilities, power users, and those using assistive technologies like switch access.</p>
+      <p>All interactive elements must be reachable and operable using Tab, Enter, Space, and arrow keys without requiring a pointer device.</p>
+    </div>
+  </div>
+
+  <!-- Example 3: Accent variant -->
+  <div class="example accent">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-3"
+    >
+      What is ARIA?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="details" id="details-3" hidden>
+      <p>Accessible Rich Internet Applications (ARIA) is a set of roles and attributes that define ways to make web content and web applications more accessible to people with disabilities.</p>
+      <p>The first rule of ARIA is: if you can use a native HTML element or attribute with the semantics and behavior you require already built in, then do so instead of using ARIA.</p>
+    </div>
+  </div>
+
+  <!-- Example 4: Minimal variant -->
+  <div class="example minimal">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-4"
+    >
+      How do I test for accessibility?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="details" id="details-4" hidden>
+      <p>Use a combination of automated tools (Axe, Lighthouse, WAVE) and manual testing. Manual testing should include keyboard-only navigation and at least one screen reader (NVDA, JAWS, VoiceOver).</p>
+      <p>Automated tools catch roughly 30–40% of issues — manual testing is essential for the rest.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('button[aria-expanded]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        var target = document.getElementById(this.getAttribute('aria-controls'));
+        if (target) {
+          target.hidden = expanded;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

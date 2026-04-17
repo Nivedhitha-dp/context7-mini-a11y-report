@@ -1,0 +1,103 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expand / Collapse Widget</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+    .example {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .example button[aria-expanded] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+      gap: 0.5rem;
+    }
+    .example button[aria-expanded]:focus-visible {
+      outline: 3px solid #005fcc;
+      outline-offset: -3px;
+    }
+    .example button[aria-expanded]:hover { background: #f0f4ff; }
+    .example button[aria-expanded] .icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      transition: transform 0.2s ease;
+    }
+    .example button[aria-expanded="true"] .icon { transform: rotate(180deg); }
+    .details {
+      border-top: 1px solid #e0e0e0;
+      padding: 1rem;
+      color: #333;
+    }
+    .details[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Expand / Collapse Widgets</h1>
+
+  <div class="example">
+    <button type="button" aria-expanded="false" aria-controls="s1" id="s1-btn">
+      What is semantic HTML?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <div class="details" id="s1" role="region" aria-labelledby="s1-btn" hidden>
+      <p>Semantic HTML uses elements that carry inherent meaning — like <code>&lt;article&gt;</code>, <code>&lt;nav&gt;</code>, and <code>&lt;button&gt;</code> — so browsers and assistive technologies understand structure without extra annotation.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button type="button" aria-expanded="false" aria-controls="s2" id="s2-btn">
+      Why does keyboard accessibility matter?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <div class="details" id="s2" role="region" aria-labelledby="s2-btn" hidden>
+      <p>Many users navigate entirely by keyboard — including people with motor disabilities, power users, and switch-control users. Elements unreachable without a mouse exclude those users entirely.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button type="button" aria-expanded="false" aria-controls="s3" id="s3-btn">
+      What is WCAG 2.1 AA?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <div class="details" id="s3" role="region" aria-labelledby="s3-btn" hidden>
+      <p>WCAG 2.1 AA is the internationally recognised web accessibility standard. It requires 4.5:1 text contrast, visible focus indicators, captions for video, and accessible name/role/value for all interactive components.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('button[aria-expanded]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        var panel = document.getElementById(btn.getAttribute('aria-controls'));
+        if (expanded) { panel.setAttribute('hidden', ''); }
+        else { panel.removeAttribute('hidden'); }
+      });
+    });
+  </script>
+</body>
+</html>

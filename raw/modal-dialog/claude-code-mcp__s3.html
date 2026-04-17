@@ -1,0 +1,330 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Dialog Example</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* skip link: lets keyboard users bypass to main content */
+    .skip-link {
+      position: absolute;
+      top: -999px;
+      left: 8px;
+      background: #1a1a1a;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-link:focus {
+      top: 8px;
+    }
+
+    main {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    /* trigger button: 4.5:1+ contrast on #f5f5f5 background */
+    button.trigger {
+      background: #1d4ed8;
+      color: #ffffff;
+      border: none;
+      padding: 0.75rem 1.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      min-height: 44px;
+      min-width: 44px;
+    }
+    button.trigger:hover {
+      background: #1e40af;
+    }
+    button.trigger:focus-visible {
+      outline: 3px solid #1d4ed8;
+      outline-offset: 3px;
+    }
+
+    /* backdrop: dims page content, signals modal is active */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    /* dialog: role="dialog" with aria-modal prevents virtual cursor escape */
+    .modal {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 2rem;
+      width: min(480px, calc(100vw - 2rem));
+      max-height: calc(100vh - 4rem);
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    /* close button: visible label via aria-label, 44×44 touch target */
+    .modal-close {
+      background: none;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      width: 44px;
+      height: 44px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: #4b5563;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .modal-close:hover {
+      background: #f3f4f6;
+      color: #1a1a1a;
+    }
+    .modal-close:focus-visible {
+      outline: 3px solid #1d4ed8;
+      outline-offset: 2px;
+    }
+
+    .modal-body {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #374151;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: #1a1a1a;
+      border: 2px solid #9ca3af;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      min-height: 44px;
+    }
+    .btn-secondary:hover {
+      border-color: #6b7280;
+      background: #f9fafb;
+    }
+    .btn-secondary:focus-visible {
+      outline: 3px solid #1d4ed8;
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: #1d4ed8;
+      color: #ffffff;
+      border: 2px solid transparent;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      min-height: 44px;
+    }
+    .btn-primary:hover {
+      background: #1e40af;
+    }
+    .btn-primary:focus-visible {
+      outline: 3px solid #1d4ed8;
+      outline-offset: 2px;
+    }
+
+    /* respect reduced-motion: disable backdrop fade for users who need it */
+    @media (prefers-reduced-motion: no-preference) {
+      .modal-backdrop {
+        transition: opacity 0.2s ease;
+      }
+      .modal {
+        transition: transform 0.2s ease;
+        transform: translateY(8px);
+      }
+      .modal-backdrop.is-open .modal {
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip link: first focusable element, lets keyboard users jump to main -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <main id="main-content">
+    <h1 style="margin-bottom:1.5rem; font-size:1.5rem; color:#1a1a1a;">Modal Dialog Demo</h1>
+
+    <!-- trigger button: receives focus back when modal closes -->
+    <button class="trigger" id="modal-trigger" aria-haspopup="dialog" aria-controls="example-modal">
+      Open Dialog
+    </button>
+  </main>
+
+  <!--
+    backdrop: clicking outside the modal closes it (mousedown on backdrop itself,
+    not its children — checked via event.target === backdrop)
+  -->
+  <div
+    class="modal-backdrop"
+    id="modal-backdrop"
+    role="presentation"
+  >
+    <!--
+      role="dialog": identifies as a dialog to AT
+      aria-modal="true": tells screen readers to treat content outside as inert
+      aria-labelledby: links dialog to its visible title (required for AT announcement)
+    -->
+    <div
+      role="dialog"
+      id="example-modal"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-desc"
+      tabindex="-1"
+      class="modal"
+    >
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Confirm Action</h2>
+        <!-- aria-label provides the accessible name since the button shows only an icon -->
+        <button class="modal-close" id="modal-close" aria-label="Close dialog">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body" id="modal-desc">
+        <p>Are you sure you want to proceed? This action cannot be undone. Please review your selection before confirming.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="modal-cancel">Cancel</button>
+        <button class="btn-primary" id="modal-confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const trigger   = document.getElementById('modal-trigger');
+    const backdrop  = document.getElementById('modal-backdrop');
+    const modal     = document.getElementById('example-modal');
+    const closeBtn  = document.getElementById('modal-close');
+    const cancelBtn = document.getElementById('modal-cancel');
+    const confirmBtn = document.getElementById('modal-confirm');
+
+    // Collect all focusable elements inside the dialog for focus trapping
+    const focusableSelectors = [
+      'button:not([disabled])',
+      'a[href]',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(', ');
+
+    function getFocusable() {
+      return Array.from(modal.querySelectorAll(focusableSelectors));
+    }
+
+    function openModal() {
+      backdrop.classList.add('is-open');
+      // inert: prevent interaction with background content in supporting browsers
+      document.querySelector('main').setAttribute('inert', '');
+      // move focus into the dialog so AT users land inside it immediately
+      modal.focus();
+    }
+
+    function closeModal() {
+      backdrop.classList.remove('is-open');
+      document.querySelector('main').removeAttribute('inert');
+      // return focus to the trigger so keyboard users don't lose their place
+      trigger.focus();
+    }
+
+    trigger.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    confirmBtn.addEventListener('click', () => {
+      // perform the confirmed action here, then close
+      closeModal();
+    });
+
+    // Escape key: standard dialog dismissal pattern (ARIA APG)
+    modal.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        return;
+      }
+
+      // Focus trap: keep Tab / Shift+Tab cycling within the dialog
+      if (e.key === 'Tab') {
+        const focusable = getFocusable();
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          // Shift+Tab from first element → wrap to last
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          // Tab from last element → wrap to first
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    });
+
+    // Click outside the modal box (on the backdrop) to close
+    backdrop.addEventListener('mousedown', (e) => {
+      if (e.target === backdrop) closeModal();
+    });
+  </script>
+
+</body>
+</html>

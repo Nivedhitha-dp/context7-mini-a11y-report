@@ -1,0 +1,295 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget Examples</title>
+  <style>
+    /* CSS custom properties for theming and high-contrast support */
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f5f7fa;
+      --color-border: #c6cdd8;
+      --color-text: #1a202c;
+      --color-text-muted: #4a5568;
+      --color-accent: #2563eb;
+      --color-accent-dark: #1d4ed8;
+      --color-accent-light: #eff6ff;
+      --color-focus-outline: #2563eb;
+      --radius: 8px;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Skip link: visually hidden until focused — lets keyboard users bypass repeated nav */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 0;
+      background: var(--color-accent);
+      color: #ffffff;
+      padding: 0.75rem 1.25rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 0 0 var(--radius) 0;
+      z-index: 9999;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      padding: var(--spacing-lg);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-text);
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Example wrapper — required class per spec */
+    .example {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      margin-bottom: var(--spacing-lg);
+      overflow: hidden;
+      background: var(--color-bg);
+    }
+
+    /* Trigger button: full-width, clear affordance */
+    .example__trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: var(--color-surface);
+      border: none;
+      border-bottom: 1px solid transparent;
+      color: var(--color-text);
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      /* Minimum 44×44px touch target */
+      min-height: 44px;
+      transition: background 0.15s ease;
+    }
+
+    .example__trigger:hover {
+      background: #e8ecf2;
+    }
+
+    /* Visible focus ring — 3px, high-contrast, never hidden */
+    .example__trigger:focus-visible {
+      outline: 3px solid var(--color-focus-outline);
+      outline-offset: -3px;
+    }
+
+    /* Separator appears only when open */
+    .example__trigger[aria-expanded="true"] {
+      border-bottom-color: var(--color-border);
+      background: var(--color-accent-light);
+      color: var(--color-accent-dark);
+    }
+
+    /* Chevron icon: rotates to indicate state — aria-hidden since state is on the button */
+    .example__icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+      color: var(--color-text-muted);
+    }
+
+    .example__trigger[aria-expanded="true"] .example__icon {
+      transform: rotate(180deg);
+      color: var(--color-accent);
+    }
+
+    /* Content container — required class per spec */
+    .details {
+      padding: var(--spacing-lg);
+      color: var(--color-text-muted);
+    }
+
+    /* Hidden via attribute — screen readers ignore hidden elements */
+    .details[hidden] {
+      display: none;
+    }
+
+    .details p + p {
+      margin-top: var(--spacing-sm);
+    }
+
+    .details ul {
+      padding-left: 1.5rem;
+      margin-top: var(--spacing-sm);
+    }
+
+    .details li + li {
+      margin-top: 0.25rem;
+    }
+
+    code {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 0.1em 0.4em;
+      font-size: 0.9em;
+      color: var(--color-accent-dark);
+    }
+
+    /* Reduce or remove animation for users who prefer it */
+    @media (prefers-reduced-motion: reduce) {
+      .example__trigger,
+      .example__icon {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip link: first focusable element, lets keyboard users jump past repeated chrome -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <main id="main-content">
+    <h1>Expand / Collapse Widget</h1>
+    <h2>Examples</h2>
+
+    <!-- Example 1 -->
+    <div class="example">
+      <!--
+        button[aria-expanded]: announces state ("expanded"/"collapsed") to screen readers.
+        aria-controls links this button to the panel it toggles.
+        Using <button> gives free keyboard support (Enter/Space) and correct role.
+      -->
+      <button
+        type="button"
+        class="example__trigger"
+        aria-expanded="false"
+        aria-controls="panel-1"
+        id="trigger-1"
+      >
+        What is WCAG?
+        <!-- aria-hidden: the SVG is decorative; state is conveyed by aria-expanded -->
+        <svg class="example__icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      <!-- hidden attribute fully hides content from all users (visual + AT) when collapsed -->
+      <div class="details" id="panel-1" role="region" aria-labelledby="trigger-1" hidden>
+        <p>The <strong>Web Content Accessibility Guidelines (WCAG)</strong> are a set of internationally recognised standards published by the W3C to help make web content more accessible.</p>
+        <p>WCAG 2.1 AA is the most commonly required conformance level and covers:</p>
+        <ul>
+          <li>Perceivable — users can perceive all information</li>
+          <li>Operable — all functionality is keyboard accessible</li>
+          <li>Understandable — content and interfaces are clear</li>
+          <li>Robust — content is interpreted by a wide range of assistive technologies</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Example 2 -->
+    <div class="example">
+      <button
+        type="button"
+        class="example__trigger"
+        aria-expanded="false"
+        aria-controls="panel-2"
+        id="trigger-2"
+      >
+        Keyboard Shortcuts
+        <svg class="example__icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      <div class="details" id="panel-2" role="region" aria-labelledby="trigger-2" hidden>
+        <p>Use the following keys to operate this widget without a mouse:</p>
+        <ul>
+          <li><code>Tab</code> — move focus to the next interactive element</li>
+          <li><code>Shift + Tab</code> — move focus to the previous element</li>
+          <li><code>Enter</code> or <code>Space</code> — toggle the panel open or closed</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Example 3 — starts expanded -->
+    <div class="example">
+      <button
+        type="button"
+        class="example__trigger"
+        aria-expanded="true"
+        aria-controls="panel-3"
+        id="trigger-3"
+      >
+        Accessibility Statement (expanded by default)
+        <svg class="example__icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      <!-- No hidden attribute: panel is open on load, matching aria-expanded="true" -->
+      <div class="details" id="panel-3" role="region" aria-labelledby="trigger-3">
+        <p>This example demonstrates a panel that is open by default. The <code>aria-expanded</code> attribute on the button is set to <code>"true"</code> and the <code>hidden</code> attribute is absent from the content panel.</p>
+        <p>Toggling the button will collapse this panel and update <code>aria-expanded</code> to <code>"false"</code>.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Query all trigger buttons in one place
+    const triggers = document.querySelectorAll('.example__trigger');
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        // Read current state from the authoritative ARIA attribute
+        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+        const panelId = trigger.getAttribute('aria-controls');
+        const panel = document.getElementById(panelId);
+
+        if (!panel) return;
+
+        // Toggle: flip aria-expanded and show/hide the panel
+        const next = !isExpanded;
+        trigger.setAttribute('aria-expanded', String(next));
+
+        if (next) {
+          // Remove hidden so panel is visible and accessible to AT
+          panel.removeAttribute('hidden');
+        } else {
+          // Set hidden to remove from both visual and accessibility tree
+          panel.setAttribute('hidden', '');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

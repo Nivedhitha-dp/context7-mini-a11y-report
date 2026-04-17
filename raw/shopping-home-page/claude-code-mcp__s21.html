@@ -1,0 +1,1263 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ShopNest — discover popular items, exclusive deals, and style inspiration on our home page." />
+  <title>ShopNest — Home</title>
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --color-primary:       #1a4f8a;
+      --color-primary-dark:  #123a6a;
+      --color-accent:        #c44d00;
+      --color-accent-hover:  #9e3d00;
+      --color-bg:            #ffffff;
+      --color-surface:       #f4f6f9;
+      --color-border:        #d0d7e2;
+      --color-text:          #1a1a2e;
+      --color-text-muted:    #4a4a6a;
+      --color-badge-deal:    #b30000;
+      --color-focus:         #005fcc;
+      --radius-sm:           6px;
+      --radius-md:           12px;
+      --radius-lg:           20px;
+      --shadow-card:         0 2px 12px rgba(0,0,0,.10);
+      --shadow-card-hover:   0 6px 24px rgba(0,0,0,.16);
+      --transition:          .2s ease;
+      --max-w:               1200px;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Skip link: visually hidden until focused ── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 9999;
+      padding: .6rem 1.2rem;
+      background: var(--color-primary);
+      color: #fff;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      transition: top var(--transition);
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* ── Focus styles (visible for all interactive elements) ── */
+    :focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ── Visually hidden utility (for screen-reader-only text) ── */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ── Layout helpers ── */
+    .container { max-width: var(--max-w); margin-inline: auto; padding-inline: 1.25rem; }
+    .section-title {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      color: var(--color-text);
+      margin-bottom: .4rem;
+    }
+    .section-subtitle {
+      color: var(--color-text-muted);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    /* ──────────────────────────────────────────────
+       HEADER / NAV
+    ────────────────────────────────────────────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: 0 1px 6px rgba(0,0,0,.07);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding-block: .9rem;
+    }
+
+    /* Logo */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--color-primary);
+      flex-shrink: 0;
+    }
+    .logo svg { width: 32px; height: 32px; }
+
+    /* Search */
+    .search-form {
+      flex: 1;
+      display: flex;
+      max-width: 500px;
+    }
+    .search-form label { display: none; } /* visible label provided via aria-label on input */
+    .search-input {
+      flex: 1;
+      padding: .55rem 1rem;
+      border: 2px solid var(--color-border);
+      border-right: none;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+      font-size: .95rem;
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+    .search-input::placeholder { color: var(--color-text-muted); }
+    .search-btn {
+      padding: .55rem 1.1rem;
+      background: var(--color-primary);
+      color: #fff;
+      border: 2px solid var(--color-primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      cursor: pointer;
+      font-size: .95rem;
+      font-weight: 600;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .search-btn:hover, .search-btn:focus-visible {
+      background: var(--color-primary-dark);
+      border-color: var(--color-primary-dark);
+    }
+
+    /* Primary nav */
+    .primary-nav { margin-left: auto; }
+    .nav-list { display: flex; align-items: center; gap: .25rem; }
+    .nav-list a {
+      padding: .45rem .75rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: .92rem;
+      color: var(--color-text);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-list a:hover,
+    .nav-list a[aria-current="page"] {
+      background: var(--color-surface);
+      color: var(--color-primary);
+    }
+    .nav-list a[aria-current="page"] { text-decoration: underline; }
+
+    /* Cart button */
+    .cart-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .5rem .85rem;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .cart-btn:hover, .cart-btn:focus-visible { background: var(--color-accent-hover); }
+    .cart-count {
+      position: absolute;
+      top: -6px; right: -6px;
+      background: var(--color-badge-deal);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ──────────────────────────────────────────────
+       HERO
+    ────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #1a4f8a 0%, #0d2d55 55%, #1a3a6e 100%);
+      color: #fff;
+      padding-block: 5rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 640px; }
+    .hero-eyebrow {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      padding: .3rem .8rem;
+      border-radius: 999px;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 1.1rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 1.1rem;
+    }
+    .hero-desc {
+      font-size: 1.1rem;
+      opacity: .88;
+      margin-bottom: 2rem;
+      max-width: 520px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .75rem 1.6rem;
+      background: #fff;
+      color: var(--color-primary);
+      border: 2px solid #fff;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      text-decoration: none;
+    }
+    .btn-primary:hover, .btn-primary:focus-visible {
+      background: transparent;
+      color: #fff;
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .75rem 1.6rem;
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,.55);
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: border-color var(--transition), background var(--transition);
+      text-decoration: none;
+    }
+    .btn-outline:hover, .btn-outline:focus-visible {
+      border-color: #fff;
+      background: rgba(255,255,255,.12);
+    }
+
+    /* ──────────────────────────────────────────────
+       SHARED SECTION WRAPPER
+    ────────────────────────────────────────────── */
+    .content-section { padding-block: 4rem; }
+    .content-section:nth-of-type(even) { background: var(--color-surface); }
+    .section-header { margin-bottom: 2rem; }
+    .section-header-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .view-all-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      color: var(--color-primary);
+      font-weight: 700;
+      font-size: .9rem;
+      border-bottom: 2px solid transparent;
+      transition: border-color var(--transition);
+    }
+    .view-all-link:hover, .view-all-link:focus-visible { border-color: var(--color-primary); }
+
+    /* ──────────────────────────────────────────────
+       PRODUCT CARDS GRID
+    ────────────────────────────────────────────── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow var(--transition), transform var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover {
+      box-shadow: var(--shadow-card-hover);
+      transform: translateY(-3px);
+    }
+    /* Reduce motion: disable transform animation */
+    @media (prefers-reduced-motion: reduce) {
+      .product-card, .blog-card { transform: none !important; transition: box-shadow var(--transition) !important; }
+    }
+
+    .product-img-wrap {
+      position: relative;
+      background: var(--color-surface);
+      aspect-ratio: 4/3;
+      overflow: hidden;
+    }
+    /* Placeholder color-blocks for images (replace with real <img> in production) */
+    .product-img-wrap svg { width: 100%; height: 100%; }
+
+    .product-badge {
+      position: absolute;
+      top: .65rem; left: .65rem;
+      padding: .2rem .6rem;
+      border-radius: 999px;
+      font-size: .72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .badge-new  { background: var(--color-primary); color: #fff; }
+    .badge-hot  { background: #c44d00; color: #fff; }
+    .badge-sale { background: var(--color-badge-deal); color: #fff; }
+
+    .product-wishlist {
+      position: absolute;
+      top: .65rem; right: .65rem;
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,.9);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-text-muted);
+      transition: color var(--transition), background var(--transition);
+    }
+    .product-wishlist:hover, .product-wishlist:focus-visible {
+      color: var(--color-badge-deal);
+      background: #fff;
+    }
+    .product-wishlist[aria-pressed="true"] { color: var(--color-badge-deal); }
+
+    .product-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: .4rem; }
+    .product-category {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+    .product-name {
+      font-size: .97rem;
+      font-weight: 700;
+      color: var(--color-text);
+      line-height: 1.35;
+    }
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .82rem;
+    }
+    .stars { color: #e6a817; letter-spacing: .05em; }
+    .rating-count { color: var(--color-text-muted); }
+    .product-price-row {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-top: auto;
+    }
+    .price-current { font-size: 1.15rem; font-weight: 900; color: var(--color-text); }
+    .price-original {
+      font-size: .85rem;
+      color: var(--color-text-muted);
+      text-decoration: line-through;
+    }
+    .price-save { font-size: .78rem; font-weight: 700; color: var(--color-badge-deal); }
+    .add-to-cart-btn {
+      width: 100%;
+      margin-top: .75rem;
+      padding: .6rem 1rem;
+      background: var(--color-primary);
+      color: #fff;
+      border: 2px solid var(--color-primary);
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+    .add-to-cart-btn:hover, .add-to-cart-btn:focus-visible {
+      background: var(--color-primary-dark);
+      border-color: var(--color-primary-dark);
+    }
+
+    /* ──────────────────────────────────────────────
+       DEALS — banner-style cards
+    ────────────────────────────────────────────── */
+    .deals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .deal-card {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-card);
+    }
+    .deal-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      /* gradient overlay for text legibility — not color-only info */
+      background: linear-gradient(160deg, transparent 30%, rgba(0,0,0,.65) 100%);
+    }
+    .deal-bg-1 { background-color: #1a3a6e; background-image: radial-gradient(ellipse at 80% 20%, #2a5fac 0%, #0d2447 100%); }
+    .deal-bg-2 { background-color: #7b2d00; background-image: radial-gradient(ellipse at 20% 80%, #c44d00 0%, #4a1900 100%); }
+    .deal-bg-3 { background-color: #1a5c35; background-image: radial-gradient(ellipse at 70% 30%, #2e9e5e 0%, #0d3320 100%); }
+    .deal-content { position: relative; z-index: 1; color: #fff; }
+    .deal-tag {
+      display: inline-block;
+      background: #fff;
+      color: var(--color-badge-deal);
+      padding: .2rem .65rem;
+      border-radius: 999px;
+      font-size: .73rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: .6rem;
+    }
+    .deal-title { font-size: 1.15rem; font-weight: 800; margin-bottom: .3rem; }
+    .deal-desc  { font-size: .88rem; opacity: .88; margin-bottom: .9rem; }
+    .deal-timer {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .timer-block {
+      background: rgba(255,255,255,.2);
+      border-radius: var(--radius-sm);
+      padding: .25rem .55rem;
+      text-align: center;
+      min-width: 44px;
+    }
+    .timer-num { font-size: 1.1rem; font-weight: 900; display: block; }
+    .timer-label { font-size: .62rem; opacity: .8; text-transform: uppercase; }
+    .deal-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .55rem 1.2rem;
+      background: #fff;
+      color: var(--color-text);
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      font-size: .88rem;
+      text-decoration: none;
+      transition: background var(--transition), color var(--transition);
+    }
+    .deal-cta:hover, .deal-cta:focus-visible {
+      background: rgba(255,255,255,.85);
+    }
+
+    /* ──────────────────────────────────────────────
+       BLOG CARDS
+    ────────────────────────────────────────────── */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.5rem;
+    }
+    .blog-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow var(--transition), transform var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .blog-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-3px); }
+    .blog-img-wrap { aspect-ratio: 16/9; overflow: hidden; background: var(--color-surface); }
+    .blog-img-wrap svg { width: 100%; height: 100%; }
+    .blog-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-size: .78rem;
+      color: var(--color-text-muted);
+      margin-bottom: .65rem;
+    }
+    .blog-tag {
+      background: var(--color-surface);
+      color: var(--color-primary);
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: .73rem;
+    }
+    .blog-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: .55rem;
+      color: var(--color-text);
+    }
+    .blog-excerpt { font-size: .88rem; color: var(--color-text-muted); line-height: 1.55; flex: 1; }
+    .blog-read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      margin-top: 1rem;
+      font-weight: 700;
+      font-size: .88rem;
+      color: var(--color-primary);
+      border-bottom: 2px solid transparent;
+      transition: border-color var(--transition);
+    }
+    .blog-read-more:hover, .blog-read-more:focus-visible { border-color: var(--color-primary); }
+
+    /* ──────────────────────────────────────────────
+       NEWSLETTER BANNER
+    ────────────────────────────────────────────── */
+    .newsletter-section {
+      background: var(--color-primary);
+      padding-block: 4rem;
+      color: #fff;
+    }
+    .newsletter-inner { max-width: 600px; margin-inline: auto; text-align: center; }
+    .newsletter-inner h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 900; margin-bottom: .6rem; }
+    .newsletter-inner p { opacity: .88; margin-bottom: 1.8rem; }
+    .newsletter-form { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; }
+    .newsletter-form label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    .newsletter-input {
+      flex: 1;
+      min-width: 220px;
+      padding: .7rem 1.1rem;
+      border: 2px solid rgba(255,255,255,.4);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      font-size: 1rem;
+    }
+    .newsletter-input::placeholder { color: rgba(255,255,255,.65); }
+    .newsletter-input:focus-visible { outline-color: #fff; border-color: #fff; }
+    .newsletter-submit {
+      padding: .7rem 1.6rem;
+      background: #fff;
+      color: var(--color-primary);
+      border: 2px solid #fff;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+    .newsletter-submit:hover, .newsletter-submit:focus-visible {
+      background: transparent;
+      color: #fff;
+    }
+
+    /* ──────────────────────────────────────────────
+       FOOTER
+    ────────────────────────────────────────────── */
+    .site-footer {
+      background: #0d2447;
+      color: rgba(255,255,255,.8);
+      padding-block: 3rem 1.5rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .footer-brand .logo { color: #fff; font-size: 1.35rem; margin-bottom: .75rem; }
+    .footer-brand p { font-size: .88rem; line-height: 1.6; max-width: 260px; }
+    .footer-nav-group h3 {
+      font-size: .85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .footer-nav-group ul { display: flex; flex-direction: column; gap: .5rem; }
+    .footer-nav-group a {
+      font-size: .88rem;
+      color: rgba(255,255,255,.72);
+      transition: color var(--transition);
+    }
+    .footer-nav-group a:hover, .footer-nav-group a:focus-visible { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding-top: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .75rem;
+      font-size: .82rem;
+      color: rgba(255,255,255,.5);
+    }
+
+    /* ──────────────────────────────────────────────
+       RESPONSIVE
+    ────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .header-inner { flex-wrap: wrap; }
+      .search-form { order: 3; flex-basis: 100%; max-width: none; }
+      .primary-nav { display: none; } /* mobile nav omitted for brevity — in production add hamburger */
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .hero { padding-block: 3rem 2.5rem; }
+    }
+
+    /* ── Reduced motion: disable all transitions/animations ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip-link: lets keyboard users bypass repeated navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ═══════════════════════════════════
+       SITE HEADER
+  ═══════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+
+      <!-- Logo — link to home, aria-label identifies the site -->
+      <a href="/" class="logo" aria-label="ShopNest — go to homepage">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#1a4f8a"/>
+          <path d="M8 13l8-6 8 6v12H20v-7h-8v7H8V13z" fill="#fff"/>
+        </svg>
+        ShopNest
+      </a>
+
+      <!-- Search — label hidden visually but present for screen readers -->
+      <form class="search-form" role="search" action="/search">
+        <label for="site-search">Search products</label>
+        <input
+          id="site-search"
+          class="search-input"
+          type="search"
+          name="q"
+          placeholder="Search products…"
+          aria-label="Search products"
+          autocomplete="off"
+        />
+        <button class="search-btn" type="submit" aria-label="Submit search">
+          <!-- SVG icon with aria-hidden since text label is on button -->
+          <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Primary navigation — aria-label distinguishes from other navs -->
+      <nav class="primary-nav" aria-label="Primary">
+        <ul class="nav-list" role="list">
+          <li><a href="/" aria-current="page">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/deals">Deals</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Cart — aria-label includes item count for screen readers -->
+      <button class="cart-btn" type="button" aria-label="Shopping cart, 3 items">
+        <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        Cart
+        <span class="cart-count" aria-hidden="true">3</span>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════ -->
+  <main id="main-content" tabindex="-1">
+
+    <!-- ─── HERO ─── -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container hero-inner">
+        <span class="hero-eyebrow" aria-hidden="true">Spring Collection 2026</span>
+        <h1 id="hero-heading">Discover Products<br/>You'll Love</h1>
+        <p class="hero-desc">Explore thousands of curated items — from everyday essentials to one-of-a-kind finds — all with fast shipping and easy returns.</p>
+        <div class="hero-actions">
+          <a href="/shop" class="btn-primary">
+            Shop Now
+            <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="/deals" class="btn-outline">
+            See Today's Deals
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── POPULAR ITEMS ─── -->
+    <section class="content-section" aria-labelledby="popular-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title" id="popular-heading">Popular Right Now</h2>
+              <p class="section-subtitle">Our most-loved items this week</p>
+            </div>
+            <a href="/shop?sort=popular" class="view-all-link">
+              View all popular items
+              <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Product list — role="list" restores list semantics removed by CSS -->
+        <ul class="product-grid" role="list">
+
+          <!-- Product 1 -->
+          <li>
+            <article class="product-card" aria-label="Wireless Noise-Cancelling Headphones">
+              <div class="product-img-wrap">
+                <!-- Decorative SVG placeholder; replace with <img alt="…"> in production -->
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="320" height="240" fill="#e8eef7"/>
+                  <ellipse cx="160" cy="110" rx="55" ry="50" fill="#c5d5ec" stroke="#a0b5d9" stroke-width="2"/>
+                  <rect x="105" y="130" width="18" height="40" rx="5" fill="#8da8d0"/>
+                  <rect x="197" y="130" width="18" height="40" rx="5" fill="#8da8d0"/>
+                  <ellipse cx="160" cy="100" rx="28" ry="25" fill="#1a4f8a" opacity=".25"/>
+                </svg>
+                <span class="product-badge badge-hot" aria-label="Hot item">Hot</span>
+                <!-- Wishlist toggle — aria-pressed reflects current state -->
+                <button class="product-wishlist" type="button" aria-pressed="false" aria-label="Add Wireless Noise-Cancelling Headphones to wishlist">
+                  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Electronics</p>
+                <h3 class="product-name">Wireless Noise-Cancelling Headphones</h3>
+                <div class="product-rating">
+                  <!-- Stars are decorative; count is in visible text -->
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="rating-count">4.9 <span class="sr-only">out of 5</span> (1,248 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$79.99</span>
+                  <span class="price-original" aria-label="Original price $119.99">$119.99</span>
+                  <span class="price-save" aria-label="Save 33%">–33%</span>
+                </div>
+                <button class="add-to-cart-btn" type="button" aria-label="Add Wireless Noise-Cancelling Headphones to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Product 2 -->
+          <li>
+            <article class="product-card" aria-label="Minimalist Leather Wallet">
+              <div class="product-img-wrap">
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="320" height="240" fill="#f5ede4"/>
+                  <rect x="80" y="80" width="160" height="100" rx="8" fill="#c9956a"/>
+                  <rect x="200" y="95" width="55" height="70" rx="6" fill="#a0714a"/>
+                  <rect x="90" y="105" width="80" height="10" rx="3" fill="#e8c9a8"/>
+                  <rect x="90" y="125" width="60" height="10" rx="3" fill="#e8c9a8"/>
+                </svg>
+                <span class="product-badge badge-new" aria-label="New arrival">New</span>
+                <button class="product-wishlist" type="button" aria-pressed="true" aria-label="Remove Minimalist Leather Wallet from wishlist">
+                  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Accessories</p>
+                <h3 class="product-name">Minimalist Leather Wallet</h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">4.6 <span class="sr-only">out of 5</span> (873 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$34.99</span>
+                </div>
+                <button class="add-to-cart-btn" type="button" aria-label="Add Minimalist Leather Wallet to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Product 3 -->
+          <li>
+            <article class="product-card" aria-label="Portable Bluetooth Speaker">
+              <div class="product-img-wrap">
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="320" height="240" fill="#e8f0e8"/>
+                  <rect x="90" y="80" width="140" height="90" rx="20" fill="#4a7a4a"/>
+                  <circle cx="140" cy="125" r="22" fill="#2d5c2d"/>
+                  <circle cx="180" cy="125" r="22" fill="#2d5c2d"/>
+                  <circle cx="140" cy="125" r="10" fill="#6ab06a"/>
+                  <circle cx="180" cy="125" r="10" fill="#6ab06a"/>
+                </svg>
+                <button class="product-wishlist" type="button" aria-pressed="false" aria-label="Add Portable Bluetooth Speaker to wishlist">
+                  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Electronics</p>
+                <h3 class="product-name">Portable Bluetooth Speaker</h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="rating-count">4.8 <span class="sr-only">out of 5</span> (2,104 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$49.99</span>
+                  <span class="price-original" aria-label="Original price $69.99">$69.99</span>
+                  <span class="price-save" aria-label="Save 29%">–29%</span>
+                </div>
+                <button class="add-to-cart-btn" type="button" aria-label="Add Portable Bluetooth Speaker to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <!-- Product 4 -->
+          <li>
+            <article class="product-card" aria-label="Ceramic Pour-Over Coffee Set">
+              <div class="product-img-wrap">
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="320" height="240" fill="#f0ece4"/>
+                  <ellipse cx="160" cy="180" rx="60" ry="12" fill="#d4c4a8"/>
+                  <rect x="130" y="80" width="60" height="100" rx="10" fill="#e8dcc8"/>
+                  <ellipse cx="160" cy="80" rx="30" ry="12" fill="#d4c4a8"/>
+                  <rect x="148" y="55" width="24" height="30" rx="5" fill="#c4a882"/>
+                </svg>
+                <span class="product-badge badge-new" aria-label="New arrival">New</span>
+                <button class="product-wishlist" type="button" aria-pressed="false" aria-label="Add Ceramic Pour-Over Coffee Set to wishlist">
+                  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Kitchen</p>
+                <h3 class="product-name">Ceramic Pour-Over Coffee Set</h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">4.5 <span class="sr-only">out of 5</span> (432 reviews)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$44.99</span>
+                </div>
+                <button class="add-to-cart-btn" type="button" aria-label="Add Ceramic Pour-Over Coffee Set to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── DEALS OF THE DAY ─── -->
+    <section class="content-section" aria-labelledby="deals-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title" id="deals-heading">Deals of the Day</h2>
+              <p class="section-subtitle">Limited-time offers — don't miss out</p>
+            </div>
+            <a href="/deals" class="view-all-link">
+              Browse all deals
+              <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <ul class="deals-grid" role="list">
+
+          <!-- Deal 1 -->
+          <li>
+            <article class="deal-card deal-bg-1" aria-labelledby="deal1-title">
+              <div class="deal-content">
+                <span class="deal-tag">Up to 40% off</span>
+                <h3 class="deal-title" id="deal1-title">Tech Accessories Flash Sale</h3>
+                <p class="deal-desc">Cables, chargers, stands, and more. Stock is limited.</p>
+                <div class="deal-timer" aria-label="Deal ends in 05 hours 42 minutes 18 seconds">
+                  <div class="timer-block" aria-hidden="true">
+                    <span class="timer-num">05</span>
+                    <span class="timer-label">hrs</span>
+                  </div>
+                  <div class="timer-block" aria-hidden="true">
+                    <span class="timer-num">42</span>
+                    <span class="timer-label">min</span>
+                  </div>
+                  <div class="timer-block" aria-hidden="true">
+                    <span class="timer-num">18</span>
+                    <span class="timer-label">sec</span>
+                  </div>
+                </div>
+                <a href="/deals/tech-accessories" class="deal-cta">
+                  Shop the Sale
+                  <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </article>
+          </li>
+
+          <!-- Deal 2 -->
+          <li>
+            <article class="deal-card deal-bg-2" aria-labelledby="deal2-title">
+              <div class="deal-content">
+                <span class="deal-tag">Buy 2 Get 1 Free</span>
+                <h3 class="deal-title" id="deal2-title">Home Goods Bonanza</h3>
+                <p class="deal-desc">Candles, cushions, frames, and décor essentials.</p>
+                <div class="deal-timer" aria-label="Deal ends in 11 hours 09 minutes 55 seconds">
+                  <div class="timer-block" aria-hidden="true">
+                    <span class="timer-num">11</span>
+                    <span class="timer-label">hrs</span>
+                  </div>
+                  <div class="timer-block" aria-hidden="true">
+                    <span class="timer-num">09</span>
+                    <span class="timer-label">min</span>
+                  </div>
+                  <div class="timer-block" aria-hidden="true">
+                    <span class="timer-num">55</span>
+                    <span class="timer-label">sec</span>
+                  </div>
+                </div>
+                <a href="/deals/home-goods" class="deal-cta">
+                  Grab the Deal
+                  <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </article>
+          </li>
+
+          <!-- Deal 3 -->
+          <li>
+            <article class="deal-card deal-bg-3" aria-labelledby="deal3-title">
+              <div class="deal-content">
+                <span class="deal-tag">Extra 20% off</span>
+                <h3 class="deal-title" id="deal3-title">Outdoor & Fitness Clearance</h3>
+                <p class="deal-desc">Gear up for spring — yoga, hiking, cycling, and more.</p>
+                <div class="deal-timer" aria-label="Deal ends in 23 hours 00 minutes 04 seconds">
+                  <div class="timer-block" aria-hidden="true">
+                    <span class="timer-num">23</span>
+                    <span class="timer-label">hrs</span>
+                  </div>
+                  <div class="timer-block" aria-hidden="true">
+                    <span class="timer-num">00</span>
+                    <span class="timer-label">min</span>
+                  </div>
+                  <div class="timer-block" aria-hidden="true">
+                    <span class="timer-num">04</span>
+                    <span class="timer-label">sec</span>
+                  </div>
+                </div>
+                <a href="/deals/outdoor-fitness" class="deal-cta">
+                  Shop Clearance
+                  <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── BLOG POSTS ─── -->
+    <section class="content-section" aria-labelledby="blog-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title" id="blog-heading">From the Blog</h2>
+              <p class="section-subtitle">Style tips, guides, and inspiration</p>
+            </div>
+            <a href="/blog" class="view-all-link">
+              Read all posts
+              <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <ul class="blog-grid" role="list">
+
+          <!-- Blog post 1 -->
+          <li>
+            <article class="blog-card" aria-labelledby="post1-title">
+              <div class="blog-img-wrap">
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 560 315" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="560" height="315" fill="#dde8f5"/>
+                  <rect x="60" y="60" width="180" height="200" rx="8" fill="#a0b8d9"/>
+                  <rect x="260" y="100" width="240" height="140" rx="6" fill="#b8ccec"/>
+                  <circle cx="420" cy="80" r="40" fill="#8aadd4"/>
+                </svg>
+              </div>
+              <div class="blog-body">
+                <div class="blog-meta">
+                  <span class="blog-tag">Style</span>
+                  <time datetime="2026-04-10">April 10, 2026</time>
+                  <span aria-hidden="true">·</span>
+                  <span>5 min read</span>
+                </div>
+                <h3 class="blog-title" id="post1-title">10 Ways to Style a Minimalist Wardrobe This Spring</h3>
+                <p class="blog-excerpt">Less is more — discover how a curated capsule wardrobe can give you more outfit options than a closet packed with choices.</p>
+                <a href="/blog/minimalist-wardrobe-spring" class="blog-read-more">
+                  Read article
+                  <svg aria-hidden="true" focusable="false" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </article>
+          </li>
+
+          <!-- Blog post 2 -->
+          <li>
+            <article class="blog-card" aria-labelledby="post2-title">
+              <div class="blog-img-wrap">
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 560 315" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="560" height="315" fill="#e8f0e8"/>
+                  <circle cx="200" cy="160" r="100" fill="#b8d4b8"/>
+                  <circle cx="380" cy="140" r="70" fill="#8ab88a"/>
+                  <rect x="120" y="220" width="320" height="30" rx="4" fill="#6aa06a" opacity=".4"/>
+                </svg>
+              </div>
+              <div class="blog-body">
+                <div class="blog-meta">
+                  <span class="blog-tag">Home</span>
+                  <time datetime="2026-04-07">April 7, 2026</time>
+                  <span aria-hidden="true">·</span>
+                  <span>4 min read</span>
+                </div>
+                <h3 class="blog-title" id="post2-title">The Beginner's Guide to Indoor Plants That Actually Thrive</h3>
+                <p class="blog-excerpt">No green thumb required. We tested 20 popular indoor plants and ranked them by how hard they are to kill — plus our top picks for low-light rooms.</p>
+                <a href="/blog/indoor-plants-guide" class="blog-read-more">
+                  Read article
+                  <svg aria-hidden="true" focusable="false" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </article>
+          </li>
+
+          <!-- Blog post 3 -->
+          <li>
+            <article class="blog-card" aria-labelledby="post3-title">
+              <div class="blog-img-wrap">
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 560 315" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="560" height="315" fill="#f5ece4"/>
+                  <rect x="80" y="80" width="160" height="180" rx="6" fill="#d4a882"/>
+                  <rect x="260" y="120" width="220" height="140" rx="6" fill="#c49066"/>
+                  <circle cx="340" cy="80" r="45" fill="#e8c9a8"/>
+                </svg>
+              </div>
+              <div class="blog-body">
+                <div class="blog-meta">
+                  <span class="blog-tag">Guides</span>
+                  <time datetime="2026-04-03">April 3, 2026</time>
+                  <span aria-hidden="true">·</span>
+                  <span>7 min read</span>
+                </div>
+                <h3 class="blog-title" id="post3-title">How to Choose the Right Coffee Maker for Your Morning Routine</h3>
+                <p class="blog-excerpt">Drip, pour-over, French press, or espresso? We break down the pros, cons, costs, and cleanup for every brewing method so you can find your perfect match.</p>
+                <a href="/blog/coffee-maker-guide" class="blog-read-more">
+                  Read article
+                  <svg aria-hidden="true" focusable="false" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── NEWSLETTER ─── -->
+    <section class="newsletter-section" aria-labelledby="newsletter-heading">
+      <div class="container newsletter-inner">
+        <h2 id="newsletter-heading">Get Deals Before Anyone Else</h2>
+        <p>Join 200,000+ shoppers who receive exclusive discounts, new arrivals, and weekly picks straight to their inbox.</p>
+        <!-- aria-describedby connects the input to the privacy note below -->
+        <form class="newsletter-form" action="/newsletter/subscribe" method="post" novalidate>
+          <label for="newsletter-email">Email address</label>
+          <input
+            id="newsletter-email"
+            class="newsletter-input"
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+            aria-required="true"
+            aria-describedby="newsletter-note"
+          />
+          <button class="newsletter-submit" type="submit">Subscribe Free</button>
+        </form>
+        <p id="newsletter-note" style="margin-top:.85rem; font-size:.8rem; opacity:.7;">
+          No spam. Unsubscribe at any time. Your data is never sold.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+
+        <div class="footer-brand">
+          <a href="/" class="logo" aria-label="ShopNest — go to homepage">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+              <rect width="32" height="32" rx="8" fill="#4a7ab8"/>
+              <path d="M8 13l8-6 8 6v12H20v-7h-8v7H8V13z" fill="#fff"/>
+            </svg>
+            ShopNest
+          </a>
+          <p>Your one-stop destination for quality products at unbeatable prices, with customer care you can count on.</p>
+        </div>
+
+        <nav class="footer-nav-group" aria-label="Shop categories">
+          <h3>Shop</h3>
+          <ul role="list">
+            <li><a href="/shop/electronics">Electronics</a></li>
+            <li><a href="/shop/fashion">Fashion</a></li>
+            <li><a href="/shop/home-kitchen">Home &amp; Kitchen</a></li>
+            <li><a href="/shop/beauty">Beauty</a></li>
+            <li><a href="/shop/sports">Sports &amp; Outdoors</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-nav-group" aria-label="Customer support links">
+          <h3>Support</h3>
+          <ul role="list">
+            <li><a href="/help">Help Center</a></li>
+            <li><a href="/orders">Track Your Order</a></li>
+            <li><a href="/returns">Returns &amp; Exchanges</a></li>
+            <li><a href="/shipping">Shipping Info</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-nav-group" aria-label="Company information links">
+          <h3>Company</h3>
+          <ul role="list">
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/press">Press</a></li>
+            <li><a href="/accessibility">Accessibility</a></li>
+          </ul>
+        </nav>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 ShopNest, Inc. All rights reserved.</p>
+        <nav aria-label="Legal links">
+          <ul style="display:flex; gap:1.25rem; list-style:none;" role="list">
+            <li><a href="/privacy" style="color:inherit; font-size:.82rem;">Privacy Policy</a></li>
+            <li><a href="/terms"   style="color:inherit; font-size:.82rem;">Terms of Service</a></li>
+            <li><a href="/cookies" style="color:inherit; font-size:.82rem;">Cookie Settings</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Wishlist toggle — updates aria-pressed and icon fill for screen reader users
+    document.querySelectorAll('.product-wishlist').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pressed = btn.getAttribute('aria-pressed') === 'true';
+        btn.setAttribute('aria-pressed', String(!pressed));
+        const path = btn.querySelector('path');
+        if (path) {
+          path.setAttribute('fill', !pressed ? 'currentColor' : 'none');
+        }
+        // Update accessible label to reflect new state
+        const productName = btn.closest('article').getAttribute('aria-label');
+        btn.setAttribute('aria-label',
+          !pressed
+            ? `Remove ${productName} from wishlist`
+            : `Add ${productName} to wishlist`
+        );
+      });
+    });
+
+    // Add-to-cart — brief live region announcement for screen readers
+    const liveRegion = document.createElement('div');
+    liveRegion.setAttribute('aria-live', 'polite');
+    liveRegion.setAttribute('aria-atomic', 'true');
+    liveRegion.className = 'sr-only';
+    document.body.appendChild(liveRegion);
+
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const productName = btn.closest('article').getAttribute('aria-label');
+        liveRegion.textContent = '';
+        // Force re-announcement by briefly clearing then setting
+        requestAnimationFrame(() => {
+          liveRegion.textContent = `${productName} added to your cart.`;
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

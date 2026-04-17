@@ -1,0 +1,192 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f4f4f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: #18181b;
+    }
+
+    main {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .required-note {
+      font-size: 0.875rem;
+      color: #52525b;
+      margin-bottom: 1.75rem;
+    }
+
+    .required-note abbr {
+      text-decoration: none;
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #18181b;
+    }
+
+    label .required-marker {
+      color: #b91c1c;
+      margin-left: 0.2em;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    label .optional-badge {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #71717a;
+      margin-left: 0.4em;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 0.625rem 0.75rem;
+      font-size: 1rem;
+      border: 1.5px solid #a1a1aa;
+      border-radius: 6px;
+      background: #fafafa;
+      color: #18181b;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,.25);
+      background: #fff;
+    }
+
+    input[aria-invalid="true"] {
+      border-color: #b91c1c;
+    }
+
+    .helper-text {
+      font-size: 0.8125rem;
+      color: #52525b;
+      line-height: 1.4;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: #2563eb;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+
+    button[type="submit"]:hover {
+      background: #1d4ed8;
+    }
+
+    button[type="submit"]:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: 2px;
+    }
+
+    button[type="submit"]:active {
+      background: #1e40af;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Contact Us</h1>
+    <p class="required-note">Fields marked <abbr title="required">*</abbr> are required.</p>
+
+    <form novalidate>
+      <div class="form-field">
+        <label for="full-name">
+          Full Name
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="full-name"
+          name="full-name"
+          autocomplete="name"
+          required
+          aria-required="true"
+          spellcheck="false"
+        >
+      </div>
+
+      <div class="form-field">
+        <label for="email">
+          Email Address
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          required
+          aria-required="true"
+          aria-describedby="email-hint"
+          inputmode="email"
+        >
+        <span id="email-hint" class="helper-text">Enter a valid email address, for example: name@example.com</span>
+      </div>
+
+      <div class="form-field">
+        <label for="phone">
+          Phone Number
+          <span class="optional-badge">(optional)</span>
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autocomplete="tel"
+          aria-describedby="phone-hint"
+          inputmode="tel"
+        >
+        <span id="phone-hint" class="helper-text">Preferred format: (555) 555-5555. Include country code for international numbers, e.g. +1 555 555 5555.</span>
+      </div>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </main>
+</body>
+</html>

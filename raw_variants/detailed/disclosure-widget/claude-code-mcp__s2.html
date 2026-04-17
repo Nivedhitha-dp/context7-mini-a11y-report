@@ -1,0 +1,417 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widgets - Accessibility Demo</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #1a1a1a;
+      --color-muted-text: #595959;
+      --color-border: #767676;
+      --color-focus: #0052cc;
+      --color-surface: #f4f4f4;
+      --color-surface-hover: #e0e0e0;
+      --color-surface-active: #d0d0d0;
+      --color-header-bg: #1a1a1a;
+      --color-header-text: #ffffff;
+      --color-accent: #0052cc;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+
+    .skip-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: var(--color-accent);
+      color: #ffffff;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 0 0 4px 0;
+    }
+
+    .sr-only:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    header {
+      background: var(--color-header-bg);
+      color: var(--color-header-text);
+      padding: 1rem 1.5rem;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--color-border);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      color: var(--color-muted-text);
+      font-size: 0.9rem;
+    }
+
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      line-height: 1.2;
+      color: var(--color-text);
+    }
+
+    h2 {
+      font-size: clamp(1.1rem, 3vw, 1.35rem);
+      margin: 2rem 0 0.75rem;
+      color: var(--color-text);
+    }
+
+    .intro {
+      margin: 0 0 2rem;
+      color: var(--color-muted-text);
+    }
+
+    /* Widget wrapper */
+    .example {
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+    }
+
+    /* Toggle button */
+    .example__toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.875rem 1.125rem;
+      background: var(--color-surface);
+      border: none;
+      border-bottom: 1px solid transparent;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      text-align: left;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.15s ease;
+    }
+
+    .example__toggle:hover {
+      background: var(--color-surface-hover);
+    }
+
+    .example__toggle:active {
+      background: var(--color-surface-active);
+    }
+
+    .example__toggle:focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: -2px;
+    }
+
+    .example__toggle[aria-expanded="true"] {
+      border-radius: 6px 6px 0 0;
+      border-bottom-color: var(--color-border);
+    }
+
+    /* Chevron icon */
+    .chevron {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      fill: currentColor;
+      transition: transform 0.2s ease;
+    }
+
+    .example__toggle[aria-expanded="true"] .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Controlled content panel */
+    .details {
+      padding: 1rem 1.125rem;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details p {
+      margin: 0 0 0.75rem;
+    }
+
+    .details p:last-child {
+      margin-bottom: 0;
+    }
+
+    .details ul {
+      margin: 0.5rem 0 0.75rem 1.25rem;
+      padding: 0;
+    }
+
+    .details li {
+      margin-bottom: 0.35rem;
+    }
+
+    /* Forced colors support */
+    @media (forced-colors: active) {
+      .example {
+        border: 2px solid ButtonBorder;
+      }
+
+      .example__toggle {
+        background: ButtonFace;
+        color: ButtonText;
+        border: 1px solid ButtonBorder;
+        border-bottom: 1px solid transparent;
+      }
+
+      .example__toggle[aria-expanded="true"] {
+        border-bottom-color: ButtonBorder;
+      }
+
+      .example__toggle:hover {
+        background: Highlight;
+        color: HighlightText;
+      }
+
+      .example__toggle:focus-visible {
+        outline: 3px solid Highlight;
+        outline-offset: -2px;
+      }
+
+      .chevron {
+        forced-color-adjust: auto;
+      }
+    }
+
+    /* Reflow: ensure wrapping at narrow widths */
+    @media (max-width: 360px) {
+      main {
+        padding: 1rem 0.75rem;
+      }
+
+      .example__toggle {
+        padding: 0.75rem;
+      }
+
+      .details {
+        padding: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#maincontent" class="skip-link sr-only">Skip to main content</a>
+
+  <header>
+    <p>Accessibility Component Library</p>
+  </header>
+
+  <main id="maincontent" tabindex="-1">
+    <h1>Expand/Collapse Widgets</h1>
+    <p class="intro">
+      These disclosure widgets use a native <code>&lt;button&gt;</code> with
+      <code>aria-expanded</code> and <code>aria-controls</code> to communicate
+      open/closed state to assistive technologies.
+    </p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="example">
+      <button
+        type="button"
+        class="example__toggle"
+        aria-expanded="false"
+        aria-controls="faq-panel-1"
+        id="faq-btn-1"
+      >
+        What is keyboard accessibility?
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </button>
+      <div class="details" id="faq-panel-1" role="region" aria-labelledby="faq-btn-1" hidden>
+        <p>
+          Keyboard accessibility means every feature and interaction on a page can
+          be reached and operated using only a keyboard — no mouse required. This
+          benefits people who cannot use a pointer device, power keyboard users,
+          and those who rely on switch access or voice control software.
+        </p>
+        <p>
+          The core requirements are: all interactive elements reachable via
+          <kbd>Tab</kbd>, a clearly visible focus indicator, and no keyboard traps.
+        </p>
+      </div>
+    </div>
+
+    <div class="example">
+      <button
+        type="button"
+        class="example__toggle"
+        aria-expanded="false"
+        aria-controls="faq-panel-2"
+        id="faq-btn-2"
+      >
+        What does WCAG 2.2 Level AA require?
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </button>
+      <div class="details" id="faq-panel-2" role="region" aria-labelledby="faq-btn-2" hidden>
+        <p>
+          WCAG 2.2 Level AA is the internationally recognised standard for
+          digital accessibility. At this level, you must satisfy all Level A
+          and Level AA success criteria, including:
+        </p>
+        <ul>
+          <li>Text contrast of at least 4.5:1 (3:1 for large text)</li>
+          <li>Visible focus indicators that meet a 3:1 contrast threshold</li>
+          <li>All functionality operable by keyboard</li>
+          <li>No content that flashes more than three times per second</li>
+          <li>Drag movements have a pointer alternative (SC 2.5.7)</li>
+          <li>Target size of at least 24×24 CSS pixels (SC 2.5.8)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="example">
+      <button
+        type="button"
+        class="example__toggle"
+        aria-expanded="false"
+        aria-controls="faq-panel-3"
+        id="faq-btn-3"
+      >
+        Why use a button instead of a details element?
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </button>
+      <div class="details" id="faq-panel-3" role="region" aria-labelledby="faq-btn-3" hidden>
+        <p>
+          The native HTML <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code>
+          element provides built-in disclosure behaviour and is a good default.
+          A <code>&lt;button&gt;</code>-based pattern is preferred when you need:
+        </p>
+        <ul>
+          <li>Consistent cross-browser accessible name announcements</li>
+          <li>Full control over animation and transition timing</li>
+          <li>Custom styling that is reliable across all browsers</li>
+          <li>Integration with JavaScript-driven state management</li>
+        </ul>
+        <p>
+          Both approaches are valid; choose based on project constraints and
+          existing component patterns.
+        </p>
+      </div>
+    </div>
+
+    <h2>Settings Panels</h2>
+
+    <div class="example">
+      <button
+        type="button"
+        class="example__toggle"
+        aria-expanded="true"
+        aria-controls="settings-panel-1"
+        id="settings-btn-1"
+      >
+        Notification Preferences
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </button>
+      <div class="details" id="settings-panel-1" role="region" aria-labelledby="settings-btn-1">
+        <p>
+          Choose how and when you receive notifications. Changes are saved
+          automatically when you leave this page.
+        </p>
+        <ul>
+          <li>Email digests: daily summary of activity</li>
+          <li>Push notifications: immediate alerts for mentions</li>
+          <li>Quiet hours: silence notifications from 10 pm to 7 am</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="example">
+      <button
+        type="button"
+        class="example__toggle"
+        aria-expanded="false"
+        aria-controls="settings-panel-2"
+        id="settings-btn-2"
+      >
+        Privacy and Data Sharing
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </button>
+      <div class="details" id="settings-panel-2" role="region" aria-labelledby="settings-btn-2" hidden>
+        <p>
+          Control how your data is used to personalise your experience and
+          improve the service. You can update these settings at any time.
+        </p>
+        <ul>
+          <li>Analytics: help us understand how features are used</li>
+          <li>Personalisation: tailor content recommendations to you</li>
+          <li>Third-party integrations: share data with connected services</li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Accessibility Component Demo &mdash; WCAG 2.2 Level AA</p>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.example__toggle').forEach(function(button) {
+      button.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        var panelId = this.getAttribute('aria-controls');
+        var panel = document.getElementById(panelId);
+        if (expanded) {
+          panel.setAttribute('hidden', '');
+        } else {
+          panel.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

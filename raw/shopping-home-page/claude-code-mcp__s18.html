@@ -1,0 +1,1104 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ShopNest — discover popular items, exclusive deals, and lifestyle inspiration." />
+  <title>ShopNest — Your Everyday Store</title>
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --color-brand:       #1a6b3c;
+      --color-brand-dark:  #134f2d;
+      --color-accent:      #e05c00;
+      --color-accent-dark: #b34800;
+      --color-bg:          #f9f9f7;
+      --color-surface:     #ffffff;
+      --color-text:        #1a1a1a;
+      --color-muted:       #4a4a4a;
+      --color-border:      #d0d0cc;
+      --color-badge-bg:    #fff3e0;
+      --color-badge-text:  #7a3000;
+      --radius-card:       12px;
+      --shadow-card:       0 2px 12px rgba(0,0,0,.08);
+      --focus-ring:        0 0 0 3px #1a6b3c, 0 0 0 5px #ffffff;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; }
+
+    /* ── Skip link: hidden until focused ── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 9999;
+      padding: .6rem 1.2rem;
+      background: var(--color-brand);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 0 0 8px 8px;
+      text-decoration: none;
+      transition: top .15s;
+    }
+    .skip-link:focus { top: 0; outline: 3px solid var(--color-accent); outline-offset: 2px; }
+
+    /* ── Global focus ring ── */
+    :focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: 4px; }
+
+    /* ── Layout helpers ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .section-header h2 { font-size: clamp(1.25rem, 2.5vw, 1.75rem); }
+    .link-all {
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--color-brand);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      white-space: nowrap;
+    }
+    .link-all:hover { color: var(--color-brand-dark); }
+
+    /* ── Site header / nav ── */
+    .site-header {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .85rem 1.25rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--color-brand);
+      text-decoration: none;
+      letter-spacing: -.5px;
+    }
+    .logo span { color: var(--color-accent); }
+
+    /* Search form */
+    .search-form {
+      display: flex;
+      flex: 1;
+      max-width: 480px;
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--color-bg);
+    }
+    .search-form:focus-within { border-color: var(--color-brand); box-shadow: var(--focus-ring); }
+    .search-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: .55rem .85rem;
+      font-size: .95rem;
+      color: var(--color-text);
+      outline: none;
+    }
+    .search-btn {
+      border: none;
+      background: var(--color-brand);
+      color: #fff;
+      padding: .55rem .9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .85rem;
+      font-weight: 600;
+    }
+    .search-btn:hover { background: var(--color-brand-dark); }
+    .search-btn:focus-visible { outline: 3px solid var(--color-accent); outline-offset: -3px; box-shadow: none; }
+
+    /* Header actions */
+    .header-actions { display: flex; gap: .5rem; align-items: center; }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: .45rem .55rem;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: .7rem;
+      color: var(--color-muted);
+      font-weight: 500;
+      line-height: 1;
+      position: relative;
+    }
+    .icon-btn:hover { background: var(--color-bg); color: var(--color-brand); }
+    .icon-btn svg { width: 22px; height: 22px; }
+    .badge {
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: .65rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 0 .35em;
+      line-height: 1.4;
+      min-width: 1.1em;
+      text-align: center;
+    }
+
+    /* Primary nav */
+    .primary-nav {
+      background: var(--color-brand);
+    }
+    .nav-list {
+      display: flex;
+      list-style: none;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      overflow-x: auto;
+    }
+    .nav-list a {
+      display: block;
+      padding: .6rem 1rem;
+      font-size: .875rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.88);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .nav-list a:hover,
+    .nav-list a[aria-current="page"] {
+      color: #fff;
+      background: rgba(255,255,255,.12);
+    }
+    .nav-list a:focus-visible { outline: 3px solid #fff; outline-offset: -3px; box-shadow: none; }
+
+    /* ── Hero banner ── */
+    .hero {
+      background: linear-gradient(135deg, #134f2d 0%, #1a6b3c 55%, #2d8a55 100%);
+      color: #fff;
+      padding: 4rem 1.25rem;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px;
+      padding: .25rem .85rem;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: .85rem;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,.85);
+      max-width: 500px;
+      margin: 0 auto 2rem;
+    }
+    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--color-accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: .8rem 1.75rem;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 2px solid transparent;
+    }
+    .btn-primary:hover { background: var(--color-accent-dark); }
+    .btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--color-accent); border-radius: 8px; }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: transparent;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: .8rem 1.75rem;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 2px solid rgba(255,255,255,.55);
+    }
+    .btn-secondary:hover { border-color: #fff; background: rgba(255,255,255,.08); }
+    .btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--color-accent); border-radius: 8px; }
+
+    /* ── Trust bar ── */
+    .trust-bar {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: .9rem 1.25rem;
+    }
+    .trust-list {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .trust-list li {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--color-muted);
+    }
+    .trust-list svg { width: 18px; height: 18px; color: var(--color-brand); flex-shrink: 0; }
+
+    /* ── Shared card grid ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ── Product card ── */
+    .product-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .product-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.12); transform: translateY(-2px); }
+    .product-card__img-wrap {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: #f0ede8;
+    }
+    .product-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .3s;
+    }
+    .product-card:hover .product-card__img-wrap img { transform: scale(1.04); }
+    .product-card__badge {
+      position: absolute;
+      top: .6rem;
+      left: .6rem;
+      background: var(--color-badge-bg);
+      color: var(--color-badge-text);
+      font-size: .7rem;
+      font-weight: 700;
+      padding: .2rem .6rem;
+      border-radius: 999px;
+      border: 1px solid #f5c99a;
+    }
+    .product-card__body { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: .5rem; }
+    .product-card__category { font-size: .75rem; color: var(--color-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+    .product-card__name { font-size: .95rem; font-weight: 700; line-height: 1.3; }
+    .product-card__rating { display: flex; align-items: center; gap: .35rem; font-size: .8rem; color: var(--color-muted); }
+    .stars { color: #d97706; letter-spacing: .05em; }
+    .product-card__price-row { display: flex; align-items: baseline; gap: .5rem; margin-top: auto; }
+    .price-current { font-size: 1.1rem; font-weight: 800; color: var(--color-text); }
+    .price-was { font-size: .82rem; color: var(--color-muted); text-decoration: line-through; }
+    .product-card__cta {
+      display: block;
+      width: calc(100% - 2rem);
+      margin: 0 1rem 1rem;
+      padding: .6rem;
+      background: var(--color-brand);
+      color: #fff;
+      font-weight: 700;
+      font-size: .875rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: background .15s;
+    }
+    .product-card__cta:hover { background: var(--color-brand-dark); }
+
+    /* ── Deal card (wider) ── */
+    .deal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .deal-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+    }
+    .deal-card__header {
+      background: linear-gradient(135deg, #b34800, #e05c00);
+      color: #fff;
+      padding: .6rem 1rem;
+      font-size: .8rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .deal-timer { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
+    .deal-card__img-wrap { aspect-ratio: 16/9; overflow: hidden; background: #f0ede8; }
+    .deal-card__img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+    .deal-card:hover .deal-card__img-wrap img { transform: scale(1.04); }
+    .deal-card__body { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: .5rem; }
+    .deal-card__name { font-size: 1rem; font-weight: 700; }
+    .deal-card__desc { font-size: .85rem; color: var(--color-muted); line-height: 1.5; }
+    .deal-card__price-row { display: flex; align-items: baseline; gap: .6rem; margin-top: .5rem; }
+    .deal-price { font-size: 1.35rem; font-weight: 900; color: var(--color-accent); }
+    .deal-was { font-size: .85rem; color: var(--color-muted); text-decoration: line-through; }
+    .deal-card__cta {
+      display: block;
+      margin: 0 1rem 1rem;
+      padding: .65rem;
+      background: var(--color-accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: .875rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .deal-card__cta:hover { background: var(--color-accent-dark); }
+
+    /* ── Blog card ── */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .blog-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+    }
+    .blog-card__img-wrap { aspect-ratio: 16/9; overflow: hidden; background: #e8f0ea; }
+    .blog-card__img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+    .blog-card:hover .blog-card__img-wrap img { transform: scale(1.04); }
+    .blog-card__body { padding: 1.1rem; flex: 1; display: flex; flex-direction: column; gap: .5rem; }
+    .blog-card__meta {
+      display: flex;
+      gap: .75rem;
+      font-size: .75rem;
+      color: var(--color-muted);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .blog-tag {
+      background: #e8f4ed;
+      color: #1a6b3c;
+      padding: .15rem .5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: .7rem;
+    }
+    .blog-card__title { font-size: 1rem; font-weight: 700; line-height: 1.35; }
+    .blog-card__title a {
+      color: var(--color-text);
+      text-decoration: none;
+    }
+    .blog-card__title a:hover { color: var(--color-brand); text-decoration: underline; text-underline-offset: 3px; }
+    .blog-card__excerpt { font-size: .85rem; color: var(--color-muted); line-height: 1.55; flex: 1; }
+    .blog-card__footer {
+      padding: .85rem 1.1rem;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .8rem;
+    }
+    .blog-author { display: flex; align-items: center; gap: .5rem; font-weight: 600; }
+    .author-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--color-brand);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .blog-read-link {
+      color: var(--color-brand);
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      font-size: .8rem;
+    }
+
+    /* ── Section spacing ── */
+    section { padding: 3rem 0; }
+    section + section { border-top: 1px solid var(--color-border); }
+
+    /* ── Newsletter banner ── */
+    .newsletter {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #fff;
+      padding: 3.5rem 1.25rem;
+      text-align: center;
+    }
+    .newsletter h2 { font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: .6rem; }
+    .newsletter p { color: rgba(255,255,255,.75); margin-bottom: 1.75rem; font-size: .95rem; }
+    .newsletter-form {
+      display: flex;
+      gap: .5rem;
+      max-width: 440px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .newsletter-input {
+      flex: 1;
+      min-width: 220px;
+      padding: .7rem 1rem;
+      border-radius: 8px;
+      border: 2px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-size: .95rem;
+      outline: none;
+    }
+    .newsletter-input::placeholder { color: rgba(255,255,255,.5); }
+    .newsletter-input:focus { border-color: #fff; }
+    .newsletter-submit {
+      padding: .7rem 1.5rem;
+      background: var(--color-accent);
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: .95rem;
+    }
+    .newsletter-submit:hover { background: var(--color-accent-dark); }
+    .newsletter-submit:focus-visible { outline: none; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--color-accent); border-radius: 8px; }
+    .newsletter-note { font-size: .75rem; color: rgba(255,255,255,.5); margin-top: .85rem; }
+
+    /* ── Footer ── */
+    .site-footer {
+      background: #111;
+      color: rgba(255,255,255,.75);
+      padding: 3rem 1.25rem 1.5rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto 2.5rem;
+    }
+    .footer-brand .logo { font-size: 1.3rem; margin-bottom: .6rem; display: inline-block; }
+    .footer-brand p { font-size: .83rem; line-height: 1.6; color: rgba(255,255,255,.55); }
+    .footer-col h3 { color: #fff; font-size: .85rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .85rem; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .footer-col a { color: rgba(255,255,255,.65); font-size: .85rem; text-decoration: none; }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 1.25rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: .78rem;
+      color: rgba(255,255,255,.4);
+    }
+    .footer-legal-links { display: flex; gap: 1.25rem; }
+    .footer-legal-links a { color: rgba(255,255,255,.4); text-decoration: none; }
+    .footer-legal-links a:hover { color: #fff; }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+      .header-inner { gap: .6rem; }
+      .search-form { order: 3; flex-basis: 100%; max-width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .hero { padding: 2.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip-link: lets keyboard users jump past repeated navigation -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ═══════════════ SITE HEADER ═══════════════ -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <!-- Brand identity -->
+      <a href="/" class="logo" aria-label="ShopNest home">Shop<span>Nest</span></a>
+
+      <!-- Site search – labelled with aria-label on the form and a visually hidden label -->
+      <form class="search-form" role="search" aria-label="Product search">
+        <label for="search-input" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap">Search products</label>
+        <input
+          id="search-input"
+          class="search-input"
+          type="search"
+          name="q"
+          placeholder="Search products…"
+          autocomplete="off"
+          aria-label="Search products"
+        />
+        <button class="search-btn" type="submit">
+          <!-- Inline SVG with aria-hidden; button text provides the accessible name -->
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Search
+        </button>
+      </form>
+
+      <!-- Header action buttons – each carries an aria-label for icon-only buttons -->
+      <div class="header-actions" role="group" aria-label="Account and cart">
+        <button class="icon-btn" type="button" aria-label="Your account">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Account
+        </button>
+        <button class="icon-btn" type="button" aria-label="Wishlist, 3 saved items">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Wishlist
+          <span class="badge" aria-hidden="true">3</span>
+        </button>
+        <button class="icon-btn" type="button" aria-label="Shopping cart, 2 items">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Cart
+          <span class="badge" aria-hidden="true">2</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Primary navigation -->
+    <nav aria-label="Primary navigation">
+      <ul class="nav-list" role="list">
+        <li><a href="/" aria-current="page">Home</a></li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/deals">Deals</a></li>
+        <li><a href="/new-arrivals">New Arrivals</a></li>
+        <li><a href="/electronics">Electronics</a></li>
+        <li><a href="/fashion">Fashion</a></li>
+        <li><a href="/home-garden">Home &amp; Garden</a></li>
+        <li><a href="/sports">Sports</a></li>
+        <li><a href="/blog">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+  <main id="main-content" tabindex="-1">
+
+    <!-- ── Hero ── -->
+    <section aria-labelledby="hero-heading" class="hero">
+      <p class="hero-eyebrow">Spring Sale — Up to 60% off</p>
+      <h1 id="hero-heading">Everything You Love,<br>All in One Place</h1>
+      <p>Shop thousands of products with fast, free delivery and hassle-free returns.</p>
+      <div class="hero-ctas">
+        <a href="/deals" class="btn-primary">
+          <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+          Shop the Sale
+        </a>
+        <a href="/new-arrivals" class="btn-secondary">Browse New Arrivals</a>
+      </div>
+    </section>
+
+    <!-- ── Trust bar ── -->
+    <div class="trust-bar" role="region" aria-label="Shopping benefits">
+      <ul class="trust-list" role="list">
+        <li>
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Free shipping over $35
+        </li>
+        <li>
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          30-day easy returns
+        </li>
+        <li>
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Secure checkout
+        </li>
+        <li>
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          24/7 customer support
+        </li>
+      </ul>
+    </div>
+
+    <!-- ══ POPULAR ITEMS ══ -->
+    <section aria-labelledby="popular-heading" class="container">
+      <div class="section-header">
+        <h2 id="popular-heading">Popular Items</h2>
+        <a href="/shop?sort=popular" class="link-all" aria-label="View all popular items">View all</a>
+      </div>
+
+      <!-- role="list" paired with role="listitem" restores list semantics removed by CSS in some browsers -->
+      <ul class="card-grid" role="list">
+
+        <!-- Product 1 -->
+        <li role="listitem">
+          <article class="product-card" aria-label="Wireless Noise-Cancelling Headphones">
+            <div class="product-card__img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80"
+                alt="Black over-ear wireless headphones on a white surface"
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+              <span class="product-card__badge" aria-label="Bestseller">Bestseller</span>
+            </div>
+            <div class="product-card__body">
+              <p class="product-card__category">Electronics</p>
+              <h3 class="product-card__name">Wireless Noise-Cancelling Headphones</h3>
+              <div class="product-card__rating" aria-label="Rating: 4.8 out of 5, 2,413 reviews">
+                <span class="stars" aria-hidden="true">★★★★★</span>
+                <span>4.8 <span style="color:var(--color-border)">|</span> 2,413</span>
+              </div>
+              <div class="product-card__price-row">
+                <span class="price-current" aria-label="Current price: $79.99">$79.99</span>
+                <span class="price-was" aria-label="Original price: $129.99">$129.99</span>
+              </div>
+            </div>
+            <a href="/product/wireless-headphones" class="product-card__cta" aria-label="Add Wireless Noise-Cancelling Headphones to cart">Add to Cart</a>
+          </article>
+        </li>
+
+        <!-- Product 2 -->
+        <li role="listitem">
+          <article class="product-card" aria-label="Minimalist Leather Watch">
+            <div class="product-card__img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80"
+                alt="Gold minimalist watch with brown leather strap on a wooden surface"
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+            </div>
+            <div class="product-card__body">
+              <p class="product-card__category">Fashion</p>
+              <h3 class="product-card__name">Minimalist Leather Watch</h3>
+              <div class="product-card__rating" aria-label="Rating: 4.6 out of 5, 874 reviews">
+                <span class="stars" aria-hidden="true">★★★★★</span>
+                <span>4.6 <span style="color:var(--color-border)">|</span> 874</span>
+              </div>
+              <div class="product-card__price-row">
+                <span class="price-current" aria-label="Current price: $54.00">$54.00</span>
+              </div>
+            </div>
+            <a href="/product/leather-watch" class="product-card__cta" aria-label="Add Minimalist Leather Watch to cart">Add to Cart</a>
+          </article>
+        </li>
+
+        <!-- Product 3 -->
+        <li role="listitem">
+          <article class="product-card" aria-label="Stainless Steel Water Bottle">
+            <div class="product-card__img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&q=80"
+                alt="Matte black insulated stainless steel water bottle with white lid"
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+              <span class="product-card__badge" aria-label="New">New</span>
+            </div>
+            <div class="product-card__body">
+              <p class="product-card__category">Sports</p>
+              <h3 class="product-card__name">Stainless Steel Water Bottle 32oz</h3>
+              <div class="product-card__rating" aria-label="Rating: 4.9 out of 5, 3,021 reviews">
+                <span class="stars" aria-hidden="true">★★★★★</span>
+                <span>4.9 <span style="color:var(--color-border)">|</span> 3,021</span>
+              </div>
+              <div class="product-card__price-row">
+                <span class="price-current" aria-label="Current price: $28.00">$28.00</span>
+                <span class="price-was" aria-label="Original price: $40.00">$40.00</span>
+              </div>
+            </div>
+            <a href="/product/water-bottle" class="product-card__cta" aria-label="Add Stainless Steel Water Bottle to cart">Add to Cart</a>
+          </article>
+        </li>
+
+        <!-- Product 4 -->
+        <li role="listitem">
+          <article class="product-card" aria-label="Scented Soy Candle Set">
+            <div class="product-card__img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80"
+                alt="Three white soy candles with wooden wicks on a marble tray"
+                width="400"
+                height="300"
+                loading="lazy"
+              />
+            </div>
+            <div class="product-card__body">
+              <p class="product-card__category">Home &amp; Garden</p>
+              <h3 class="product-card__name">Scented Soy Candle Gift Set</h3>
+              <div class="product-card__rating" aria-label="Rating: 4.7 out of 5, 1,188 reviews">
+                <span class="stars" aria-hidden="true">★★★★★</span>
+                <span>4.7 <span style="color:var(--color-border)">|</span> 1,188</span>
+              </div>
+              <div class="product-card__price-row">
+                <span class="price-current" aria-label="Current price: $36.00">$36.00</span>
+                <span class="price-was" aria-label="Original price: $48.00">$48.00</span>
+              </div>
+            </div>
+            <a href="/product/candle-set" class="product-card__cta" aria-label="Add Scented Soy Candle Gift Set to cart">Add to Cart</a>
+          </article>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- ══ DEALS ══ -->
+    <section aria-labelledby="deals-heading" class="container">
+      <div class="section-header">
+        <h2 id="deals-heading">Today's Deals</h2>
+        <a href="/deals" class="link-all" aria-label="View all deals">View all deals</a>
+      </div>
+
+      <ul class="deal-grid" role="list">
+
+        <!-- Deal 1 -->
+        <li role="listitem">
+          <article class="deal-card" aria-label="Smart 4K TV deal – 42% off">
+            <div class="deal-card__header" aria-label="Deal: 42% off. Ends in 4 hours 22 minutes">
+              <span>🔥 42% OFF</span>
+              <!-- aria-live="off": timer updates are decorative; screen readers shouldn't interrupt -->
+              <span class="deal-timer" aria-live="off">Ends in 4:22:07</span>
+            </div>
+            <div class="deal-card__img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1593359677879-a4bb92f4834c?w=600&q=80"
+                alt="55-inch flat-screen smart TV displaying a colorful home screen"
+                width="600"
+                height="338"
+                loading="lazy"
+              />
+            </div>
+            <div class="deal-card__body">
+              <h3 class="deal-card__name">55" 4K Smart TV — OLED</h3>
+              <p class="deal-card__desc">Ultra-thin bezel, Dolby Vision, built-in streaming apps, and voice assistant support.</p>
+              <div class="deal-card__price-row">
+                <span class="deal-price" aria-label="Sale price: $399.99">$399.99</span>
+                <span class="deal-was" aria-label="Original price: $699.99">$699.99</span>
+              </div>
+            </div>
+            <a href="/deals/4k-tv" class="deal-card__cta" aria-label="Get the Smart 4K TV deal — $399.99">Grab This Deal</a>
+          </article>
+        </li>
+
+        <!-- Deal 2 -->
+        <li role="listitem">
+          <article class="deal-card" aria-label="Standing Desk deal – 35% off">
+            <div class="deal-card__header" aria-label="Deal: 35% off. Ends in 11 hours 5 minutes">
+              <span>🔥 35% OFF</span>
+              <span class="deal-timer" aria-live="off">Ends in 11:05:33</span>
+            </div>
+            <div class="deal-card__img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=600&q=80"
+                alt="Adjustable sit-stand desk in a bright home office"
+                width="600"
+                height="338"
+                loading="lazy"
+              />
+            </div>
+            <div class="deal-card__body">
+              <h3 class="deal-card__name">Electric Adjustable Standing Desk</h3>
+              <p class="deal-card__desc">Programmable height memory, cable management tray, supports up to 275 lbs.</p>
+              <div class="deal-card__price-row">
+                <span class="deal-price" aria-label="Sale price: $259.00">$259.00</span>
+                <span class="deal-was" aria-label="Original price: $399.00">$399.00</span>
+              </div>
+            </div>
+            <a href="/deals/standing-desk" class="deal-card__cta" aria-label="Get the Standing Desk deal — $259.00">Grab This Deal</a>
+          </article>
+        </li>
+
+        <!-- Deal 3 -->
+        <li role="listitem">
+          <article class="deal-card" aria-label="Espresso Machine deal – 28% off">
+            <div class="deal-card__header" aria-label="Deal: 28% off. Ends in 8 hours 47 minutes">
+              <span>🔥 28% OFF</span>
+              <span class="deal-timer" aria-live="off">Ends in 8:47:19</span>
+            </div>
+            <div class="deal-card__img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1516224498413-84ecf3a1e7fd?w=600&q=80"
+                alt="Stainless steel semi-automatic espresso machine on a kitchen counter"
+                width="600"
+                height="338"
+                loading="lazy"
+              />
+            </div>
+            <div class="deal-card__body">
+              <h3 class="deal-card__name">Semi-Auto Espresso Machine</h3>
+              <p class="deal-card__desc">15-bar pressure pump, built-in steam frother, removable water tank, easy clean.</p>
+              <div class="deal-card__price-row">
+                <span class="deal-price" aria-label="Sale price: $179.00">$179.00</span>
+                <span class="deal-was" aria-label="Original price: $249.00">$249.00</span>
+              </div>
+            </div>
+            <a href="/deals/espresso-machine" class="deal-card__cta" aria-label="Get the Espresso Machine deal — $179.00">Grab This Deal</a>
+          </article>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- ══ BLOG POSTS ══ -->
+    <section aria-labelledby="blog-heading" class="container">
+      <div class="section-header">
+        <h2 id="blog-heading">From the Blog</h2>
+        <a href="/blog" class="link-all" aria-label="Read all blog posts">Read all posts</a>
+      </div>
+
+      <ul class="blog-grid" role="list">
+
+        <!-- Post 1 -->
+        <li role="listitem">
+          <article class="blog-card" aria-labelledby="post1-title">
+            <div class="blog-card__img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80"
+                alt="A neatly organized kitchen with wooden utensils and green plants"
+                width="600"
+                height="338"
+                loading="lazy"
+              />
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <span class="blog-tag">Home</span>
+                <time datetime="2026-04-10">April 10, 2026</time>
+                <span>5 min read</span>
+              </div>
+              <h3 id="post1-title" class="blog-card__title">
+                <a href="/blog/kitchen-organization-tips">10 Kitchen Organization Tips That Actually Work</a>
+              </h3>
+              <p class="blog-card__excerpt">Transform your kitchen from chaotic to calm with these practical storage hacks and product picks our editors swear by.</p>
+            </div>
+            <div class="blog-card__footer">
+              <div class="blog-author">
+                <div class="author-avatar" aria-hidden="true">SM</div>
+                <span>Sara Malik</span>
+              </div>
+              <a href="/blog/kitchen-organization-tips" class="blog-read-link" aria-label="Read full post: 10 Kitchen Organization Tips That Actually Work">Read more</a>
+            </div>
+          </article>
+        </li>
+
+        <!-- Post 2 -->
+        <li role="listitem">
+          <article class="blog-card" aria-labelledby="post2-title">
+            <div class="blog-card__img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=600&q=80"
+                alt="Person running outdoors wearing wireless earbuds and a fitness tracker"
+                width="600"
+                height="338"
+                loading="lazy"
+              />
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <span class="blog-tag">Sports</span>
+                <time datetime="2026-04-07">April 7, 2026</time>
+                <span>7 min read</span>
+              </div>
+              <h3 id="post2-title" class="blog-card__title">
+                <a href="/blog/best-fitness-gadgets-2026">The Best Fitness Gadgets to Upgrade Your Workout in 2026</a>
+              </h3>
+              <p class="blog-card__excerpt">From AI-powered trainers to ultra-light running gear — we tested 30 products so you don't have to.</p>
+            </div>
+            <div class="blog-card__footer">
+              <div class="blog-author">
+                <div class="author-avatar" aria-hidden="true">JR</div>
+                <span>James Reyes</span>
+              </div>
+              <a href="/blog/best-fitness-gadgets-2026" class="blog-read-link" aria-label="Read full post: The Best Fitness Gadgets to Upgrade Your Workout in 2026">Read more</a>
+            </div>
+          </article>
+        </li>
+
+        <!-- Post 3 -->
+        <li role="listitem">
+          <article class="blog-card" aria-labelledby="post3-title">
+            <div class="blog-card__img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80"
+                alt="Flat lay of spring fashion items — pastel blouse, white sneakers, and sunglasses"
+                width="600"
+                height="338"
+                loading="lazy"
+              />
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <span class="blog-tag">Fashion</span>
+                <time datetime="2026-04-03">April 3, 2026</time>
+                <span>4 min read</span>
+              </div>
+              <h3 id="post3-title" class="blog-card__title">
+                <a href="/blog/spring-style-guide-2026">Spring Style Guide: What to Wear This Season</a>
+              </h3>
+              <p class="blog-card__excerpt">Pastels are back — here's how to mix and match this season's freshest looks without breaking your budget.</p>
+            </div>
+            <div class="blog-card__footer">
+              <div class="blog-author">
+                <div class="author-avatar" aria-hidden="true">LC</div>
+                <span>Leila Chen</span>
+              </div>
+              <a href="/blog/spring-style-guide-2026" class="blog-read-link" aria-label="Read full post: Spring Style Guide: What to Wear This Season">Read more</a>
+            </div>
+          </article>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- ══ NEWSLETTER ══ -->
+    <section aria-labelledby="newsletter-heading" class="newsletter">
+      <div class="container" style="max-width:640px">
+        <h2 id="newsletter-heading">Get Deals Before Everyone Else</h2>
+        <p>Subscribe to our newsletter and receive exclusive offers, early access sales, and curated picks each week.</p>
+        <form class="newsletter-form" aria-label="Newsletter sign-up">
+          <label for="newsletter-email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap">Your email address</label>
+          <input
+            id="newsletter-email"
+            class="newsletter-input"
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            aria-required="true"
+            aria-describedby="newsletter-note"
+          />
+          <button class="newsletter-submit" type="submit">Subscribe</button>
+        </form>
+        <p id="newsletter-note" class="newsletter-note">No spam, ever. Unsubscribe in one click at any time.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════ SITE FOOTER ═══════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="logo" aria-label="ShopNest home">Shop<span>Nest</span></a>
+        <p>Your everyday store for electronics, fashion, home goods, and more. Trusted by over 2 million shoppers.</p>
+      </div>
+      <nav aria-label="Shop categories">
+        <h3>Shop</h3>
+        <ul role="list">
+          <li><a href="/new-arrivals">New Arrivals</a></li>
+          <li><a href="/deals">Deals</a></li>
+          <li><a href="/electronics">Electronics</a></li>
+          <li><a href="/fashion">Fashion</a></li>
+          <li><a href="/home-garden">Home &amp; Garden</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Customer support">
+        <h3>Support</h3>
+        <ul role="list">
+          <li><a href="/help">Help Center</a></li>
+          <li><a href="/orders">Track Order</a></li>
+          <li><a href="/returns">Returns</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+          <li><a href="/accessibility">Accessibility</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Company information">
+        <h3>Company</h3>
+        <ul role="list">
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/press">Press</a></li>
+          <li><a href="/careers">Careers</a></li>
+          <li><a href="/sustainability">Sustainability</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ShopNest, Inc. All rights reserved.</p>
+      <nav aria-label="Legal links" class="footer-legal-links">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Use</a>
+        <a href="/cookies">Cookie Settings</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

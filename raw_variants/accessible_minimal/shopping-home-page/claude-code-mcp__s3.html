@@ -1,0 +1,785 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopHub – Popular Items, Deals &amp; More</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #111827;
+      --color-text-secondary: #374151;
+      --color-text-muted: #4b5563;
+      --color-header-bg: #111827;
+      --color-header-text: #f9fafb;
+      --color-accent: #1d4ed8;
+      --color-accent-hover: #1e40af;
+      --color-accent-text: #ffffff;
+      --color-deal-red: #991b1b;
+      --color-deal-badge-bg: #dc2626;
+      --color-deal-badge-text: #ffffff;
+      --color-card-bg: #f9fafb;
+      --color-card-border: #e5e7eb;
+      --color-hero-bg: #eff6ff;
+      --color-category: #1e40af;
+      --color-footer-bg: #111827;
+      --color-footer-text: #f9fafb;
+      --color-footer-link: #d1d5db;
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+      --transition: 180ms ease;
+      --font: system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    }
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{font-family:var(--font);background:var(--color-bg);color:var(--color-text);line-height:1.6}
+    img{display:block;max-width:100%;height:auto}
+    a{color:inherit;text-decoration:none}
+
+    /* skip link — visible only on focus */
+    .skip-link{
+      position:absolute;top:-100%;left:1rem;z-index:9999;
+      background:var(--color-accent);color:#fff;
+      padding:.5rem 1.25rem;border-radius:var(--radius-md);
+      font-weight:600;font-size:.875rem;transition:top var(--transition);
+    }
+    .skip-link:focus{top:.75rem}
+
+    /* visually hidden but available to screen readers */
+    .sr-only{
+      position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+      overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+    }
+
+    /* global focus ring — never remove focus indicators */
+    :focus-visible{
+      outline:3px solid var(--color-accent);
+      outline-offset:3px;
+      border-radius:var(--radius-sm);
+    }
+
+    /* ── HEADER ── */
+    .site-header{
+      background:var(--color-header-bg);color:var(--color-header-text);
+      position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md);
+    }
+    .header-inner{
+      max-width:1200px;margin:0 auto;padding:.875rem 1.5rem;
+      display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+    }
+    .site-logo{
+      font-size:1.5rem;font-weight:800;letter-spacing:-.03em;
+      color:var(--color-header-text);flex-shrink:0;
+    }
+    .site-logo span{color:#60a5fa}
+    .primary-nav{flex:1}
+    .primary-nav ul{display:flex;gap:.25rem;list-style:none;flex-wrap:wrap}
+    .primary-nav a{
+      color:#d1d5db;padding:.375rem .625rem;border-radius:var(--radius-sm);
+      font-size:.9375rem;transition:color var(--transition),background var(--transition);
+    }
+    .primary-nav a:hover,.primary-nav a:focus-visible{color:#fff;background:rgba(255,255,255,.1)}
+    .primary-nav a[aria-current="page"]{color:#fff;font-weight:600}
+    .search-form{display:flex;align-items:center;gap:.375rem}
+    .search-input{
+      padding:.375rem .875rem;border:2px solid #374151;border-radius:var(--radius-md);
+      background:#1f2937;color:var(--color-header-text);font-size:.875rem;width:190px;
+      transition:border-color var(--transition);
+    }
+    .search-input::placeholder{color:#9ca3af}
+    .search-input:focus{outline:none;border-color:#60a5fa}
+    .search-input:focus-visible{outline:3px solid #60a5fa;outline-offset:0;border-radius:var(--radius-md)}
+    .search-btn{
+      background:var(--color-accent);color:#fff;border:none;
+      padding:.375rem .875rem;border-radius:var(--radius-md);
+      cursor:pointer;font-size:.875rem;font-weight:500;
+      display:flex;align-items:center;gap:.375rem;
+      transition:background var(--transition);
+    }
+    .search-btn:hover{background:var(--color-accent-hover)}
+    .cart-link{
+      display:flex;align-items:center;gap:.375rem;
+      background:none;border:2px solid #374151;color:var(--color-header-text);
+      padding:.375rem .875rem;border-radius:var(--radius-md);
+      font-size:.875rem;font-weight:500;flex-shrink:0;
+      transition:border-color var(--transition),background var(--transition);
+    }
+    .cart-link:hover{border-color:#60a5fa;background:rgba(96,165,250,.1)}
+    .cart-count{
+      background:var(--color-deal-badge-bg);color:#fff;
+      border-radius:9999px;font-size:.75rem;font-weight:700;
+      padding:0 6px;min-width:1.25rem;text-align:center;
+    }
+
+    /* ── LAYOUT ── */
+    .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+
+    /* ── BUTTONS ── */
+    .btn{
+      display:inline-flex;align-items:center;gap:.375rem;
+      padding:.75rem 1.5rem;border-radius:var(--radius-md);
+      font-size:.9375rem;font-weight:600;cursor:pointer;
+      border:2px solid transparent;
+      transition:background var(--transition),color var(--transition),border-color var(--transition);
+      line-height:1;
+    }
+    .btn-primary{background:var(--color-accent);color:#fff;border-color:var(--color-accent)}
+    .btn-primary:hover{background:var(--color-accent-hover);border-color:var(--color-accent-hover)}
+    .btn-outline{background:transparent;color:var(--color-accent);border-color:var(--color-accent)}
+    .btn-outline:hover{background:var(--color-accent);color:#fff}
+    .btn-sm{padding:.5rem 1rem;font-size:.875rem}
+    .btn-full{width:100%;justify-content:center}
+
+    /* ── SECTION HEADER ── */
+    .section-header{
+      display:flex;align-items:baseline;justify-content:space-between;
+      margin-bottom:2rem;flex-wrap:wrap;gap:1rem;
+    }
+    .section-title{font-size:1.75rem;font-weight:700;letter-spacing:-.02em}
+    .section-link{
+      color:var(--color-accent);font-size:.9375rem;font-weight:500;
+      text-decoration:underline;text-underline-offset:3px;
+    }
+    .section-link:hover{color:var(--color-accent-hover)}
+
+    /* ── HERO ── */
+    .hero{background:var(--color-hero-bg);padding:4rem 0}
+    .hero-inner{
+      max-width:1200px;margin:0 auto;padding:0 1.5rem;
+      display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;
+    }
+    .hero-badge{
+      display:inline-block;background:#dbeafe;color:#1e40af;
+      padding:.25rem .875rem;border-radius:9999px;font-size:.8125rem;
+      font-weight:600;margin-bottom:1rem;letter-spacing:.05em;text-transform:uppercase;
+    }
+    .hero-title{
+      font-size:clamp(2rem,4vw,3rem);font-weight:800;
+      line-height:1.15;letter-spacing:-.03em;margin-bottom:1.25rem;
+    }
+    .hero-title em{font-style:normal;color:var(--color-accent)}
+    .hero-desc{font-size:1.125rem;color:var(--color-text-secondary);margin-bottom:1.75rem;max-width:42ch}
+    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+    .hero-img{
+      border-radius:var(--radius-xl);overflow:hidden;
+      background:linear-gradient(135deg,#bfdbfe,#93c5fd);
+      aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
+    }
+    .hero-img svg{width:120px;height:120px;opacity:.5}
+
+    /* ── POPULAR ITEMS ── */
+    .products-section{padding:4rem 0}
+    .product-grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+      gap:1.5rem;list-style:none;
+    }
+    .product-card{
+      background:var(--color-card-bg);border:1px solid var(--color-card-border);
+      border-radius:var(--radius-lg);overflow:hidden;
+      display:flex;flex-direction:column;
+      transition:box-shadow var(--transition),transform var(--transition);
+    }
+    .product-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+    .product-img{
+      aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
+    }
+    .product-body{padding:1.25rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
+    .product-category{
+      font-size:.75rem;font-weight:600;color:var(--color-category);
+      text-transform:uppercase;letter-spacing:.06em;
+    }
+    .product-name{font-size:1rem;font-weight:600;line-height:1.4}
+    .product-rating{display:flex;align-items:center;gap:.375rem}
+    .stars{color:#92400e;font-size:.875rem}
+    .rating-count{font-size:.8125rem;color:var(--color-text-muted)}
+    .product-price-row{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-top:auto;padding-top:.625rem;
+    }
+    .price{font-size:1.25rem;font-weight:700}
+
+    /* ── DEALS ── */
+    .deals-section{background:#fef2f2;padding:4rem 0}
+    .deals-grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:1.5rem;list-style:none;
+    }
+    .deal-card{
+      background:#fff;border:1px solid #fecaca;border-radius:var(--radius-lg);
+      overflow:hidden;display:flex;flex-direction:column;
+      transition:box-shadow var(--transition);
+    }
+    .deal-card:hover{box-shadow:var(--shadow-lg)}
+    .deal-img-wrap{position:relative;aspect-ratio:16/9}
+    .deal-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+    .deal-badge{
+      position:absolute;top:.875rem;left:.875rem;
+      background:var(--color-deal-badge-bg);color:#fff;
+      font-size:.875rem;font-weight:700;
+      padding:.25rem .5rem;border-radius:var(--radius-sm);
+    }
+    .deal-body{padding:1.25rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
+    .deal-name{font-size:1.0625rem;font-weight:600}
+    .deal-prices{display:flex;align-items:baseline;gap:.625rem}
+    .deal-sale{font-size:1.375rem;font-weight:700;color:var(--color-deal-red)}
+    .deal-original{font-size:1rem;color:var(--color-text-muted);text-decoration:line-through}
+    .deal-timer{font-size:.8125rem;color:var(--color-text-secondary)}
+    .deal-timer strong{color:var(--color-deal-red);font-weight:600}
+
+    /* ── BLOG ── */
+    .blog-section{padding:4rem 0}
+    .blog-grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+      gap:1.5rem;list-style:none;
+    }
+    .blog-card{
+      background:var(--color-card-bg);border:1px solid var(--color-card-border);
+      border-radius:var(--radius-lg);overflow:hidden;
+      display:flex;flex-direction:column;
+      transition:box-shadow var(--transition),transform var(--transition);
+    }
+    .blog-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+    .blog-img{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
+    .blog-body{padding:1.25rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
+    .blog-category{
+      font-size:.75rem;font-weight:700;color:var(--color-category);
+      text-transform:uppercase;letter-spacing:.06em;
+    }
+    .blog-title{font-size:1.125rem;font-weight:700;line-height:1.4}
+    .blog-excerpt{font-size:.9375rem;color:var(--color-text-secondary);line-height:1.65;flex:1}
+    .blog-meta{
+      display:flex;align-items:center;gap:.5rem;
+      padding-top:.75rem;border-top:1px solid var(--color-card-border);
+      font-size:.8125rem;color:var(--color-text-muted);
+    }
+    .blog-meta-sep{color:var(--color-card-border)}
+    .blog-link{margin-top:.75rem;align-self:flex-start}
+
+    /* ── NEWSLETTER ── */
+    .newsletter-section{
+      background:var(--color-accent);color:#fff;
+      padding:4rem 0;text-align:center;
+    }
+    .newsletter-title{font-size:2rem;font-weight:800;margin-bottom:.5rem}
+    .newsletter-desc{font-size:1.125rem;margin-bottom:1.75rem;opacity:.92}
+    .newsletter-form{
+      display:flex;gap:1rem;max-width:480px;margin:0 auto;flex-wrap:wrap;
+    }
+    .newsletter-email{
+      flex:1;min-width:200px;padding:.75rem 1rem;
+      border:2px solid rgba(255,255,255,.4);border-radius:var(--radius-md);
+      background:rgba(255,255,255,.15);color:#fff;font-size:.9375rem;
+    }
+    .newsletter-email::placeholder{color:rgba(255,255,255,.75)}
+    .newsletter-email:focus{outline:none;border-color:#fff}
+    .newsletter-email:focus-visible{outline:3px solid #fff;outline-offset:2px;border-radius:var(--radius-md)}
+    .newsletter-btn{
+      background:#fff;color:var(--color-accent);border:2px solid #fff;
+      padding:.75rem 1.5rem;border-radius:var(--radius-md);
+      font-weight:700;font-size:.9375rem;cursor:pointer;
+      transition:background var(--transition),color var(--transition);
+    }
+    .newsletter-btn:hover{background:transparent;color:#fff}
+
+    /* ── FOOTER ── */
+    .site-footer{background:var(--color-footer-bg);color:var(--color-footer-text);padding:3.5rem 0 1.5rem}
+    .footer-grid{
+      max-width:1200px;margin:0 auto;padding:0 1.5rem;
+      display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;
+    }
+    .footer-brand-desc{color:#9ca3af;font-size:.9375rem;line-height:1.7;margin-top:1rem;max-width:28ch}
+    .footer-col-title{
+      font-size:.875rem;font-weight:700;text-transform:uppercase;
+      letter-spacing:.08em;color:#f9fafb;margin-bottom:1rem;
+    }
+    .footer-links{list-style:none;display:flex;flex-direction:column;gap:.625rem}
+    .footer-links a{
+      color:var(--color-footer-link);font-size:.9375rem;
+      transition:color var(--transition);
+    }
+    .footer-links a:hover{color:#fff}
+    .footer-bottom{
+      max-width:1200px;margin:2.5rem auto 0;padding:1.25rem 1.5rem 0;
+      border-top:1px solid #374151;
+      display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+    }
+    .footer-bottom-copy{font-size:.875rem;color:#9ca3af}
+    .footer-legal{display:flex;gap:1.5rem;list-style:none}
+    .footer-legal a{color:#9ca3af;font-size:.875rem;transition:color var(--transition)}
+    .footer-legal a:hover{color:#fff}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      .hero-inner{grid-template-columns:1fr}
+      .hero-img{display:none}
+      .footer-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:600px){
+      .primary-nav{display:none}
+      .footer-grid{grid-template-columns:1fr}
+      .section-title{font-size:1.375rem}
+    }
+
+    /* honour reduced motion preferences */
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,*::before,*::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip link: first focusable element lets keyboard users jump past navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+
+      <a href="/" class="site-logo" aria-label="ShopHub – go to home page">
+        Shop<span>Hub</span>
+      </a>
+
+      <!-- role="navigation" is implicit on <nav>; aria-label distinguishes multiple navs -->
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <ul role="list">
+          <li><a href="/" aria-current="page">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/deals">Deals</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- role="search" creates a landmark region for screen readers -->
+      <form class="search-form" role="search" action="/search" method="get">
+        <label for="site-search" class="sr-only">Search products</label>
+        <input
+          class="search-input"
+          type="search"
+          id="site-search"
+          name="q"
+          placeholder="Search products…"
+          autocomplete="off"
+        />
+        <button class="search-btn" type="submit" aria-label="Submit search">
+          <!-- aria-hidden on decorative icon; text label carries the accessible name -->
+          <svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Search
+        </button>
+      </form>
+
+      <!-- item count in aria-label so screen readers announce it without the visual badge -->
+      <a class="cart-link" href="/cart" aria-label="Shopping cart, 3 items">
+        <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        Cart
+        <!-- aria-hidden so screen readers don't double-count: count is already in the <a> aria-label -->
+        <span class="cart-count" aria-hidden="true">3</span>
+      </a>
+
+    </div>
+  </header>
+
+  <!-- ═══════════════ MAIN ═══════════════ -->
+  <!-- tabindex="-1" lets the skip link programmatically move focus here -->
+  <main id="main-content" tabindex="-1">
+
+    <!-- ── HERO ── -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-inner">
+        <div>
+          <span class="hero-badge">New Arrivals 2026</span>
+          <!-- The page's only H1 -->
+          <h1 class="hero-title" id="hero-heading">
+            Discover <em>Amazing</em><br>
+            Products for Every<br>
+            Lifestyle
+          </h1>
+          <p class="hero-desc">
+            Thousands of top-rated items at unbeatable prices — from everyday
+            essentials to the latest tech and fashion.
+          </p>
+          <div class="hero-actions">
+            <a href="/shop" class="btn btn-primary">Shop Now</a>
+            <a href="/deals" class="btn btn-outline">View Deals</a>
+          </div>
+        </div>
+
+        <!-- role="img" with aria-label describes the decorative illustration -->
+        <div class="hero-img" role="img" aria-label="Illustration of a shopping bag with popular products inside">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="40" width="60" height="50" rx="5" fill="white" fill-opacity=".65"/>
+            <path d="M35 40V30a15 15 0 0 1 30 0v10" stroke="white" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="40" cy="57" r="4" fill="#1d4ed8" fill-opacity=".45"/>
+            <circle cx="60" cy="57" r="4" fill="#1d4ed8" fill-opacity=".45"/>
+            <rect x="30" y="70" width="40" height="8" rx="2" fill="#1d4ed8" fill-opacity=".3"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── POPULAR ITEMS ── -->
+    <section class="products-section" aria-labelledby="popular-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" id="popular-heading">Popular Items</h2>
+          <a href="/shop/popular" class="section-link" aria-label="View all popular items">View All</a>
+        </div>
+
+        <ul class="product-grid" role="list" aria-label="Popular products">
+
+          <li>
+            <article aria-labelledby="prod-1-name">
+              <div class="product-card">
+                <!-- Placeholder images use role="img" with descriptive aria-label -->
+                <div class="product-img" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe)" role="img" aria-label="Wireless Noise-Cancelling Headphones"></div>
+                <div class="product-body">
+                  <span class="product-category">Electronics</span>
+                  <h3 class="product-name" id="prod-1-name">Wireless Noise-Cancelling Headphones</h3>
+                  <!-- Full rating communicated via aria-label; visual stars are decorative -->
+                  <div class="product-rating" aria-label="Rated 4.8 out of 5 stars, 1,240 reviews">
+                    <span class="stars" aria-hidden="true">★★★★★</span>
+                    <span class="rating-count" aria-hidden="true">4.8 (1,240)</span>
+                  </div>
+                  <div class="product-price-row">
+                    <span class="price" aria-label="Price: $79.99">$79.99</span>
+                    <a href="/product/wireless-headphones" class="btn btn-primary btn-sm"
+                       aria-label="Add Wireless Noise-Cancelling Headphones to cart">
+                      Add to Cart
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article aria-labelledby="prod-2-name">
+              <div class="product-card">
+                <div class="product-img" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0)" role="img" aria-label="Ergonomic Laptop Stand"></div>
+                <div class="product-body">
+                  <span class="product-category">Office</span>
+                  <h3 class="product-name" id="prod-2-name">Ergonomic Laptop Stand</h3>
+                  <div class="product-rating" aria-label="Rated 4.6 out of 5 stars, 842 reviews">
+                    <span class="stars" aria-hidden="true">★★★★★</span>
+                    <span class="rating-count" aria-hidden="true">4.6 (842)</span>
+                  </div>
+                  <div class="product-price-row">
+                    <span class="price" aria-label="Price: $34.99">$34.99</span>
+                    <a href="/product/laptop-stand" class="btn btn-primary btn-sm"
+                       aria-label="Add Ergonomic Laptop Stand to cart">
+                      Add to Cart
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article aria-labelledby="prod-3-name">
+              <div class="product-card">
+                <div class="product-img" style="background:linear-gradient(135deg,#fef3c7,#fde68a)" role="img" aria-label="Stainless Steel Water Bottle 32oz"></div>
+                <div class="product-body">
+                  <span class="product-category">Lifestyle</span>
+                  <h3 class="product-name" id="prod-3-name">Stainless Steel Water Bottle 32oz</h3>
+                  <div class="product-rating" aria-label="Rated 4.9 out of 5 stars, 3,107 reviews">
+                    <span class="stars" aria-hidden="true">★★★★★</span>
+                    <span class="rating-count" aria-hidden="true">4.9 (3,107)</span>
+                  </div>
+                  <div class="product-price-row">
+                    <span class="price" aria-label="Price: $24.99">$24.99</span>
+                    <a href="/product/water-bottle" class="btn btn-primary btn-sm"
+                       aria-label="Add Stainless Steel Water Bottle to cart">
+                      Add to Cart
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article aria-labelledby="prod-4-name">
+              <div class="product-card">
+                <div class="product-img" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8)" role="img" aria-label="Minimalist Leather Wallet"></div>
+                <div class="product-body">
+                  <span class="product-category">Accessories</span>
+                  <h3 class="product-name" id="prod-4-name">Minimalist Leather Wallet</h3>
+                  <div class="product-rating" aria-label="Rated 4.7 out of 5 stars, 560 reviews">
+                    <span class="stars" aria-hidden="true">★★★★★</span>
+                    <span class="rating-count" aria-hidden="true">4.7 (560)</span>
+                  </div>
+                  <div class="product-price-row">
+                    <span class="price" aria-label="Price: $39.99">$39.99</span>
+                    <a href="/product/leather-wallet" class="btn btn-primary btn-sm"
+                       aria-label="Add Minimalist Leather Wallet to cart">
+                      Add to Cart
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── TODAY'S DEALS ── -->
+    <section class="deals-section" aria-labelledby="deals-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" id="deals-heading">Today's Deals</h2>
+          <a href="/deals" class="section-link" aria-label="Browse all deals">Browse All Deals</a>
+        </div>
+
+        <ul class="deals-grid" role="list" aria-label="Today's deals">
+
+          <li>
+            <article class="deal-card" aria-labelledby="deal-1-name">
+              <div class="deal-img-wrap">
+                <div class="deal-img" style="background:linear-gradient(135deg,#fee2e2,#fecaca)" role="img" aria-label="Smart Home Security Camera"></div>
+                <!-- aria-label spells out the discount so it is not conveyed by text alone -->
+                <span class="deal-badge" aria-label="40 percent off">40% OFF</span>
+              </div>
+              <div class="deal-body">
+                <h3 class="deal-name" id="deal-1-name">Smart Home Security Camera</h3>
+                <div class="deal-prices">
+                  <span class="deal-sale" aria-label="Sale price: $59.99">$59.99</span>
+                  <span class="deal-original" aria-label="Original price: $99.99">$99.99</span>
+                </div>
+                <!-- aria-live so countdown updates are announced without user action -->
+                <p class="deal-timer">Deal ends in <strong aria-live="polite" aria-atomic="true">8h 42m</strong></p>
+                <a href="/product/security-camera" class="btn btn-primary btn-full"
+                   aria-label="Shop the Smart Home Security Camera deal">Shop Now</a>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="deal-card" aria-labelledby="deal-2-name">
+              <div class="deal-img-wrap">
+                <div class="deal-img" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe)" role="img" aria-label="Bluetooth Mechanical Keyboard"></div>
+                <span class="deal-badge" aria-label="30 percent off">30% OFF</span>
+              </div>
+              <div class="deal-body">
+                <h3 class="deal-name" id="deal-2-name">Bluetooth Mechanical Keyboard</h3>
+                <div class="deal-prices">
+                  <span class="deal-sale" aria-label="Sale price: $69.99">$69.99</span>
+                  <span class="deal-original" aria-label="Original price: $99.99">$99.99</span>
+                </div>
+                <p class="deal-timer">Deal ends in <strong aria-live="polite" aria-atomic="true">12h 15m</strong></p>
+                <a href="/product/mechanical-keyboard" class="btn btn-primary btn-full"
+                   aria-label="Shop the Bluetooth Mechanical Keyboard deal">Shop Now</a>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="deal-card" aria-labelledby="deal-3-name">
+              <div class="deal-img-wrap">
+                <div class="deal-img" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0)" role="img" aria-label="Premium Non-Slip Yoga Mat"></div>
+                <span class="deal-badge" aria-label="25 percent off">25% OFF</span>
+              </div>
+              <div class="deal-body">
+                <h3 class="deal-name" id="deal-3-name">Premium Non-Slip Yoga Mat</h3>
+                <div class="deal-prices">
+                  <span class="deal-sale" aria-label="Sale price: $29.99">$29.99</span>
+                  <span class="deal-original" aria-label="Original price: $39.99">$39.99</span>
+                </div>
+                <p class="deal-timer">Deal ends in <strong aria-live="polite" aria-atomic="true">5h 30m</strong></p>
+                <a href="/product/yoga-mat" class="btn btn-primary btn-full"
+                   aria-label="Shop the Premium Non-Slip Yoga Mat deal">Shop Now</a>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── BLOG POSTS ── -->
+    <section class="blog-section" aria-labelledby="blog-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" id="blog-heading">From Our Blog</h2>
+          <a href="/blog" class="section-link" aria-label="Read all blog posts">Read All Posts</a>
+        </div>
+
+        <ul class="blog-grid" role="list" aria-label="Recent blog posts">
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog-1-title">
+              <div class="blog-img" style="background:linear-gradient(135deg,#dbeafe,#93c5fd)" role="img" aria-label="Illustration for the article about home office gadgets"></div>
+              <div class="blog-body">
+                <span class="blog-category">Tech</span>
+                <h3 class="blog-title" id="blog-1-title">10 Gadgets That Will Transform Your Home Office</h3>
+                <p class="blog-excerpt">
+                  Upgrade your workspace with these essential tools — from ergonomic
+                  accessories to smart lighting that boosts focus and productivity.
+                </p>
+                <div class="blog-meta">
+                  <span>By Sarah Chen</span>
+                  <span class="blog-meta-sep" aria-hidden="true">·</span>
+                  <time datetime="2026-04-10">April 10, 2026</time>
+                </div>
+                <!-- Descriptive aria-label avoids ambiguous "Read Article" for screen readers -->
+                <a href="/blog/home-office-gadgets" class="btn btn-outline btn-sm blog-link"
+                   aria-label="Read article: 10 Gadgets That Will Transform Your Home Office">
+                  Read Article
+                </a>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog-2-title">
+              <div class="blog-img" style="background:linear-gradient(135deg,#fef3c7,#fcd34d)" role="img" aria-label="Illustration for the article about eco-friendly products"></div>
+              <div class="blog-body">
+                <span class="blog-category">Sustainability</span>
+                <h3 class="blog-title" id="blog-2-title">The Best Eco-Friendly Products of 2026</h3>
+                <p class="blog-excerpt">
+                  Shop sustainably without compromise. We rounded up the most innovative,
+                  planet-friendly products making waves this year.
+                </p>
+                <div class="blog-meta">
+                  <span>By Marcus Rivera</span>
+                  <span class="blog-meta-sep" aria-hidden="true">·</span>
+                  <time datetime="2026-04-05">April 5, 2026</time>
+                </div>
+                <a href="/blog/eco-friendly-2026" class="btn btn-outline btn-sm blog-link"
+                   aria-label="Read article: The Best Eco-Friendly Products of 2026">
+                  Read Article
+                </a>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog-3-title">
+              <div class="blog-img" style="background:linear-gradient(135deg,#fce7f3,#f9a8d4)" role="img" aria-label="Illustration for the gift guide article"></div>
+              <div class="blog-body">
+                <span class="blog-category">Gift Guides</span>
+                <h3 class="blog-title" id="blog-3-title">Gift Guide: Top Picks Under $50</h3>
+                <p class="blog-excerpt">
+                  Finding the perfect gift does not have to break the bank. Here are our
+                  editors' top picks that impress without the hefty price tag.
+                </p>
+                <div class="blog-meta">
+                  <span>By Priya Patel</span>
+                  <span class="blog-meta-sep" aria-hidden="true">·</span>
+                  <time datetime="2026-04-01">April 1, 2026</time>
+                </div>
+                <a href="/blog/gift-guide-under-50" class="btn btn-outline btn-sm blog-link"
+                   aria-label="Read article: Gift Guide: Top Picks Under $50">
+                  Read Article
+                </a>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── NEWSLETTER ── -->
+    <section class="newsletter-section" aria-labelledby="newsletter-heading">
+      <div class="container">
+        <h2 class="newsletter-title" id="newsletter-heading">Stay in the Loop</h2>
+        <p class="newsletter-desc" id="newsletter-desc">
+          Get exclusive deals and new arrivals delivered straight to your inbox.
+        </p>
+        <form class="newsletter-form" action="/newsletter/subscribe" method="post" aria-label="Newsletter sign-up">
+          <label for="newsletter-email" class="sr-only">Your email address</label>
+          <input
+            class="newsletter-email"
+            type="email"
+            id="newsletter-email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+            aria-required="true"
+            aria-describedby="newsletter-desc"
+          />
+          <button class="newsletter-btn" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <!-- role="contentinfo" is implicit on <footer> at page level -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+
+      <div>
+        <a href="/" class="site-logo" aria-label="ShopHub – go to home page">Shop<span>Hub</span></a>
+        <p class="footer-brand-desc">
+          Your one-stop destination for top-rated products, unbeatable deals,
+          and ideas for every lifestyle.
+        </p>
+      </div>
+
+      <nav aria-label="Shop links">
+        <h3 class="footer-col-title">Shop</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="/new-arrivals">New Arrivals</a></li>
+          <li><a href="/best-sellers">Best Sellers</a></li>
+          <li><a href="/deals">Deals</a></li>
+          <li><a href="/gift-cards">Gift Cards</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Customer support links">
+        <h3 class="footer-col-title">Support</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="/help">Help Center</a></li>
+          <li><a href="/returns">Returns</a></li>
+          <li><a href="/shipping">Shipping Info</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Company links">
+        <h3 class="footer-col-title">Company</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/careers">Careers</a></li>
+          <li><a href="/accessibility">Accessibility</a></li>
+        </ul>
+      </nav>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-bottom-copy">&copy; 2026 ShopHub. All rights reserved.</p>
+      <nav aria-label="Legal links">
+        <ul class="footer-legal" role="list">
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/cookies">Cookie Settings</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

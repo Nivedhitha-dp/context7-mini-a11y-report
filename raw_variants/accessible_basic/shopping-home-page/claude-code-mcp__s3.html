@@ -1,0 +1,994 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopNow — Popular Items, Deals &amp; More</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0d1b2a;
+      --navy-mid: #1c2f45;
+      --navy-light: #1c3a5e;
+      --orange: #f97316;
+      --orange-dark: #ea6a05;
+      --blue: #005fcc;
+      --blue-dark: #004aaa;
+      --red: #b91c1c;
+      --gray-900: #111827;
+      --gray-700: #374151;
+      --gray-500: #6b7280;
+      --gray-100: #f3f4f6;
+      --white: #ffffff;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 0;
+      z-index: 9999;
+      background: var(--blue);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 0 0 4px 0;
+    }
+    .skip-link:focus { top: 0; }
+
+    :focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 2px;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      color: var(--gray-900);
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    .site-header { background: var(--navy); color: var(--white); }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .site-logo {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+    .site-logo span { color: var(--orange); }
+
+    /* Search */
+    .search-form {
+      display: flex;
+      flex: 1;
+      max-width: 520px;
+    }
+    .search-input {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border: 2px solid var(--white);
+      border-right: none;
+      border-radius: 4px 0 0 4px;
+      color: var(--gray-900);
+    }
+    .search-input:focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 0;
+      z-index: 1;
+      position: relative;
+    }
+    .search-btn {
+      padding: 0.6rem 1.2rem;
+      background: var(--orange);
+      color: var(--white);
+      border: 2px solid var(--orange);
+      border-radius: 0 4px 4px 0;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .search-btn:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+    .search-btn:focus-visible { outline-color: var(--white); }
+
+    /* Cart */
+    .cart-link {
+      color: var(--white);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.75rem;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .cart-link:hover, .cart-link:focus-visible { border-color: var(--white); }
+    .cart-link:focus-visible { outline-color: var(--orange); }
+
+    /* Nav */
+    .main-nav { background: var(--navy-mid); }
+    .main-nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .main-nav a {
+      display: block;
+      padding: 0.7rem 0.9rem;
+      color: #c9ddf0;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .main-nav a:hover { color: var(--white); }
+    .main-nav a[aria-current="page"] {
+      color: var(--orange);
+      font-weight: 700;
+      border-bottom: 3px solid var(--orange);
+    }
+    .main-nav a:focus-visible { outline-color: var(--orange); }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: var(--white);
+      padding: 4.5rem 1.5rem;
+      text-align: center;
+    }
+    .hero-inner { max-width: 680px; margin: 0 auto; }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .hero h1 .accent { color: var(--orange); }
+    .hero p {
+      font-size: 1.1rem;
+      color: #b8cfe3;
+      margin-bottom: 2rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--orange);
+      color: var(--white);
+      padding: 0.85rem 2.5rem;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .cta-btn:hover { background: var(--orange-dark); }
+    .cta-btn:focus-visible { outline-color: var(--white); }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    section { margin-bottom: 3.5rem; }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: 2px solid #dde3eb;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .view-all {
+      color: var(--blue);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-new  { background: #d1fae5; color: #065f46; border: 1px solid #34d399; }
+    .badge-deal { background: #fef3c7; color: #92400e; border: 1px solid #fbbf24; }
+
+    /* ── Product cards ── */
+    .product-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .product-card {
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.2s;
+    }
+    .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.13); }
+    .product-card img {
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      display: block;
+    }
+    .product-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+    }
+    .product-body h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .product-body h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .product-body h3 a:hover { color: var(--blue); text-decoration: underline; }
+    .rating {
+      font-size: 0.82rem;
+      color: var(--gray-500);
+    }
+    .stars { color: #d97706; }
+    .price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-top: auto;
+      padding-top: 0.5rem;
+    }
+    .price .was {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--gray-500);
+      text-decoration: line-through;
+      margin-left: 0.35rem;
+    }
+    .add-btn {
+      margin-top: 0.75rem;
+      width: 100%;
+      padding: 0.55rem;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .add-btn:hover { background: var(--blue-dark); }
+    .add-btn:focus-visible { outline-color: var(--orange); }
+
+    /* ── Deal cards ── */
+    .deals-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1.25rem;
+    }
+    .deal-card {
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .deal-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+    .deal-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+    }
+    .deal-body h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .deal-body h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .deal-body h3 a:hover { color: var(--blue); text-decoration: underline; }
+    .deal-timer {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--red);
+    }
+    .deal-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--red);
+    }
+    .deal-price .was {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--gray-500);
+      text-decoration: line-through;
+      margin-left: 0.3rem;
+    }
+    .savings {
+      display: inline-block;
+      background: #d1fae5;
+      color: #065f46;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+    }
+
+    /* ── Blog cards ── */
+    .blog-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .blog-card {
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .blog-card img {
+      width: 100%;
+      height: 185px;
+      object-fit: cover;
+      display: block;
+    }
+    .blog-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+    .blog-meta {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+    }
+    .blog-cat {
+      color: var(--blue);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .blog-body h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+    .blog-body h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .blog-body h3 a:hover { color: var(--blue); text-decoration: underline; }
+    .excerpt {
+      font-size: 0.9rem;
+      color: #4b5563;
+      line-height: 1.5;
+      flex: 1;
+    }
+    .read-more {
+      margin-top: 0.75rem;
+      align-self: flex-start;
+      color: var(--blue);
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    /* ── Newsletter ── */
+    .newsletter {
+      background: var(--navy);
+      color: var(--white);
+      padding: 3.5rem 1.5rem;
+      text-align: center;
+    }
+    .newsletter-inner { max-width: 540px; margin: 0 auto; }
+    .newsletter h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .newsletter > .newsletter-inner > p {
+      color: #b8cfe3;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .newsletter-form {
+      display: flex;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .newsletter-input {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      font-size: 0.95rem;
+      border: 2px solid var(--white);
+      border-right: none;
+      border-radius: 5px 0 0 5px;
+      color: var(--gray-900);
+    }
+    .newsletter-input:focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .newsletter-submit {
+      padding: 0.7rem 1.3rem;
+      background: var(--orange);
+      color: var(--white);
+      border: 2px solid var(--orange);
+      border-radius: 0 5px 5px 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .newsletter-submit:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+    .newsletter-submit:focus-visible { outline-color: var(--white); }
+    .privacy-note {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+
+    /* ── Footer ── */
+    .site-footer { background: var(--gray-900); color: #9ca3af; padding: 3rem 1.5rem 1.5rem; }
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 2rem;
+    }
+    .footer-col h3 {
+      color: var(--gray-100);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.75rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .footer-col a {
+      color: #9ca3af;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+    .footer-col a:hover { color: var(--white); text-decoration: underline; }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      border-top: 1px solid var(--gray-700);
+      padding-top: 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .footer-bottom a { color: #9ca3af; text-decoration: none; }
+    .footer-bottom a:hover { color: var(--white); text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .header-top { flex-direction: column; align-items: stretch; }
+      .search-form { max-width: 100%; }
+      .hero { padding: 3rem 1rem; }
+      .newsletter-form { flex-direction: column; }
+      .newsletter-input { border-right: 2px solid var(--white); border-radius: 5px; }
+      .newsletter-submit { border-radius: 5px; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ═══ Site Header ═══ -->
+  <header class="site-header">
+    <div class="header-top">
+
+      <a href="/" class="site-logo">Shop<span>Now</span></a>
+
+      <form class="search-form" role="search" action="/search" method="get">
+        <label for="site-search" class="sr-only">Search products</label>
+        <input
+          type="search"
+          id="site-search"
+          name="q"
+          class="search-input"
+          placeholder="Search products…"
+          autocomplete="off"
+        >
+        <button type="submit" class="search-btn">Search</button>
+      </form>
+
+      <a href="/cart" class="cart-link" aria-label="Shopping cart, 3 items">
+        <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        Cart (3)
+      </a>
+
+    </div>
+
+    <nav class="main-nav" aria-label="Primary">
+      <ul>
+        <li><a href="/"            aria-current="page">Home</a></li>
+        <li><a href="/electronics">Electronics</a></li>
+        <li><a href="/clothing">Clothing</a></li>
+        <li><a href="/home-garden">Home &amp; Garden</a></li>
+        <li><a href="/sports">Sports</a></li>
+        <li><a href="/beauty">Beauty</a></li>
+        <li><a href="/deals">Deals</a></li>
+        <li><a href="/blog">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ═══ Hero ═══ -->
+  <section aria-label="Site promotion">
+    <div class="hero">
+      <div class="hero-inner">
+        <h1>Shop <span class="accent">Smarter</span>,<br>Save More</h1>
+        <p>Thousands of products at unbeatable prices. New deals added every day.</p>
+        <a href="/deals" class="cta-btn">Browse Today's Deals</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Main Content ═══ -->
+  <main id="main-content">
+
+    <!-- Popular Items -->
+    <section aria-labelledby="popular-heading">
+      <div class="section-header">
+        <h2 id="popular-heading">Popular Items</h2>
+        <a href="/popular" class="view-all">View all popular items</a>
+      </div>
+
+      <ul class="product-list">
+
+        <li>
+          <article class="product-card">
+            <img
+              src="https://placehold.co/440x350/e0f2fe/0369a1?text=Headphones"
+              alt="Sony WH-1000XM5 over-ear wireless noise-cancelling headphones in midnight black"
+              width="440" height="350"
+              loading="lazy"
+            >
+            <div class="product-body">
+              <span class="badge badge-new">New</span>
+              <h3><a href="/product/sony-wh1000xm5">Sony WH-1000XM5 Wireless Headphones</a></h3>
+              <p class="rating">
+                <span class="stars" aria-hidden="true">★★★★★</span>
+                <span>4.8 out of 5 (2,341 reviews)</span>
+              </p>
+              <p class="price">$279.99</p>
+              <button
+                type="button"
+                class="add-btn"
+                aria-label="Add Sony WH-1000XM5 Wireless Headphones to cart"
+              >Add to Cart</button>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="product-card">
+            <img
+              src="https://placehold.co/440x350/fef9c3/854d0e?text=Sneakers"
+              alt="Nike Air Zoom Pegasus 40 running shoes in white and royal blue"
+              width="440" height="350"
+              loading="lazy"
+            >
+            <div class="product-body">
+              <h3><a href="/product/nike-air-zoom-40">Nike Air Zoom Pegasus 40</a></h3>
+              <p class="rating">
+                <span class="stars" aria-hidden="true">★★★★☆</span>
+                <span>4.6 out of 5 (1,872 reviews)</span>
+              </p>
+              <p class="price">$130.00</p>
+              <button
+                type="button"
+                class="add-btn"
+                aria-label="Add Nike Air Zoom Pegasus 40 to cart"
+              >Add to Cart</button>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="product-card">
+            <img
+              src="https://placehold.co/440x350/fce7f3/9d174d?text=Smart+Watch"
+              alt="Apple Watch Series 9 41mm with starlight aluminium case and sport band"
+              width="440" height="350"
+              loading="lazy"
+            >
+            <div class="product-body">
+              <span class="badge badge-new">New</span>
+              <h3><a href="/product/apple-watch-s9">Apple Watch Series 9 (41 mm)</a></h3>
+              <p class="rating">
+                <span class="stars" aria-hidden="true">★★★★★</span>
+                <span>4.9 out of 5 (5,103 reviews)</span>
+              </p>
+              <p class="price">$399.00</p>
+              <button
+                type="button"
+                class="add-btn"
+                aria-label="Add Apple Watch Series 9 to cart"
+              >Add to Cart</button>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="product-card">
+            <img
+              src="https://placehold.co/440x350/d1fae5/065f46?text=Espresso"
+              alt="Breville Barista Express espresso machine in brushed stainless steel with built-in grinder"
+              width="440" height="350"
+              loading="lazy"
+            >
+            <div class="product-body">
+              <h3><a href="/product/breville-barista-express">Breville Barista Express Espresso Machine</a></h3>
+              <p class="rating">
+                <span class="stars" aria-hidden="true">★★★★★</span>
+                <span>4.7 out of 5 (987 reviews)</span>
+              </p>
+              <p class="price">$699.95</p>
+              <button
+                type="button"
+                class="add-btn"
+                aria-label="Add Breville Barista Express Espresso Machine to cart"
+              >Add to Cart</button>
+            </div>
+          </article>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- Today's Deals -->
+    <section aria-labelledby="deals-heading">
+      <div class="section-header">
+        <h2 id="deals-heading">Today's Deals</h2>
+        <a href="/deals" class="view-all">View all deals</a>
+      </div>
+
+      <ul class="deals-list">
+
+        <li>
+          <article class="deal-card">
+            <img
+              src="https://placehold.co/520x320/ede9fe/4c1d95?text=4K+TV"
+              alt="Samsung 55-inch QLED 4K smart TV with ultra-slim bezel"
+              width="520" height="320"
+              loading="lazy"
+            >
+            <div class="deal-body">
+              <span class="badge badge-deal">Deal</span>
+              <h3><a href="/product/samsung-55-qled">Samsung 55″ QLED 4K Smart TV</a></h3>
+              <p class="deal-timer" aria-live="polite" aria-atomic="true">
+                <span aria-hidden="true">⏱</span> Ends in 4 h 23 m
+              </p>
+              <p class="deal-price">
+                $549.99
+                <span class="was"><span class="sr-only">Original price</span>$899.99</span>
+              </p>
+              <span class="savings">You save $350.00 (39% off)</span>
+              <button
+                type="button"
+                class="add-btn"
+                aria-label="Add Samsung 55-inch QLED 4K Smart TV to cart — deal price $549.99"
+              >Add to Cart</button>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="deal-card">
+            <img
+              src="https://placehold.co/520x320/fef3c7/78350f?text=Instant+Pot"
+              alt="Instant Pot Duo 7-in-1 6-quart electric pressure cooker in stainless steel"
+              width="520" height="320"
+              loading="lazy"
+            >
+            <div class="deal-body">
+              <span class="badge badge-deal">Deal</span>
+              <h3><a href="/product/instant-pot-duo">Instant Pot Duo 7-in-1 (6 Qt)</a></h3>
+              <p class="deal-timer" aria-live="polite" aria-atomic="true">
+                <span aria-hidden="true">⏱</span> Ends in 9 h 41 m
+              </p>
+              <p class="deal-price">
+                $49.95
+                <span class="was"><span class="sr-only">Original price</span>$99.95</span>
+              </p>
+              <span class="savings">You save $50.00 (50% off)</span>
+              <button
+                type="button"
+                class="add-btn"
+                aria-label="Add Instant Pot Duo 7-in-1 to cart — deal price $49.95"
+              >Add to Cart</button>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="deal-card">
+            <img
+              src="https://placehold.co/520x320/e0f2fe/0c4a6e?text=Laptop"
+              alt="Dell XPS 15 laptop open at 90 degrees showing thin-bezel OLED display"
+              width="520" height="320"
+              loading="lazy"
+            >
+            <div class="deal-body">
+              <span class="badge badge-deal">Deal</span>
+              <h3><a href="/product/dell-xps-15">Dell XPS 15 OLED (Intel Core i7)</a></h3>
+              <p class="deal-timer" aria-live="polite" aria-atomic="true">
+                <span aria-hidden="true">⏱</span> Ends in 2 h 08 m
+              </p>
+              <p class="deal-price">
+                $1,199.00
+                <span class="was"><span class="sr-only">Original price</span>$1,699.00</span>
+              </p>
+              <span class="savings">You save $500.00 (29% off)</span>
+              <button
+                type="button"
+                class="add-btn"
+                aria-label="Add Dell XPS 15 OLED laptop to cart — deal price $1,199.00"
+              >Add to Cart</button>
+            </div>
+          </article>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- Blog Posts -->
+    <section aria-labelledby="blog-heading">
+      <div class="section-header">
+        <h2 id="blog-heading">From the Blog</h2>
+        <a href="/blog" class="view-all">View all blog posts</a>
+      </div>
+
+      <ul class="blog-list">
+
+        <li>
+          <article class="blog-card">
+            <img
+              src="https://placehold.co/600x300/e0f2fe/0c4a6e?text=Laptop+Guide"
+              alt="Person at a desk comparing two open laptops side by side"
+              width="600" height="300"
+              loading="lazy"
+            >
+            <div class="blog-body">
+              <p class="blog-meta">
+                <span class="blog-cat">Tech</span> &middot; April 14, 2026 &middot; 5 min read
+              </p>
+              <h3>
+                <a href="/blog/best-laptops-2026">
+                  The Best Laptops of 2026: Our Top Picks for Every Budget
+                </a>
+              </h3>
+              <p class="excerpt">
+                From ultrabooks under $700 to powerhouse workstations, we tested 40+ machines to find your perfect match.
+              </p>
+              <a
+                href="/blog/best-laptops-2026"
+                class="read-more"
+                aria-label="Read: The Best Laptops of 2026: Our Top Picks for Every Budget"
+              >Read article</a>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="blog-card">
+            <img
+              src="https://placehold.co/600x300/d1fae5/064e3b?text=Kitchen+Tips"
+              alt="Well-organized kitchen with labeled containers arranged on open shelves"
+              width="600" height="300"
+              loading="lazy"
+            >
+            <div class="blog-body">
+              <p class="blog-meta">
+                <span class="blog-cat">Home</span> &middot; April 10, 2026 &middot; 4 min read
+              </p>
+              <h3>
+                <a href="/blog/kitchen-organization-tips">
+                  10 Kitchen Organization Tips That Actually Work
+                </a>
+              </h3>
+              <p class="excerpt">
+                Declutter your kitchen once and keep it tidy for good with these practical, budget-friendly storage strategies.
+              </p>
+              <a
+                href="/blog/kitchen-organization-tips"
+                class="read-more"
+                aria-label="Read: 10 Kitchen Organization Tips That Actually Work"
+              >Read article</a>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="blog-card">
+            <img
+              src="https://placehold.co/600x300/fce7f3/831843?text=Style+Guide"
+              alt="Clothing rack displaying a curated selection of colourful spring outfits"
+              width="600" height="300"
+              loading="lazy"
+            >
+            <div class="blog-body">
+              <p class="blog-meta">
+                <span class="blog-cat">Style</span> &middot; April 7, 2026 &middot; 6 min read
+              </p>
+              <h3>
+                <a href="/blog/spring-fashion-2026">
+                  Spring 2026 Fashion Trends You Need to Know
+                </a>
+              </h3>
+              <p class="excerpt">
+                Bold colors, relaxed silhouettes, and sustainable fabrics dominate this season. Here's how to work the looks on any budget.
+              </p>
+              <a
+                href="/blog/spring-fashion-2026"
+                class="read-more"
+                aria-label="Read: Spring 2026 Fashion Trends You Need to Know"
+              >Read article</a>
+            </div>
+          </article>
+        </li>
+
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- ═══ Newsletter ═══ -->
+  <section class="newsletter" aria-labelledby="newsletter-heading">
+    <div class="newsletter-inner">
+      <h2 id="newsletter-heading">Get Deals in Your Inbox</h2>
+      <p>Subscribe and be the first to know about new arrivals and exclusive offers.</p>
+      <form class="newsletter-form" action="/newsletter/subscribe" method="post" aria-label="Newsletter sign-up">
+        <label for="newsletter-email" class="sr-only">Your email address</label>
+        <input
+          type="email"
+          id="newsletter-email"
+          name="email"
+          class="newsletter-input"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+          aria-required="true"
+          aria-describedby="privacy-note"
+        >
+        <button type="submit" class="newsletter-submit">Subscribe</button>
+      </form>
+      <p id="privacy-note" class="privacy-note">We respect your privacy. Unsubscribe at any time.</p>
+    </div>
+  </section>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+
+      <nav aria-label="Shop categories">
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="/electronics">Electronics</a></li>
+          <li><a href="/clothing">Clothing &amp; Apparel</a></li>
+          <li><a href="/home-garden">Home &amp; Garden</a></li>
+          <li><a href="/sports">Sports &amp; Outdoors</a></li>
+          <li><a href="/beauty">Beauty &amp; Personal Care</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Customer service">
+        <h3>Customer Service</h3>
+        <ul>
+          <li><a href="/help">Help Center</a></li>
+          <li><a href="/returns">Returns &amp; Refunds</a></li>
+          <li><a href="/shipping">Shipping Info</a></li>
+          <li><a href="/order-tracking">Track Your Order</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Company information">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="/about">About ShopNow</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/careers">Careers</a></li>
+          <li><a href="/press">Press</a></li>
+          <li><a href="/affiliate">Affiliate Program</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Legal">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/cookies">Cookie Policy</a></li>
+          <li><a href="/accessibility">Accessibility Statement</a></li>
+        </ul>
+      </nav>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 ShopNow, Inc. All rights reserved.</p>
+      <p>
+        <a href="/accessibility">Accessibility</a>
+        &middot;
+        <a href="/sitemap">Sitemap</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

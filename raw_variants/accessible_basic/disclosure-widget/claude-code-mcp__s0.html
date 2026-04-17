@@ -1,0 +1,539 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget Examples</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg: #f8f7f4;
+      --color-surface: #ffffff;
+      --color-border: #c9c5bd;
+      --color-text: #1a1814;
+      --color-text-muted: #4a4640;
+      --color-accent: #2d5f8a;
+      --color-accent-hover: #1e4162;
+      --color-accent-light: #e8f0f7;
+      --color-focus-ring: #2d5f8a;
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,.10), 0 1px 2px rgba(0,0,0,.06);
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: -999px;
+      left: 1rem;
+      padding: .5rem 1rem;
+      background: var(--color-accent);
+      color: #fff;
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      z-index: 9999;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    main { max-width: 720px; margin: 0 auto; }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+      color: var(--color-text);
+    }
+
+    .page-intro {
+      color: var(--color-text-muted);
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-size: .8rem;
+    }
+
+    /* Example wrapper */
+    .example {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .example-label {
+      padding: .5rem 1.25rem;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .example-inner { padding: 1.25rem; }
+
+    /* ── Disclosure button ── */
+    .disclosure-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 1rem 1.25rem;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid transparent;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      text-align: left;
+      border-radius: var(--radius);
+      transition: background .15s, border-color .15s;
+    }
+
+    .disclosure-btn:hover {
+      background: var(--color-accent-light);
+    }
+
+    /* Visible focus ring — meets 3:1 UI component contrast */
+    .disclosure-btn:focus-visible {
+      outline: 3px solid var(--color-focus-ring);
+      outline-offset: 2px;
+    }
+
+    /* Chevron icon */
+    .disclosure-btn .chevron {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      color: var(--color-accent);
+      transition: transform .2s ease;
+    }
+
+    .disclosure-btn[aria-expanded="true"] .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* ── Controlled content panel ── */
+    .details {
+      padding: 0 1.25rem;
+      overflow: hidden;
+      /* Animated open/close */
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .25s ease, padding .25s ease;
+    }
+
+    .details[data-open="true"] {
+      grid-template-rows: 1fr;
+      padding-top: .75rem;
+      padding-bottom: 1.25rem;
+    }
+
+    /* Inner wrapper required for grid-template-rows animation */
+    .details-inner { overflow: hidden; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .details, .disclosure-btn .chevron { transition: none; }
+    }
+
+    /* ── FAQ variant styles ── */
+    .faq-list { list-style: none; }
+
+    .faq-list li { border-bottom: 1px solid var(--color-border); }
+    .faq-list li:last-child { border-bottom: none; }
+
+    .faq-list .disclosure-btn {
+      border-radius: 0;
+      padding: .9rem 0;
+    }
+
+    .faq-list .details { padding-left: 0; padding-right: 0; }
+
+    .faq-list .details p {
+      color: var(--color-text-muted);
+      font-size: .97rem;
+    }
+
+    /* ── Settings variant styles ── */
+    .settings-group { display: flex; flex-direction: column; gap: .5rem; }
+
+    .settings-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .settings-card .disclosure-btn {
+      border-radius: 0;
+      gap: .75rem;
+    }
+
+    .settings-card .btn-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: var(--color-accent-light);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-accent);
+    }
+
+    .settings-card .btn-text { flex: 1; }
+    .settings-card .btn-text span {
+      display: block;
+      font-size: .8rem;
+      font-weight: 400;
+      color: var(--color-text-muted);
+    }
+
+    .settings-card .details { background: var(--color-bg); border-top: 1px solid var(--color-border); }
+    .settings-card .details[data-open="true"] { padding: 1rem 1.25rem; }
+
+    .settings-field { margin-bottom: .75rem; }
+    .settings-field:last-child { margin-bottom: 0; }
+
+    .settings-field label {
+      display: block;
+      font-size: .875rem;
+      font-weight: 500;
+      margin-bottom: .3rem;
+    }
+
+    .settings-field input[type="text"],
+    .settings-field select {
+      width: 100%;
+      padding: .45rem .75rem;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      font-size: .9rem;
+      background: #fff;
+      color: var(--color-text);
+    }
+
+    .settings-field input:focus-visible,
+    .settings-field select:focus-visible {
+      outline: 3px solid var(--color-focus-ring);
+      outline-offset: 1px;
+    }
+
+    /* ── Standalone / inline variant ── */
+    .inline-disclosure { }
+
+    .inline-disclosure .disclosure-btn {
+      padding: .6rem .9rem;
+      background: var(--color-accent-light);
+      border: 1px solid var(--color-accent);
+      border-radius: var(--radius);
+      font-size: .9rem;
+      color: var(--color-accent);
+      width: auto;
+      display: inline-flex;
+      gap: .5rem;
+    }
+
+    .inline-disclosure .disclosure-btn:hover { background: #d6e6f5; }
+
+    .inline-disclosure .details {
+      margin-top: .75rem;
+      padding: 0;
+      border-left: 3px solid var(--color-accent);
+      padding-left: 1rem;
+    }
+
+    .inline-disclosure .details[data-open="true"] { padding-top: .5rem; padding-bottom: .5rem; }
+
+    .inline-disclosure .details p { color: var(--color-text-muted); font-size: .93rem; }
+  </style>
+</head>
+<body>
+
+  <!-- Skip link: lets keyboard users bypass repeated navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <main id="main-content">
+    <h1>Expand / Collapse Widget</h1>
+    <p class="page-intro">Accessible disclosure patterns using <code>button[aria-expanded]</code> and <code>aria-controls</code>.</p>
+
+    <!-- ══════════════════════════════════════
+         Example 1: FAQ accordion
+    ═══════════════════════════════════════ -->
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="example">
+      <div class="example-label" aria-hidden="true">FAQ Accordion</div>
+      <div class="example-inner">
+        <!-- Each FAQ item is a list item — conveying list structure to screen readers -->
+        <ul class="faq-list" role="list">
+
+          <li>
+            <button
+              class="disclosure-btn"
+              type="button"
+              aria-expanded="false"
+              aria-controls="faq-1"
+              id="faq-btn-1"
+            >
+              What is WCAG and why does it matter?
+              <!-- aria-hidden: decorative chevron, not meaningful content -->
+              <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="5 8 10 13 15 8"/>
+              </svg>
+            </button>
+            <div
+              class="details"
+              id="faq-1"
+              role="region"
+              aria-labelledby="faq-btn-1"
+            >
+              <div class="details-inner">
+                <p>The Web Content Accessibility Guidelines (WCAG) are a set of internationally recognised standards published by the W3C. They ensure web content is perceivable, operable, understandable, and robust for all users, including those using assistive technologies.</p>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <button
+              class="disclosure-btn"
+              type="button"
+              aria-expanded="false"
+              aria-controls="faq-2"
+              id="faq-btn-2"
+            >
+              Which WCAG conformance level should I target?
+              <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="5 8 10 13 15 8"/>
+              </svg>
+            </button>
+            <div
+              class="details"
+              id="faq-2"
+              role="region"
+              aria-labelledby="faq-btn-2"
+            >
+              <div class="details-inner">
+                <p>Level AA is the widely accepted legal and practical baseline for most organisations. Level A is the minimum floor, and Level AAA is aspirational — targeting it where feasible benefits users with more complex needs but is not required for general conformance.</p>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <button
+              class="disclosure-btn"
+              type="button"
+              aria-expanded="false"
+              aria-controls="faq-3"
+              id="faq-btn-3"
+            >
+              How do I test for keyboard accessibility?
+              <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="5 8 10 13 15 8"/>
+              </svg>
+            </button>
+            <div
+              class="details"
+              id="faq-3"
+              role="region"
+              aria-labelledby="faq-btn-3"
+            >
+              <div class="details-inner">
+                <p>Unplug your mouse and navigate your page using only Tab, Shift+Tab, Enter, Space, and arrow keys. Every interactive element should be reachable, have a clearly visible focus indicator, and perform its expected action when activated by keyboard.</p>
+              </div>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════
+         Example 2: Settings panels
+    ═══════════════════════════════════════ -->
+    <h2>Account Settings</h2>
+
+    <div class="example">
+      <div class="example-label" aria-hidden="true">Settings Panels</div>
+      <div class="example-inner">
+        <div class="settings-group">
+
+          <div class="settings-card">
+            <button
+              class="disclosure-btn"
+              type="button"
+              aria-expanded="false"
+              aria-controls="settings-profile"
+              id="settings-btn-profile"
+            >
+              <span class="btn-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              </span>
+              <span class="btn-text">
+                Profile Information
+                <span>Name, email, and display preferences</span>
+              </span>
+              <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="5 8 10 13 15 8"/>
+              </svg>
+            </button>
+            <div
+              class="details"
+              id="settings-profile"
+              role="region"
+              aria-labelledby="settings-btn-profile"
+            >
+              <div class="details-inner">
+                <div class="settings-field">
+                  <label for="display-name">Display name</label>
+                  <input type="text" id="display-name" name="display-name" autocomplete="name" placeholder="Your name">
+                </div>
+                <div class="settings-field">
+                  <label for="display-email">Email address</label>
+                  <input type="text" id="display-email" name="display-email" autocomplete="email" placeholder="you@example.com">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <button
+              class="disclosure-btn"
+              type="button"
+              aria-expanded="false"
+              aria-controls="settings-appearance"
+              id="settings-btn-appearance"
+            >
+              <span class="btn-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              </span>
+              <span class="btn-text">
+                Appearance
+                <span>Theme and language options</span>
+              </span>
+              <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="5 8 10 13 15 8"/>
+              </svg>
+            </button>
+            <div
+              class="details"
+              id="settings-appearance"
+              role="region"
+              aria-labelledby="settings-btn-appearance"
+            >
+              <div class="details-inner">
+                <div class="settings-field">
+                  <label for="theme-select">Color theme</label>
+                  <select id="theme-select" name="theme">
+                    <option value="system">Use system preference</option>
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </div>
+                <div class="settings-field">
+                  <label for="language-select">Language</label>
+                  <select id="language-select" name="language">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════
+         Example 3: Inline contextual disclosure
+    ═══════════════════════════════════════ -->
+    <h2>Contextual Help</h2>
+
+    <div class="example">
+      <div class="example-label" aria-hidden="true">Inline Disclosure</div>
+      <div class="example-inner">
+
+        <p>Your password must meet complexity requirements.</p>
+
+        <div class="inline-disclosure" style="margin-top:.75rem;">
+          <button
+            class="disclosure-btn"
+            type="button"
+            aria-expanded="false"
+            aria-controls="help-password"
+            id="help-btn-password"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            View requirements
+            <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="5 8 10 13 15 8"/>
+            </svg>
+          </button>
+          <div
+            class="details"
+            id="help-password"
+            role="region"
+            aria-labelledby="help-btn-password"
+          >
+            <div class="details-inner">
+              <ul style="padding-left:1.1rem; color: var(--color-text-muted); font-size:.93rem; display:flex; flex-direction:column; gap:.3rem;">
+                <li>At least 12 characters long</li>
+                <li>Contains at least one uppercase letter</li>
+                <li>Contains at least one number</li>
+                <li>Contains at least one special character (e.g. ! @ # $)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    (function () {
+      // Finds every disclosure button and wires up toggle behaviour.
+      // Keyboard: Enter and Space are native for <button> — no extra handling needed.
+      document.querySelectorAll('.disclosure-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var expanded = btn.getAttribute('aria-expanded') === 'true';
+          var panelId  = btn.getAttribute('aria-controls');
+          var panel    = document.getElementById(panelId);
+
+          if (!panel) return;
+
+          // Flip expanded state
+          btn.setAttribute('aria-expanded', String(!expanded));
+          panel.dataset.open = String(!expanded);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

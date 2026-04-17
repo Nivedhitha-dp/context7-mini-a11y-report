@@ -1,0 +1,289 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget - Accessibility Demo</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #1a1a1a;
+      --color-muted-text: #3d3d3d;
+      --color-border: #767676;
+      --color-surface: #f0f0f0;
+      --color-surface-hover: #dcdcdc;
+      --color-focus: #0052cc;
+      --color-site-header-bg: #1a1a1a;
+      --color-site-header-text: #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    .sr-only:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 0.5rem 1rem;
+      background: var(--color-focus);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      z-index: 100;
+      border-radius: 0 0 4px 0;
+    }
+
+    header {
+      background-color: var(--color-site-header-bg);
+      color: var(--color-site-header-text);
+      padding: 0.875rem 1.5rem;
+    }
+
+    .site-name {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    main h1 {
+      margin: 0 0 0.25rem;
+      font-size: 1.75rem;
+    }
+
+    .intro {
+      color: var(--color-muted-text);
+      margin: 0 0 2rem;
+      font-size: 1rem;
+    }
+
+    /* ── Example wrapper ── */
+    .example {
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+    }
+
+    /* ── Disclosure button ── */
+    .disclosure-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background-color: var(--color-surface);
+      border: none;
+      border-bottom: 1px solid transparent;
+      color: var(--color-text);
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      min-height: 48px;
+    }
+
+    .disclosure-btn:hover {
+      background-color: var(--color-surface-hover);
+    }
+
+    .disclosure-btn:focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: -3px;
+    }
+
+    .disclosure-btn[aria-expanded="true"] {
+      border-bottom-color: var(--color-border);
+    }
+
+    /* Chevron icon */
+    .disclosure-btn .chevron {
+      flex-shrink: 0;
+      width: 1.125em;
+      height: 1.125em;
+      fill: currentColor;
+      transition: transform 0.2s ease;
+    }
+
+    .disclosure-btn[aria-expanded="true"] .chevron {
+      transform: rotate(90deg);
+    }
+
+    /* ── Controlled content ── */
+    .details {
+      padding: 1rem 1.125rem;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details p {
+      margin: 0 0 0.75rem;
+      color: var(--color-muted-text);
+      overflow-wrap: anywhere;
+    }
+
+    .details p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ── Reflow ── */
+    @media (max-width: 400px) {
+      main { padding: 1rem 0.75rem; }
+      main h1 { font-size: 1.375rem; }
+    }
+
+    /* ── Forced colors ── */
+    @media (forced-colors: active) {
+      .example { border: 2px solid CanvasText; }
+
+      .disclosure-btn {
+        background-color: ButtonFace;
+        color: ButtonText;
+        border: 2px solid ButtonBorder;
+        forced-color-adjust: none;
+      }
+
+      .disclosure-btn:hover { background-color: Highlight; color: HighlightText; }
+
+      .disclosure-btn:focus-visible {
+        outline: 3px solid Highlight;
+        outline-offset: -3px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#maincontent" class="skip-link sr-only">Skip to main content</a>
+
+  <header>
+    <p class="site-name">Accessibility Demo</p>
+  </header>
+
+  <main id="maincontent" tabindex="-1">
+    <h1>Expand / Collapse Widgets</h1>
+    <p class="intro">Each panel below can be expanded or collapsed using a mouse, keyboard, or assistive technology.</p>
+
+    <!-- Example 1 -->
+    <div class="example">
+      <button
+        type="button"
+        class="disclosure-btn"
+        aria-expanded="false"
+        aria-controls="panel1"
+        id="btn1"
+      >
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+          <path d="M6 3.5 11.5 8 6 12.5V3.5z"/>
+        </svg>
+        What is web accessibility?
+      </button>
+      <div id="panel1" class="details" hidden>
+        <p>Web accessibility means that websites, tools, and technologies are designed and developed so that all people — including people with disabilities — can use them.</p>
+        <p>More specifically, people can perceive, understand, navigate, and interact with the web, and they can contribute to the web.</p>
+      </div>
+    </div>
+
+    <!-- Example 2 -->
+    <div class="example">
+      <button
+        type="button"
+        class="disclosure-btn"
+        aria-expanded="false"
+        aria-controls="panel2"
+        id="btn2"
+      >
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+          <path d="M6 3.5 11.5 8 6 12.5V3.5z"/>
+        </svg>
+        Who benefits from accessible design?
+      </button>
+      <div id="panel2" class="details" hidden>
+        <p>Accessible design benefits people with a wide range of disabilities, including visual, auditory, physical, speech, cognitive, and neurological disabilities.</p>
+        <p>It also benefits people in situational contexts — for example, someone in a bright environment, a person using a small screen, or someone with a temporary injury.</p>
+      </div>
+    </div>
+
+    <!-- Example 3 -->
+    <div class="example">
+      <button
+        type="button"
+        class="disclosure-btn"
+        aria-expanded="false"
+        aria-controls="panel3"
+        id="btn3"
+      >
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+          <path d="M6 3.5 11.5 8 6 12.5V3.5z"/>
+        </svg>
+        How do I get started with WCAG 2.2?
+      </button>
+      <div id="panel3" class="details" hidden>
+        <p>The Web Content Accessibility Guidelines (WCAG) 2.2 are organized around four principles: Perceivable, Operable, Understandable, and Robust.</p>
+        <p>Start by reviewing the WCAG 2.2 Quick Reference. Then test your work with keyboard navigation and a screen reader to validate real-world usability.</p>
+      </div>
+    </div>
+
+    <!-- Example 4: starts expanded -->
+    <div class="example">
+      <button
+        type="button"
+        class="disclosure-btn"
+        aria-expanded="true"
+        aria-controls="panel4"
+        id="btn4"
+      >
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+          <path d="M6 3.5 11.5 8 6 12.5V3.5z"/>
+        </svg>
+        This panel starts expanded
+      </button>
+      <div id="panel4" class="details">
+        <p>This example demonstrates a panel that is open by default. The button's <code>aria-expanded</code> attribute is set to <code>true</code>, and the content container does not have the <code>hidden</code> attribute.</p>
+        <p>Activating the button collapses this panel and updates <code>aria-expanded</code> to <code>false</code>.</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.querySelectorAll('.disclosure-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var isExpanded = this.getAttribute('aria-expanded') === 'true';
+        var panel = document.getElementById(this.getAttribute('aria-controls'));
+        this.setAttribute('aria-expanded', String(!isExpanded));
+        if (isExpanded) {
+          panel.setAttribute('hidden', '');
+        } else {
+          panel.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

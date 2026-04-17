@@ -1,0 +1,274 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us</title>
+  <style>
+    /* CSS custom properties for easy theming and high-contrast overrides */
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f8f9fa;
+      --color-border: #6c757d;
+      --color-border-focus: #0056b3;
+      --color-text: #212529;
+      --color-text-muted: #495057;
+      --color-label: #212529;
+      --color-required: #c0392b;
+      --color-btn-bg: #0056b3;
+      --color-btn-text: #ffffff;
+      --color-btn-hover: #003d80;
+      --radius: 6px;
+      --spacing: 1.5rem;
+    }
+
+    /* skip-link: lets keyboard users bypass repeated nav and jump straight to main */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      background: var(--color-btn-bg);
+      color: var(--color-btn-text);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      z-index: 9999;
+      transition: top 0.2s;
+    }
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    main {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--color-text);
+    }
+
+    .form-intro {
+      color: var(--color-text-muted);
+      margin-bottom: var(--spacing);
+      font-size: 0.975rem;
+    }
+
+    /* required-note: informs users upfront so they don't discover it field by field */
+    .required-note {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--spacing);
+    }
+    .required-note abbr {
+      text-decoration: none;
+      color: var(--color-required);
+      font-weight: 700;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* form-field: groups label + input + helper text as a single perceivable unit */
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-label);
+    }
+
+    /* required marker is aria-hidden; "required" is conveyed via aria-required on the input */
+    .required-marker {
+      color: var(--color-required);
+      font-weight: 700;
+      margin-left: 0.2em;
+      aria-hidden: true;
+    }
+
+    .helper-text {
+      font-size: 0.825rem;
+      color: var(--color-text-muted);
+      /* rendered before input so screen readers announce it before the field when using aria-describedby */
+      order: 1;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      order: 2;
+      width: 100%;
+      padding: 0.625rem 0.75rem;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--color-text);
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      /* min touch target height ≥ 44px per WCAG 2.5.5 */
+      min-height: 44px;
+    }
+
+    /* :focus-visible: visible focus ring for keyboard users; suppressed for mouse clicks */
+    input:focus-visible {
+      outline: 3px solid var(--color-border-focus);
+      outline-offset: 2px;
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.2);
+    }
+
+    input[aria-invalid="true"] {
+      border-color: var(--color-required);
+    }
+
+    .submit-btn {
+      margin-top: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--color-btn-text);
+      background: var(--color-btn-bg);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      /* min touch target ≥ 44px */
+      min-height: 44px;
+      transition: background 0.15s;
+      align-self: flex-start;
+    }
+
+    .submit-btn:hover {
+      background: var(--color-btn-hover);
+    }
+
+    /* focus-visible on button: 3px outline ensures 3:1 contrast against white bg */
+    .submit-btn:focus-visible {
+      outline: 3px solid var(--color-border-focus);
+      outline-offset: 3px;
+      box-shadow: 0 0 0 5px rgba(0, 86, 179, 0.25);
+    }
+
+    /* prefers-reduced-motion: remove transitions for users sensitive to animation */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
+
+    /* ensure layout remains usable at 320px (smallest WCAG 1.4.10 reflow breakpoint) */
+    @media (max-width: 360px) {
+      h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- skip-link target is #main-content so keyboard users can bypass the page header -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <main id="main-content">
+    <h1>Contact Us</h1>
+    <p class="form-intro">We'd love to hear from you. Fill in the form below and we'll be in touch.</p>
+
+    <!-- required-note: surfaced before the form so screen reader users know the convention -->
+    <p class="required-note">
+      Fields marked <abbr title="required" aria-label="required">*</abbr> are required.
+    </p>
+
+    <form novalidate action="#" method="post">
+
+      <!-- Full Name field -->
+      <div class="form-field">
+        <label for="full-name">
+          Full Name
+          <!-- aria-hidden keeps the asterisk out of the accessible name; aria-required conveys requirement -->
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="full-name"
+          name="full-name"
+          autocomplete="name"
+          required
+          aria-required="true"
+          spellcheck="false"
+        >
+      </div>
+
+      <!-- Email Address field — helper text linked via aria-describedby so it's announced with the field -->
+      <div class="form-field">
+        <label for="email">
+          Email Address
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <!-- helper-text rendered in DOM before input; CSS order property places it visually after label -->
+        <span class="helper-text" id="email-hint">
+          Enter a valid address, e.g. name@example.com
+        </span>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          inputmode="email"
+          required
+          aria-required="true"
+          aria-describedby="email-hint"
+          spellcheck="false"
+        >
+      </div>
+
+      <!-- Phone Number field — optional; helper text describes preferred format -->
+      <div class="form-field">
+        <label for="phone">Phone Number</label>
+        <span class="helper-text" id="phone-hint">
+          Optional. Preferred format: +1 (555) 000-0000
+        </span>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autocomplete="tel"
+          inputmode="tel"
+          aria-describedby="phone-hint"
+        >
+      </div>
+
+      <button type="submit" class="submit-btn">Send Message</button>
+
+    </form>
+  </main>
+</body>
+</html>

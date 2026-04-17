@@ -1,0 +1,1142 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopWell — Quality Products, Unbeatable Deals</title>
+  <meta name="description" content="ShopWell offers popular products, exclusive deals, and lifestyle inspiration. Shop electronics, home goods, fashion, and more." />
+  <style>
+    /* ── Design tokens ─────────────────────────────────────────── */
+    :root {
+      --color-brand:        #1a56a0; /* 7.1:1 on white */
+      --color-brand-dark:   #123d79; /* 10.4:1 on white */
+      --color-accent:       #c94f0a; /* 5.5:1 on white */
+      --color-accent-dark:  #a03d07;
+      --color-bg:           #ffffff;
+      --color-surface:      #f4f6f9;
+      --color-surface-2:    #e8ecf2;
+      --color-text:         #1a1a1a; /* 17.1:1 on white */
+      --color-text-muted:   #555f6e; /* 5.9:1 on white */
+      --color-badge-deal:   #166534; /* 7.2:1 on #dcfce7 */
+      --color-badge-deal-bg:#dcfce7;
+      --color-focus:        #1a56a0;
+      --radius-sm:          4px;
+      --radius-md:          8px;
+      --radius-lg:          16px;
+      --shadow-card:        0 2px 8px rgba(0,0,0,.12);
+      --font-sans:          system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --transition-fast:    150ms ease;
+    }
+
+    /* ── Reset & base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: var(--color-brand); }
+    a:hover { color: var(--color-brand-dark); }
+
+    /* ── Skip link (keyboard bypass) ──────────────────────────── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      padding: .5rem 1rem;
+      background: var(--color-brand);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      text-decoration: none;
+      z-index: 9999;
+      transition: top var(--transition-fast);
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Focus styles ──────────────────────────────────────────── */
+    :focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* ── Layout helpers ────────────────────────────────────────── */
+    .container {
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-inline: 1.25rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-header h2 {
+      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .view-all-link {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--color-brand);
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ── Header / Navigation ───────────────────────────────────── */
+    .site-header {
+      background: var(--color-brand);
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0,0,0,.2);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-block: .75rem;
+    }
+    .site-logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -.02em;
+    }
+    .site-logo span { color: #fbbf24; }
+
+    /* Search form */
+    .search-form {
+      display: flex;
+      flex: 1;
+      max-width: 480px;
+    }
+    .search-form label { display: contents; }
+    .search-input {
+      flex: 1;
+      padding: .5rem .75rem;
+      border: 2px solid transparent;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+      font-size: 1rem;
+      background: #fff;
+      color: var(--color-text);
+      min-width: 0;
+    }
+    .search-input:focus-visible {
+      outline: none;
+      border-color: #fbbf24;
+    }
+    .search-btn {
+      padding: .5rem 1rem;
+      background: #fbbf24;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+    .search-btn:hover { background: #f59e0b; }
+    .search-btn:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+
+    /* Header icon actions */
+    .header-actions { display: flex; gap: .5rem; align-items: center; }
+    .icon-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: .35rem .5rem;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: background var(--transition-fast);
+      position: relative;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,.15); }
+    .icon-btn svg { width: 22px; height: 22px; }
+    .cart-badge {
+      position: absolute;
+      top: 2px; right: 2px;
+      background: #f87171;
+      color: #fff;
+      font-size: .65rem;
+      font-weight: 800;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Primary nav */
+    .primary-nav {
+      background: var(--color-brand-dark);
+    }
+    .primary-nav ul {
+      display: flex;
+      list-style: none;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .primary-nav ul::-webkit-scrollbar { display: none; }
+    .primary-nav a {
+      display: block;
+      padding: .6rem 1rem;
+      color: #e0e9f5;
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    .primary-nav a:hover { background: rgba(255,255,255,.1); color: #fff; }
+    .primary-nav a[aria-current="page"] {
+      color: #fbbf24;
+      border-bottom: 2px solid #fbbf24;
+    }
+
+    /* ── Hero banner ───────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #0f3460 0%, #1a56a0 60%, #2d6bc4 100%);
+      color: #fff;
+      padding: 4rem 1.25rem;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      background: #fbbf24;
+      color: #1a1a1a;
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .25rem .75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      letter-spacing: -.02em;
+    }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: #c7d9f5;
+      max-width: 560px;
+      margin-inline: auto;
+      margin-bottom: 2rem;
+    }
+    .hero-cta-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block;
+      padding: .85rem 2rem;
+      background: #fbbf24;
+      color: #1a1a1a;
+      font-size: 1rem;
+      font-weight: 800;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      border: 2px solid transparent;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+    .btn-primary:hover { background: #f59e0b; color: #1a1a1a; transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-block;
+      padding: .85rem 2rem;
+      background: transparent;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      border: 2px solid rgba(255,255,255,.6);
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+    }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.1); color: #fff; }
+
+    /* ── Category strip ────────────────────────────────────────── */
+    .categories { background: var(--color-surface); padding: 1.5rem 0; }
+    .category-list {
+      display: flex;
+      gap: 1rem;
+      list-style: none;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding-bottom: .25rem;
+    }
+    .category-list li { flex-shrink: 0; }
+    .category-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .4rem;
+      padding: .75rem 1.25rem;
+      background: #fff;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: var(--color-text);
+      font-size: .85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-card);
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+    .category-chip:hover { background: var(--color-surface-2); transform: translateY(-2px); color: var(--color-brand); }
+    .category-chip span[aria-hidden="true"] { font-size: 1.75rem; }
+
+    /* ── Product grid ──────────────────────────────────────────── */
+    .section-products { padding: 3rem 0; }
+    .section-deals { padding: 3rem 0; background: var(--color-surface); }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+      list-style: none;
+    }
+
+    .product-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,.15); }
+    .product-img-wrap {
+      aspect-ratio: 4/3;
+      background: var(--color-surface);
+      overflow: hidden;
+      position: relative;
+    }
+    .product-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .badge {
+      position: absolute;
+      top: .6rem; left: .6rem;
+      padding: .2rem .6rem;
+      font-size: .72rem;
+      font-weight: 800;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .badge-deal { background: var(--color-badge-deal-bg); color: var(--color-badge-deal); }
+    .badge-new  { background: #dbeafe; color: #1e40af; }
+    .badge-hot  { background: #fee2e2; color: #991b1b; }
+
+    .product-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: .4rem; }
+    .product-category { font-size: .75rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: .06em; }
+    .product-name {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .product-name a {
+      color: var(--color-text);
+      text-decoration: none;
+    }
+    .product-name a:hover { color: var(--color-brand); text-decoration: underline; }
+
+    .product-rating { display: flex; align-items: center; gap: .35rem; font-size: .85rem; }
+    .stars { color: #f59e0b; letter-spacing: -.05em; }
+    .rating-count { color: var(--color-text-muted); font-size: .8rem; }
+
+    .product-price-row {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: .5rem;
+    }
+    .price-current { font-size: 1.15rem; font-weight: 800; color: var(--color-accent); }
+    .price-original { font-size: .9rem; color: var(--color-text-muted); text-decoration: line-through; }
+    .price-save { font-size: .78rem; font-weight: 700; color: var(--color-badge-deal); background: var(--color-badge-deal-bg); padding: .1rem .45rem; border-radius: 999px; }
+
+    .btn-add-cart {
+      margin-top: .75rem;
+      width: 100%;
+      padding: .6rem 1rem;
+      background: var(--color-brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+    .btn-add-cart:hover { background: var(--color-brand-dark); }
+
+    /* ── Deals banner ──────────────────────────────────────────── */
+    .deal-banner {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      color: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .deal-banner-text h3 { font-size: clamp(1.2rem, 3vw, 1.75rem); font-weight: 900; }
+    .deal-banner-text p { color: #e9d5ff; margin-top: .25rem; }
+    .countdown {
+      display: flex;
+      gap: .75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255,255,255,.2);
+      border-radius: var(--radius-sm);
+      padding: .5rem .75rem;
+      min-width: 52px;
+    }
+    .countdown-num { font-size: 1.5rem; font-weight: 900; line-height: 1; }
+    .countdown-label { font-size: .65rem; text-transform: uppercase; letter-spacing: .06em; color: #e9d5ff; }
+
+    /* ── Blog posts ────────────────────────────────────────────── */
+    .section-blog { padding: 3rem 0; }
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      list-style: none;
+    }
+    .blog-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition-fast);
+    }
+    .blog-card:hover { transform: translateY(-3px); }
+    .blog-img-wrap { aspect-ratio: 16/9; overflow: hidden; background: var(--color-surface); }
+    .blog-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .blog-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .blog-tag {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--color-brand);
+      margin-bottom: .5rem;
+    }
+    .blog-title { font-size: 1.05rem; font-weight: 700; line-height: 1.35; margin-bottom: .5rem; }
+    .blog-title a { color: var(--color-text); text-decoration: none; }
+    .blog-title a:hover { color: var(--color-brand); text-decoration: underline; }
+    .blog-excerpt { font-size: .88rem; color: var(--color-text-muted); line-height: 1.55; flex: 1; }
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-top: 1rem;
+      font-size: .8rem;
+      color: var(--color-text-muted);
+    }
+    .blog-meta time { font-weight: 600; }
+
+    /* ── Newsletter ────────────────────────────────────────────── */
+    .newsletter { background: var(--color-brand); color: #fff; padding: 3rem 1.25rem; text-align: center; }
+    .newsletter h2 { font-size: clamp(1.25rem, 3vw, 1.75rem); font-weight: 800; margin-bottom: .5rem; }
+    .newsletter p { color: #c7d9f5; margin-bottom: 1.5rem; }
+    .newsletter-form {
+      display: flex;
+      max-width: 480px;
+      margin-inline: auto;
+      gap: 0;
+    }
+    .newsletter-form label { display: contents; }
+    .newsletter-input {
+      flex: 1;
+      padding: .75rem 1rem;
+      border: 2px solid transparent;
+      border-radius: var(--radius-md) 0 0 var(--radius-md);
+      font-size: 1rem;
+      min-width: 0;
+      background: #fff;
+      color: var(--color-text);
+    }
+    .newsletter-input:focus-visible {
+      outline: none;
+      border-color: #fbbf24;
+    }
+    .newsletter-btn {
+      padding: .75rem 1.25rem;
+      background: #fbbf24;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background var(--transition-fast);
+    }
+    .newsletter-btn:hover { background: #f59e0b; }
+    .newsletter-note { font-size: .78rem; color: #93b8e0; margin-top: .75rem; }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    .site-footer { background: #111827; color: #9ca3af; padding: 3rem 1.25rem 1.5rem; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .footer-col h3 { color: #f9fafb; font-size: .95rem; font-weight: 700; margin-bottom: .75rem; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .4rem; }
+    .footer-col a { color: #9ca3af; font-size: .88rem; text-decoration: none; transition: color var(--transition-fast); }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid #374151;
+      padding-top: 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .82rem;
+    }
+
+    /* ── Reduced motion ────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+      html { scroll-behavior: auto; }
+      .product-card:hover, .blog-card:hover { transform: none; }
+    }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .search-form { max-width: 100%; }
+      .header-inner { flex-wrap: wrap; }
+      .hero { padding: 2.5rem 1rem; }
+      .deal-banner { flex-direction: column; text-align: center; }
+      .newsletter-form { flex-direction: column; border-radius: var(--radius-md); }
+      .newsletter-input { border-radius: var(--radius-md) var(--radius-md) 0 0; }
+      .newsletter-btn { border-radius: 0 0 var(--radius-md) var(--radius-md); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip-link: lets keyboard users bypass repeated navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ── Site header ──────────────────────────────────────────── -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+
+      <!-- Logo -->
+      <a href="/" class="site-logo" aria-label="ShopWell home">Shop<span>Well</span></a>
+
+      <!-- Search -->
+      <form class="search-form" role="search" action="/search" method="get">
+        <label for="site-search">
+          <span class="visually-hidden">Search products</span>
+        </label>
+        <input
+          id="site-search"
+          class="search-input"
+          type="search"
+          name="q"
+          placeholder="Search products…"
+          autocomplete="off"
+          aria-label="Search products"
+        />
+        <button type="submit" class="search-btn" aria-label="Submit search">
+          <!-- search icon -->
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Icon actions -->
+      <div class="header-actions">
+        <a href="/account" class="icon-btn" aria-label="My account">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Account
+        </a>
+        <a href="/wishlist" class="icon-btn" aria-label="Wishlist">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Wishlist
+        </a>
+        <a href="/cart" class="icon-btn" aria-label="Shopping cart, 3 items">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <!-- badge conveys cart count visually; aria-label on parent covers it for AT -->
+          <span class="cart-badge" aria-hidden="true">3</span>
+          Cart
+        </a>
+      </div>
+    </div>
+
+    <!-- Primary navigation -->
+    <nav class="primary-nav" aria-label="Main categories">
+      <div class="container">
+        <ul role="list">
+          <li><a href="/" aria-current="page">Home</a></li>
+          <li><a href="/electronics">Electronics</a></li>
+          <li><a href="/fashion">Fashion</a></li>
+          <li><a href="/home-living">Home &amp; Living</a></li>
+          <li><a href="/sports">Sports</a></li>
+          <li><a href="/beauty">Beauty</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/toys">Toys &amp; Games</a></li>
+          <li><a href="/deals">Today's Deals</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ── Main content ─────────────────────────────────────────── -->
+  <main id="main-content" tabindex="-1">
+
+    <!-- Hero -->
+    <section aria-labelledby="hero-heading" class="hero">
+      <div class="container">
+        <p class="hero-eyebrow" aria-hidden="true">Spring Sale — Up to 60% Off</p>
+        <h1 id="hero-heading">Find Everything You Love, <br aria-hidden="true"/>At Prices You'll Love More</h1>
+        <p>Millions of products. Fast shipping. Unbeatable deals. Start your spring shopping today.</p>
+        <div class="hero-cta-group">
+          <a href="/deals" class="btn-primary">Shop Spring Sale</a>
+          <a href="/categories" class="btn-outline">Browse All Categories</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category strip -->
+    <section aria-labelledby="cat-heading" class="categories">
+      <div class="container">
+        <h2 id="cat-heading" class="visually-hidden">Shop by Category</h2>
+        <ul class="category-list" role="list" aria-label="Browse categories">
+          <li><a href="/electronics" class="category-chip"><span aria-hidden="true">💻</span>Electronics</a></li>
+          <li><a href="/fashion" class="category-chip"><span aria-hidden="true">👗</span>Fashion</a></li>
+          <li><a href="/home-living" class="category-chip"><span aria-hidden="true">🛋️</span>Home</a></li>
+          <li><a href="/sports" class="category-chip"><span aria-hidden="true">⚽</span>Sports</a></li>
+          <li><a href="/beauty" class="category-chip"><span aria-hidden="true">💄</span>Beauty</a></li>
+          <li><a href="/books" class="category-chip"><span aria-hidden="true">📚</span>Books</a></li>
+          <li><a href="/toys" class="category-chip"><span aria-hidden="true">🧸</span>Toys</a></li>
+          <li><a href="/garden" class="category-chip"><span aria-hidden="true">🌿</span>Garden</a></li>
+          <li><a href="/kitchen" class="category-chip"><span aria-hidden="true">🍳</span>Kitchen</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Popular items -->
+    <section aria-labelledby="popular-heading" class="section-products">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="popular-heading">Popular Right Now</h2>
+          <a href="/popular" class="view-all-link" aria-label="View all popular products">View all →</a>
+        </div>
+        <ul class="product-grid" role="list" aria-label="Popular products">
+
+          <li>
+            <article class="product-card" aria-labelledby="prod-1-name">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80"
+                  alt="Stainless steel minimalist watch with white dial on a light grey background"
+                  width="400" height="300"
+                  loading="lazy"
+                />
+                <span class="badge badge-new" aria-label="New">New</span>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Accessories</p>
+                <h3 id="prod-1-name" class="product-name">
+                  <a href="/products/minimalist-watch">Minimal Stainless Watch</a>
+                </h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="visually-hidden">Rated 5 out of 5 stars.</span>
+                  <span class="rating-count">(1,240)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$89.99</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Minimal Stainless Watch to cart">
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="prod-2-name">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80"
+                  alt="Over-ear wireless headphones in black, shown on a white surface"
+                  width="400" height="300"
+                  loading="lazy"
+                />
+                <span class="badge badge-hot" aria-label="Hot">Hot</span>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Electronics</p>
+                <h3 id="prod-2-name" class="product-name">
+                  <a href="/products/wireless-headphones">Pro Wireless Headphones</a>
+                </h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★½</span>
+                  <span class="visually-hidden">Rated 4.5 out of 5 stars.</span>
+                  <span class="rating-count">(3,876)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$149.00</span>
+                  <span class="price-original">$199.00</span>
+                  <span class="price-save">Save 25%</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Pro Wireless Headphones to cart">
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="prod-3-name">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&q=80"
+                  alt="Bright orange athletic running shoes with white sole, photographed on a plain background"
+                  width="400" height="300"
+                  loading="lazy"
+                />
+              </div>
+              <div class="product-body">
+                <p class="product-category">Sports</p>
+                <h3 id="prod-3-name" class="product-name">
+                  <a href="/products/trail-runners">UltraLight Trail Runners</a>
+                </h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="visually-hidden">Rated 5 out of 5 stars.</span>
+                  <span class="rating-count">(892)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$119.95</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add UltraLight Trail Runners to cart">
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="prod-4-name">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80"
+                  alt="Scented soy candle in a clear glass jar with a wooden wick, surrounded by dried botanicals"
+                  width="400" height="300"
+                  loading="lazy"
+                />
+                <span class="badge badge-new" aria-label="New">New</span>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Home &amp; Living</p>
+                <h3 id="prod-4-name" class="product-name">
+                  <a href="/products/botanical-candle">Botanical Soy Candle</a>
+                </h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="visually-hidden">Rated 5 out of 5 stars.</span>
+                  <span class="rating-count">(558)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$34.00</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Botanical Soy Candle to cart">
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- Deals section -->
+    <section aria-labelledby="deals-heading" class="section-deals">
+      <div class="container">
+
+        <!-- Flash sale banner -->
+        <div class="deal-banner" role="region" aria-label="Flash sale countdown">
+          <div class="deal-banner-text">
+            <h2 id="deals-heading">Flash Deals — Ends Today</h2>
+            <p>Limited stock. Once it's gone, it's gone.</p>
+          </div>
+          <!-- countdown is decorative/informational; actual time remaining announced via label -->
+          <div class="countdown" aria-label="Time remaining: 4 hours, 23 minutes, 15 seconds">
+            <div class="countdown-unit" aria-hidden="true">
+              <span class="countdown-num">04</span>
+              <span class="countdown-label">hrs</span>
+            </div>
+            <div class="countdown-unit" aria-hidden="true">
+              <span class="countdown-num">23</span>
+              <span class="countdown-label">min</span>
+            </div>
+            <div class="countdown-unit" aria-hidden="true">
+              <span class="countdown-num">15</span>
+              <span class="countdown-label">sec</span>
+            </div>
+          </div>
+        </div>
+
+        <ul class="product-grid" role="list" aria-label="Flash deal products">
+
+          <li>
+            <article class="product-card" aria-labelledby="deal-1-name">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&q=80"
+                  alt="Collection of skincare bottles and tubes arranged on a marble surface"
+                  width="400" height="300"
+                  loading="lazy"
+                />
+                <span class="badge badge-deal" aria-label="Deal">Deal</span>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Beauty</p>
+                <h3 id="deal-1-name" class="product-name">
+                  <a href="/products/skincare-set">Radiance Skincare Set</a>
+                </h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★½</span>
+                  <span class="visually-hidden">Rated 4.5 out of 5 stars.</span>
+                  <span class="rating-count">(2,104)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$44.99</span>
+                  <span class="price-original">$79.99</span>
+                  <span class="price-save">Save 44%</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Radiance Skincare Set to cart">
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="deal-2-name">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80"
+                  alt="Instant film camera in white and pastel colors sitting on a wooden table"
+                  width="400" height="300"
+                  loading="lazy"
+                />
+                <span class="badge badge-deal" aria-label="Deal">Deal</span>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Electronics</p>
+                <h3 id="deal-2-name" class="product-name">
+                  <a href="/products/instant-camera">Instant Film Camera</a>
+                </h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="visually-hidden">Rated 5 out of 5 stars.</span>
+                  <span class="rating-count">(4,512)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$59.00</span>
+                  <span class="price-original">$99.00</span>
+                  <span class="price-save">Save 40%</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add Instant Film Camera to cart">
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="deal-3-name">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"
+                  alt="Sleek black cast iron skillet on a wooden kitchen counter"
+                  width="400" height="300"
+                  loading="lazy"
+                />
+                <span class="badge badge-deal" aria-label="Deal">Deal</span>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Kitchen</p>
+                <h3 id="deal-3-name" class="product-name">
+                  <a href="/products/cast-iron-skillet">12-Inch Cast Iron Skillet</a>
+                </h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="visually-hidden">Rated 5 out of 5 stars.</span>
+                  <span class="rating-count">(6,788)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$29.99</span>
+                  <span class="price-original">$54.99</span>
+                  <span class="price-save">Save 45%</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add 12-Inch Cast Iron Skillet to cart">
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="deal-4-name">
+              <div class="product-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&q=80"
+                  alt="Fitness tracker smart watch in black with a heart-rate display on wrist"
+                  width="400" height="300"
+                  loading="lazy"
+                />
+                <span class="badge badge-deal" aria-label="Deal">Deal</span>
+              </div>
+              <div class="product-body">
+                <p class="product-category">Electronics</p>
+                <h3 id="deal-4-name" class="product-name">
+                  <a href="/products/fitness-tracker">FitPulse Smart Tracker</a>
+                </h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★½</span>
+                  <span class="visually-hidden">Rated 4.5 out of 5 stars.</span>
+                  <span class="rating-count">(1,890)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$49.00</span>
+                  <span class="price-original">$89.00</span>
+                  <span class="price-save">Save 45%</span>
+                </div>
+                <button class="btn-add-cart" aria-label="Add FitPulse Smart Tracker to cart">
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- Blog posts -->
+    <section aria-labelledby="blog-heading" class="section-blog">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="blog-heading">From Our Blog</h2>
+          <a href="/blog" class="view-all-link" aria-label="View all blog posts">View all →</a>
+        </div>
+        <ul class="blog-grid" role="list" aria-label="Recent blog articles">
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog-1-title">
+              <div class="blog-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80"
+                  alt="Bright modern kitchen with pastel cookware and fresh herbs on the counter"
+                  width="600" height="338"
+                  loading="lazy"
+                />
+              </div>
+              <div class="blog-body">
+                <span class="blog-tag">Home &amp; Living</span>
+                <h3 id="blog-1-title" class="blog-title">
+                  <a href="/blog/spring-kitchen-refresh">10 Ways to Refresh Your Kitchen for Spring</a>
+                </h3>
+                <p class="blog-excerpt">Small updates can transform your cooking space. From new textiles to clever storage, here are ten affordable ideas to give your kitchen a seasonal lift.</p>
+                <div class="blog-meta">
+                  <span>By Mia Chen</span>
+                  <span aria-hidden="true">·</span>
+                  <time datetime="2026-04-10">April 10, 2026</time>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog-2-title">
+              <div class="blog-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1483721310020-03333e577078?w=600&q=80"
+                  alt="Person running on a trail through green forest in early morning light"
+                  width="600" height="338"
+                  loading="lazy"
+                />
+              </div>
+              <div class="blog-body">
+                <span class="blog-tag">Sports &amp; Fitness</span>
+                <h3 id="blog-2-title" class="blog-title">
+                  <a href="/blog/trail-running-gear-guide">The Complete Beginner's Trail Running Gear Guide</a>
+                </h3>
+                <p class="blog-excerpt">From shoes with the right grip to moisture-wicking layers, we break down every piece of gear you need before hitting the trails this spring.</p>
+                <div class="blog-meta">
+                  <span>By James Park</span>
+                  <span aria-hidden="true">·</span>
+                  <time datetime="2026-04-07">April 7, 2026</time>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog-3-title">
+              <div class="blog-img-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=600&q=80"
+                  alt="Flatlay of skincare products on a white marble surface with fresh flowers"
+                  width="600" height="338"
+                  loading="lazy"
+                />
+              </div>
+              <div class="blog-body">
+                <span class="blog-tag">Beauty</span>
+                <h3 id="blog-3-title" class="blog-title">
+                  <a href="/blog/spring-skincare-routine">Build Your Ideal Spring Skincare Routine</a>
+                </h3>
+                <p class="blog-excerpt">Transitioning from heavy winter moisturizers to lighter spring formulas takes intention. A dermatologist shares the exact routine to follow as the season changes.</p>
+                <div class="blog-meta">
+                  <span>By Dr. Aisha Osei</span>
+                  <span aria-hidden="true">·</span>
+                  <time datetime="2026-04-03">April 3, 2026</time>
+                </div>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section aria-labelledby="newsletter-heading" class="newsletter">
+      <div class="container">
+        <h2 id="newsletter-heading">Get Deals Before Anyone Else</h2>
+        <p>Subscribe for exclusive offers, early access to sales, and curated picks — straight to your inbox.</p>
+        <form class="newsletter-form" action="/newsletter/subscribe" method="post" novalidate>
+          <label for="newsletter-email">
+            <span class="visually-hidden">Email address</span>
+          </label>
+          <input
+            id="newsletter-email"
+            class="newsletter-input"
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+            aria-required="true"
+            aria-describedby="newsletter-note"
+          />
+          <button type="submit" class="newsletter-btn">Subscribe</button>
+        </form>
+        <p id="newsletter-note" class="newsletter-note">No spam. Unsubscribe at any time. We respect your privacy.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────────── -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>Shop</h3>
+          <ul role="list">
+            <li><a href="/new-arrivals">New Arrivals</a></li>
+            <li><a href="/deals">Today's Deals</a></li>
+            <li><a href="/bestsellers">Bestsellers</a></li>
+            <li><a href="/gift-cards">Gift Cards</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Help</h3>
+          <ul role="list">
+            <li><a href="/help/orders">Track Your Order</a></li>
+            <li><a href="/help/returns">Returns &amp; Exchanges</a></li>
+            <li><a href="/help/shipping">Shipping Info</a></li>
+            <li><a href="/help/faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Company</h3>
+          <ul role="list">
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/press">Press</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Follow Us</h3>
+          <ul role="list">
+            <li><a href="https://instagram.com/shopwell" rel="noopener noreferrer" target="_blank">Instagram <span class="visually-hidden">(opens in new tab)</span></a></li>
+            <li><a href="https://twitter.com/shopwell" rel="noopener noreferrer" target="_blank">Twitter / X <span class="visually-hidden">(opens in new tab)</span></a></li>
+            <li><a href="https://pinterest.com/shopwell" rel="noopener noreferrer" target="_blank">Pinterest <span class="visually-hidden">(opens in new tab)</span></a></li>
+            <li><a href="https://youtube.com/shopwell" rel="noopener noreferrer" target="_blank">YouTube <span class="visually-hidden">(opens in new tab)</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 ShopWell, Inc. All rights reserved.</p>
+        <nav aria-label="Legal links">
+          <ul role="list" style="display:flex;gap:1.25rem;list-style:none;flex-wrap:wrap;">
+            <li><a href="/privacy" style="color:#9ca3af;font-size:.82rem;text-decoration:none;">Privacy Policy</a></li>
+            <li><a href="/terms" style="color:#9ca3af;font-size:.82rem;text-decoration:none;">Terms of Use</a></li>
+            <li><a href="/accessibility" style="color:#9ca3af;font-size:.82rem;text-decoration:none;">Accessibility</a></li>
+            <li><a href="/sitemap" style="color:#9ca3af;font-size:.82rem;text-decoration:none;">Sitemap</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

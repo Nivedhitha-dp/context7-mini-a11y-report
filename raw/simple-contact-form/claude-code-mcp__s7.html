@@ -1,0 +1,299 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Form</title>
+  <style>
+    /* CSS custom properties for easy theming and high-contrast overrides */
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f8f9fa;
+      --color-border: #6c757d;
+      --color-border-focus: #0057b8;
+      --color-text: #1a1a1a;
+      --color-text-muted: #4a5568;
+      --color-error: #c0392b;
+      --color-accent: #0057b8;
+      --color-accent-hover: #004494;
+      --color-btn-text: #ffffff;
+      --radius: 6px;
+      --font: system-ui, -apple-system, sans-serif;
+    }
+
+    /* Visually hidden utility — keeps content available to screen readers */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Skip link: invisible until focused, lets keyboard users bypass repeated content */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      background: var(--color-accent);
+      color: var(--color-btn-text);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      z-index: 100;
+      transition: top 0.2s;
+    }
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--color-bg);
+      color: var(--color-text);
+      margin: 0;
+      padding: 2rem 1rem;
+      /* 4.5:1+ contrast: #1a1a1a on #ffffff = ~18:1 */
+    }
+
+    main {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .form-intro {
+      color: var(--color-text-muted);
+      margin-top: 0;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      /* #4a5568 on #ffffff = 7.04:1 — passes AA */
+    }
+
+    /* Each field group: label + input + helper text */
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-text);
+    }
+
+    /* Visual required marker — "(required)" text is also in the label for screen readers */
+    .required-marker {
+      color: var(--color-error);
+      /* aria-hidden so screen readers use the "(required)" text instead */
+      margin-left: 0.2rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      font-size: 1rem;
+      font-family: var(--font);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-surface);
+      color: var(--color-text);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      /* Minimum 44px touch target height */
+      min-height: 44px;
+    }
+
+    /* Visible focus style: 3px outline with offset for clear visibility (WCAG 2.4.11) */
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus {
+      outline: 3px solid var(--color-border-focus);
+      outline-offset: 2px;
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 1px var(--color-border-focus);
+    }
+
+    .helper-text {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      /* #4a5568 on #f8f9fa = 6.55:1 — passes AA */
+    }
+
+    /* Optional badge next to label */
+    .optional-badge {
+      font-weight: 400;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-left: 0.4rem;
+    }
+
+    .submit-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.7rem 2rem;
+      font-size: 1rem;
+      font-family: var(--font);
+      font-weight: 600;
+      background: var(--color-accent);
+      color: var(--color-btn-text);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      min-height: 44px;
+      /* #ffffff on #0057b8 = 5.11:1 — passes AA */
+      transition: background 0.15s;
+      margin-top: 0.5rem;
+    }
+
+    .submit-btn:hover {
+      background: var(--color-accent-hover);
+    }
+
+    /* Visible focus for button */
+    .submit-btn:focus-visible {
+      outline: 3px solid var(--color-border-focus);
+      outline-offset: 3px;
+    }
+
+    /* Respect reduced-motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+      input, .submit-btn, .skip-link {
+        transition: none;
+      }
+    }
+
+    /* Responsive: ensure usable layout at 320px and when zoomed */
+    @media (max-width: 400px) {
+      h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip link: first focusable element, bypasses nav/header for keyboard users -->
+  <a href="#contact-form" class="skip-link">Skip to form</a>
+
+  <main>
+    <h1>Contact Us</h1>
+    <p class="form-intro" id="form-desc">
+      Fields marked with <span aria-hidden="true" style="color:#c0392b;">*</span> are required.
+    </p>
+
+    <!--
+      aria-describedby="form-desc": associates the required-field note with the form
+      novalidate: lets us handle validation messaging accessibly if needed
+    -->
+    <form
+      id="contact-form"
+      aria-label="Contact form"
+      aria-describedby="form-desc"
+      novalidate
+    >
+
+      <!-- Full Name -->
+      <div class="form-field">
+        <!--
+          "required" text in the label is read by screen readers.
+          aria-hidden on * prevents double-announcement of "(required) *".
+        -->
+        <label for="full-name">
+          Full Name
+          <span class="required-marker" aria-hidden="true">*</span>
+          <span class="sr-only">(required)</span>
+        </label>
+        <!--
+          autocomplete="name": helps autofill tools and users with motor impairments.
+          aria-required="true": explicit ARIA signal for AT alongside the HTML required attr.
+          No aria-describedby here: no helper text for this field.
+        -->
+        <input
+          type="text"
+          id="full-name"
+          name="full-name"
+          autocomplete="name"
+          required
+          aria-required="true"
+          spellcheck="false"
+        />
+      </div>
+
+      <!-- Email Address -->
+      <div class="form-field">
+        <label for="email">
+          Email Address
+          <span class="required-marker" aria-hidden="true">*</span>
+          <span class="sr-only">(required)</span>
+        </label>
+        <!--
+          aria-describedby="email-hint": links input to helper text so screen readers
+          announce the format hint after the field label and role.
+          type="email": triggers appropriate keyboard on mobile and browser-level validation hint.
+        -->
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          required
+          aria-required="true"
+          aria-describedby="email-hint"
+          inputmode="email"
+          spellcheck="false"
+        />
+        <span id="email-hint" class="helper-text">
+          Enter your email in the format: name@example.com
+        </span>
+      </div>
+
+      <!-- Phone Number (optional) -->
+      <div class="form-field">
+        <label for="phone">
+          Phone Number
+          <span class="optional-badge">(optional)</span>
+        </label>
+        <!--
+          aria-describedby="phone-hint": links input to format guidance helper text.
+          type="tel": triggers numeric/phone keyboard on mobile.
+          autocomplete="tel": supports autofill for phone numbers.
+        -->
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autocomplete="tel"
+          aria-describedby="phone-hint"
+          inputmode="tel"
+        />
+        <span id="phone-hint" class="helper-text">
+          Preferred format: (555) 123-4567. Include country code for international numbers.
+        </span>
+      </div>
+
+      <!--
+        type="submit" is the most robust submit trigger for AT and keyboard users.
+        Button text is descriptive — "Submit" alone can be ambiguous; "Send Message" clarifies action.
+      -->
+      <button type="submit" class="submit-btn">Send Message</button>
+
+    </form>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,312 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand / Collapse Disclosure Widgets</title>
+  <style>
+    /* ── Reset & tokens ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg:          #f8f9fb;
+      --color-surface:     #ffffff;
+      --color-border:      #c7cdd8;
+      --color-text:        #1a1d23;
+      --color-text-muted:  #4a5162;
+      --color-accent:      #2563eb;
+      --color-accent-dark: #1d4ed8;
+      --color-focus-ring:  #2563eb;
+      --color-success-bg:  #f0fdf4;
+      --color-success-border: #16a34a;
+      --color-warn-bg:     #fffbeb;
+      --color-warn-border: #d97706;
+      --radius:            8px;
+      --shadow:            0 1px 4px rgba(0,0,0,.08);
+    }
+
+    /* ── Skip link ── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      padding: .5rem 1rem;
+      background: var(--color-accent);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 0 0 var(--radius) var(--radius);
+      text-decoration: none;
+      z-index: 9999;
+      transition: top .15s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Page layout ── */
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+    .page-wrapper {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: .5rem;
+    }
+    .page-intro {
+      color: var(--color-text-muted);
+      margin-bottom: 2.5rem;
+    }
+    h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 1rem;
+    }
+    .section { margin-bottom: 2.5rem; }
+
+    /* ── Example wrapper ── */
+    .example {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Trigger button ── */
+    .disclosure-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 1rem 1.25rem;
+      background: var(--color-surface);
+      border: none;
+      color: var(--color-text);
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      gap: .75rem;
+      transition: background .15s;
+    }
+    .disclosure-trigger:hover { background: #f1f4f9; }
+    .disclosure-trigger:focus-visible {
+      outline: 3px solid var(--color-focus-ring);
+      outline-offset: -3px;
+      border-radius: var(--radius);
+    }
+    .disclosure-trigger[aria-expanded="true"] { background: #f1f4f9; }
+
+    /* ── Chevron icon ── */
+    .chevron {
+      flex-shrink: 0;
+      width: 1.125rem;
+      height: 1.125rem;
+      transition: transform .2s ease;
+      color: var(--color-text-muted);
+    }
+    .disclosure-trigger[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+
+    /* ── Controlled content panel ── */
+    .details {
+      border-top: 1px solid var(--color-border);
+      padding: 1.25rem;
+      color: var(--color-text-muted);
+      /* hidden state */
+      display: none;
+    }
+    .details.is-open { display: block; }
+
+    /* Variants */
+    .example--success .disclosure-trigger { border-left: 4px solid var(--color-success-border); }
+    .example--warn    .disclosure-trigger { border-left: 4px solid var(--color-warn-border); }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .chevron, .disclosure-trigger { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip-link: lets keyboard users jump past nav/header to main content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div class="page-wrapper">
+    <header>
+      <h1>Expand / Collapse Widgets</h1>
+      <p class="page-intro">Accessible disclosure patterns using <code>aria-expanded</code> and <code>aria-controls</code>. Toggle with mouse, touch, <kbd>Enter</kbd>, or <kbd>Space</kbd>.</p>
+    </header>
+
+    <main id="main-content">
+
+      <!-- ── Section 1: Basic disclosures ── -->
+      <section class="section" aria-labelledby="basic-heading">
+        <h2 id="basic-heading">Basic disclosures</h2>
+
+        <!-- Example 1: collapsed by default -->
+        <div class="example">
+          <!-- aria-expanded reflects the current open/closed state; aria-controls points to the panel ID -->
+          <button
+            class="disclosure-trigger"
+            aria-expanded="false"
+            aria-controls="panel-1"
+            id="trigger-1"
+          >
+            What is WCAG?
+            <!-- SVG icon is decorative; aria-hidden removes it from the a11y tree -->
+            <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="5 8 10 13 15 8"/>
+            </svg>
+          </button>
+          <!-- role="region" + aria-labelledby creates a named landmark for this content -->
+          <div
+            id="panel-1"
+            class="details"
+            role="region"
+            aria-labelledby="trigger-1"
+          >
+            <p>The Web Content Accessibility Guidelines (WCAG) are a set of internationally recognised standards for making web content more accessible to people with disabilities. WCAG 2.2 Level AA is the current legal benchmark in many jurisdictions.</p>
+          </div>
+        </div>
+
+        <!-- Example 2: expanded by default -->
+        <div class="example">
+          <button
+            class="disclosure-trigger"
+            aria-expanded="true"
+            aria-controls="panel-2"
+            id="trigger-2"
+          >
+            Why does keyboard navigation matter?
+            <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="5 8 10 13 15 8"/>
+            </svg>
+          </button>
+          <div
+            id="panel-2"
+            class="details is-open"
+            role="region"
+            aria-labelledby="trigger-2"
+          >
+            <p>Many users rely solely on a keyboard — including people with motor impairments, screen reader users, and power users. Every interactive element must be reachable via <kbd>Tab</kbd> and operable via <kbd>Enter</kbd> or <kbd>Space</kbd>.</p>
+          </div>
+        </div>
+
+        <!-- Example 3: collapsed, longer content -->
+        <div class="example">
+          <button
+            class="disclosure-trigger"
+            aria-expanded="false"
+            aria-controls="panel-3"
+            id="trigger-3"
+          >
+            How do I check colour contrast?
+            <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="5 8 10 13 15 8"/>
+            </svg>
+          </button>
+          <div
+            id="panel-3"
+            class="details"
+            role="region"
+            aria-labelledby="trigger-3"
+          >
+            <p>Use a tool such as the <strong>WebAIM Contrast Checker</strong> or the <strong>axe DevTools</strong> browser extension. WCAG AA requires:</p>
+            <ul style="margin: .75rem 0 0 1.25rem; line-height: 2;">
+              <li>Normal text — 4.5 : 1 minimum</li>
+              <li>Large text (≥ 18 pt or ≥ 14 pt bold) — 3 : 1 minimum</li>
+              <li>UI components and focus indicators — 3 : 1 minimum</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Section 2: Contextual variants ── -->
+      <section class="section" aria-labelledby="variants-heading">
+        <h2 id="variants-heading">Contextual variants</h2>
+
+        <!-- Success variant -->
+        <div class="example example--success">
+          <button
+            class="disclosure-trigger"
+            aria-expanded="false"
+            aria-controls="panel-4"
+            id="trigger-4"
+          >
+            Your submission was accepted
+            <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="5 8 10 13 15 8"/>
+            </svg>
+          </button>
+          <div
+            id="panel-4"
+            class="details"
+            role="region"
+            aria-labelledby="trigger-4"
+            style="background: var(--color-success-bg);"
+          >
+            <p>Reference number <strong>#A-20940</strong> has been assigned. You will receive a confirmation email within 5 minutes.</p>
+          </div>
+        </div>
+
+        <!-- Warning variant -->
+        <div class="example example--warn">
+          <button
+            class="disclosure-trigger"
+            aria-expanded="false"
+            aria-controls="panel-5"
+            id="trigger-5"
+          >
+            Action required — review your details
+            <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="5 8 10 13 15 8"/>
+            </svg>
+          </button>
+          <div
+            id="panel-5"
+            class="details"
+            role="region"
+            aria-labelledby="trigger-5"
+            style="background: var(--color-warn-bg);"
+          >
+            <p>Your billing address does not match the card on file. Please update it before your next renewal on <time datetime="2026-05-01">1 May 2026</time>.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // Find every disclosure trigger and wire up toggle behaviour.
+    // Keyboard: Enter and Space are native button events — no extra handling needed.
+    document.querySelectorAll('.disclosure-trigger').forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        var panelId  = this.getAttribute('aria-controls');
+        var panel    = document.getElementById(panelId);
+
+        // Flip the state
+        this.setAttribute('aria-expanded', String(!expanded));
+
+        // Show/hide the controlled panel
+        if (expanded) {
+          panel.classList.remove('is-open');
+        } else {
+          panel.classList.add('is-open');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

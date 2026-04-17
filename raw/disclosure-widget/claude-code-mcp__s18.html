@@ -1,0 +1,157 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .example {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .example button[aria-expanded] {
+      all: unset;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      background: transparent;
+      gap: 0.75rem;
+    }
+
+    .example button[aria-expanded]:focus-visible {
+      outline: 3px solid #2563eb;
+      outline-offset: -3px;
+    }
+
+    .example button[aria-expanded]:hover {
+      background: #f9fafb;
+    }
+
+    .icon {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .details {
+      padding: 0 1.25rem 1rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details p {
+      margin: 0.75rem 0 0;
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+  <h1>Expand/Collapse Widgets</h1>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="panel-1"
+      id="btn-1"
+    >
+      What is accessibility?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 6 8 10 12 6"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-1" role="region" aria-labelledby="btn-1" hidden>
+      <p>Accessibility (a11y) is the practice of designing and building products so that people with disabilities can use them. It encompasses visual, auditory, motor, and cognitive considerations.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="panel-2"
+      id="btn-2"
+    >
+      What is WCAG?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 6 8 10 12 6"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-2" role="region" aria-labelledby="btn-2" hidden>
+      <p>WCAG (Web Content Accessibility Guidelines) is a set of international standards published by the W3C. WCAG 2.1 Level AA is the most commonly required conformance level for websites.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="panel-3"
+      id="btn-3"
+    >
+      Why does keyboard navigation matter?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 6 8 10 12 6"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-3" role="region" aria-labelledby="btn-3" hidden>
+      <p>Many users rely solely on a keyboard — including people with motor disabilities, power users, and those using assistive technologies. Every interactive element must be reachable and operable without a mouse.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('button[aria-expanded]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        var panelId = btn.getAttribute('aria-controls');
+        var panel = document.getElementById(panelId);
+
+        btn.setAttribute('aria-expanded', String(!expanded));
+        if (expanded) {
+          panel.setAttribute('hidden', '');
+        } else {
+          panel.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

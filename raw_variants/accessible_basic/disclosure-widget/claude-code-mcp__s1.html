@@ -1,0 +1,273 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand / Collapse Widget Examples</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background: #f5f5f5;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #333;
+    }
+
+    /* ── wrapper for each demo ── */
+    .example {
+      background: #fff;
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── native details/summary ── */
+    .example details {
+      border: 1px solid #b0b0b0;
+      border-radius: 4px;
+    }
+
+    .example details summary {
+      cursor: pointer;
+      padding: 0.65rem 1rem;
+      font-weight: 600;
+      list-style: none;          /* hide default marker in some browsers */
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #eef2ff;
+      border-radius: 4px;
+      user-select: none;
+    }
+
+    .example details summary::-webkit-details-marker { display: none; }
+
+    .example details summary::before {
+      content: "▶";
+      font-size: 0.7rem;
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
+    .example details[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    .example details summary:focus-visible {
+      outline: 3px solid #0060df;
+      outline-offset: 2px;
+    }
+
+    /* content panel for native widget */
+    .example details .details {
+      padding: 1rem;
+      border-top: 1px solid #b0b0b0;
+    }
+
+    /* ── button-based accordion ── */
+    .accordion-item {
+      border: 1px solid #b0b0b0;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+
+    .accordion-item:last-child { margin-bottom: 0; }
+
+    .accordion-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background: #eef2ff;
+      border: none;
+      padding: 0.65rem 1rem;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+      text-align: left;
+    }
+
+    .accordion-trigger[aria-expanded="true"] {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom: 1px solid #b0b0b0;
+    }
+
+    .accordion-trigger:focus-visible {
+      outline: 3px solid #0060df;
+      outline-offset: 2px;
+    }
+
+    .accordion-icon {
+      font-size: 0.7rem;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .accordion-trigger[aria-expanded="true"] .accordion-icon {
+      transform: rotate(180deg);
+    }
+
+    /* content panel for button-based widget */
+    .accordion-item .details {
+      padding: 1rem;
+    }
+
+    .accordion-item .details[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Expand / Collapse Widget Examples</h1>
+
+  <!-- ── Example 1: native <details>/<summary> ── -->
+  <section aria-labelledby="ex1-heading">
+    <div class="example">
+      <h2 id="ex1-heading">Native details / summary</h2>
+
+      <details>
+        <summary>What is semantic HTML?</summary>
+        <div class="details">
+          <p>Semantic HTML uses elements that convey meaning about the structure
+          and content of a page. Examples include <code>&lt;article&gt;</code>,
+          <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, and
+          <code>&lt;button&gt;</code>. Using semantic HTML improves accessibility
+          and makes pages easier for assistive technologies to parse.</p>
+        </div>
+      </details>
+
+      <details style="margin-top: 0.5rem;">
+        <summary>What is WCAG?</summary>
+        <div class="details">
+          <p>The Web Content Accessibility Guidelines (WCAG) are published by the
+          W3C and define how to make web content more accessible to people with
+          disabilities. WCAG 2.2 Level AA is the most commonly required
+          conformance level for public-sector and commercial websites.</p>
+        </div>
+      </details>
+
+      <details style="margin-top: 0.5rem;">
+        <summary>Why is keyboard accessibility important?</summary>
+        <div class="details">
+          <p>Many users navigate entirely by keyboard — people with motor
+          disabilities, power users, and anyone who cannot use a pointer device.
+          Every interactive element must be reachable and operable via keyboard
+          alone, with a clearly visible focus indicator.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── Example 2: button-based accordion (allows independent open/close) ── -->
+  <section aria-labelledby="ex2-heading">
+    <div class="example">
+      <h2 id="ex2-heading">Button-based accordion</h2>
+
+      <div class="accordion-item">
+        <button
+          class="accordion-trigger"
+          aria-expanded="false"
+          aria-controls="acc-panel-1"
+          id="acc-btn-1"
+        >
+          Getting started
+          <span class="accordion-icon" aria-hidden="true">▼</span>
+        </button>
+        <div
+          class="details"
+          id="acc-panel-1"
+          role="region"
+          aria-labelledby="acc-btn-1"
+          hidden
+        >
+          <p>Install the package with <code>npm install my-package</code>, then
+          import it in your entry file. No additional configuration is required
+          for basic usage.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button
+          class="accordion-trigger"
+          aria-expanded="false"
+          aria-controls="acc-panel-2"
+          id="acc-btn-2"
+        >
+          Configuration options
+          <span class="accordion-icon" aria-hidden="true">▼</span>
+        </button>
+        <div
+          class="details"
+          id="acc-panel-2"
+          role="region"
+          aria-labelledby="acc-btn-2"
+          hidden
+        >
+          <p>Pass an options object as the second argument to override defaults.
+          Supported keys are <code>theme</code>, <code>locale</code>, and
+          <code>debug</code>. All keys are optional.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button
+          class="accordion-trigger"
+          aria-expanded="false"
+          aria-controls="acc-panel-3"
+          id="acc-btn-3"
+        >
+          Troubleshooting
+          <span class="accordion-icon" aria-hidden="true">▼</span>
+        </button>
+        <div
+          class="details"
+          id="acc-panel-3"
+          role="region"
+          aria-labelledby="acc-btn-3"
+          hidden
+        >
+          <p>If the widget fails to initialise, ensure the DOM is fully loaded
+          before calling <code>init()</code>. Wrap your call in a
+          <code>DOMContentLoaded</code> listener or place the script at the
+          bottom of <code>&lt;body&gt;</code>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Button-based accordion — toggle aria-expanded and hidden
+    document.querySelectorAll('.accordion-trigger').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        var panelId  = this.getAttribute('aria-controls');
+        var panel    = document.getElementById(panelId);
+
+        this.setAttribute('aria-expanded', String(!expanded));
+
+        if (expanded) {
+          panel.setAttribute('hidden', '');
+        } else {
+          panel.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

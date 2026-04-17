@@ -1,0 +1,168 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 640px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      color: #1a1a1a;
+    }
+
+    .example {
+      margin-bottom: 1.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .example button[aria-expanded] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: #f9fafb;
+      border: none;
+      border-bottom: 1px solid transparent;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .example button[aria-expanded]:hover {
+      background: #f3f4f6;
+    }
+
+    .example button[aria-expanded]:focus-visible {
+      outline: 3px solid #2563eb;
+      outline-offset: -3px;
+    }
+
+    .example button[aria-expanded="true"] {
+      border-bottom-color: #d1d5db;
+    }
+
+    .example button[aria-expanded] .icon {
+      display: inline-block;
+      transition: transform 0.2s;
+      font-size: 0.75rem;
+      aria-hidden: true;
+    }
+
+    .example button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .details {
+      padding: 1rem;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details p {
+      margin: 0 0 0.75rem;
+    }
+
+    .details p:last-child {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Expand/Collapse Widget</h1>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="section1-content"
+      id="section1-trigger"
+    >
+      What is web accessibility?
+      <span class="icon" aria-hidden="true">▼</span>
+    </button>
+    <div
+      class="details"
+      id="section1-content"
+      role="region"
+      aria-labelledby="section1-trigger"
+      hidden
+    >
+      <p>Web accessibility means that websites, tools, and technologies are designed and developed so that people with disabilities can use them.</p>
+      <p>More specifically, people can perceive, understand, navigate, and interact with the web, and they can contribute to the web.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="section2-content"
+      id="section2-trigger"
+    >
+      Why does accessibility matter?
+      <span class="icon" aria-hidden="true">▼</span>
+    </button>
+    <div
+      class="details"
+      id="section2-content"
+      role="region"
+      aria-labelledby="section2-trigger"
+      hidden
+    >
+      <p>Accessibility benefits people with and without disabilities. It improves usability for everyone and is often required by law in many jurisdictions.</p>
+      <p>An accessible site can reach a wider audience and demonstrates a commitment to inclusive design.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="true"
+      aria-controls="section3-content"
+      id="section3-trigger"
+    >
+      How do I get started?
+      <span class="icon" aria-hidden="true">▼</span>
+    </button>
+    <div
+      class="details"
+      id="section3-content"
+      role="region"
+      aria-labelledby="section3-trigger"
+    >
+      <p>Start with semantic HTML — use the right elements for the right purpose. Then learn the four WCAG principles: Perceivable, Operable, Understandable, Robust.</p>
+      <p>Use automated tools like axe or Lighthouse for quick checks, and complement them with keyboard testing and a screen reader.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('button[aria-expanded]').forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+
+        var contentId = this.getAttribute('aria-controls');
+        var content = document.getElementById(contentId);
+        if (content) {
+          if (!expanded) {
+            content.removeAttribute('hidden');
+          } else {
+            content.setAttribute('hidden', '');
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

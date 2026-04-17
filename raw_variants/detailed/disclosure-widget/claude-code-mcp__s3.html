@@ -1,0 +1,460 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget - Accessibility Patterns</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f4f4f4;
+      --color-surface-hover: #e8e8e8;
+      --color-text: #1b1b1b;
+      --color-muted: #3b3b3b;
+      --color-border: #767676;
+      --color-focus: #0050c8;
+      --color-header-bg: #1b1b1b;
+      --color-header-text: #ffffff;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      min-height: 100dvh;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 200;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--color-focus);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      border-radius: 0.25rem;
+    }
+
+    .skip-link:focus {
+      outline: 3px solid #ffbf47;
+      outline-offset: 2px;
+    }
+
+    .skip-link:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    /* Header */
+    .site-header {
+      background-color: var(--color-header-bg);
+      color: var(--color-header-text);
+      padding: 1rem 1.5rem;
+    }
+
+    .site-name {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    /* Main */
+    main {
+      max-width: 46rem;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    main:focus {
+      outline: none;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+
+    .intro {
+      color: var(--color-muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .examples {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    /* Wraps each widget */
+    .example {
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    /* Accordion: collapse borders between adjacent items */
+    .accordion .example {
+      border-radius: 0;
+      border-bottom: none;
+    }
+
+    .accordion .example:first-child {
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+    }
+
+    .accordion .example:last-child {
+      border-bottom: 1px solid var(--color-border);
+      border-bottom-left-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
+
+    /* Toggle button */
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      width: 100%;
+      min-height: 3rem;
+      padding: 0.875rem 1.25rem;
+      background-color: var(--color-surface);
+      color: var(--color-text);
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      text-align: left;
+      border: none;
+      cursor: pointer;
+    }
+
+    .toggle-btn:hover {
+      background-color: var(--color-surface-hover);
+    }
+
+    .toggle-btn:focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: -3px;
+    }
+
+    .toggle-icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      color: inherit;
+      transition: transform 0.2s ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .toggle-icon {
+        transition: none;
+      }
+    }
+
+    .toggle-btn[aria-expanded="true"] .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Controlled content panel */
+    .details {
+      padding: 1.25rem 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .details > * + * {
+      margin-top: 0.75rem;
+    }
+
+    .details p {
+      color: var(--color-muted);
+    }
+
+    .details ul {
+      color: var(--color-muted);
+      padding-left: 1.5rem;
+    }
+
+    .details li + li {
+      margin-top: 0.375rem;
+    }
+
+    code {
+      font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+      font-size: 0.9em;
+      background-color: var(--color-surface);
+      padding: 0.125em 0.3em;
+      border-radius: 0.2em;
+    }
+
+    /* Suppress code chip styling inside a button */
+    .toggle-btn code {
+      background: none;
+      padding: 0;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--color-border);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--color-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Forced colors */
+    @media (forced-colors: active) {
+      .example {
+        border: 1px solid ButtonBorder;
+      }
+
+      .toggle-btn {
+        border: 1px solid ButtonBorder;
+        forced-color-adjust: auto;
+      }
+
+      .toggle-btn:focus-visible {
+        outline: 3px solid Highlight;
+        outline-offset: -3px;
+      }
+
+      .details {
+        border-top: 1px solid ButtonBorder;
+      }
+    }
+
+    /* Reflow at 320px */
+    @media (max-width: 360px) {
+      main {
+        padding: 1.5rem 1rem 3rem;
+      }
+
+      .toggle-btn {
+        padding: 0.75rem 1rem;
+      }
+
+      .details {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="#maincontent" class="skip-link">Skip to main content</a>
+    <span class="site-name">Accessibility Patterns</span>
+  </header>
+
+  <main id="maincontent" tabindex="-1">
+    <h1>Expand/Collapse Widgets</h1>
+    <p class="intro">
+      Accessible disclosure widgets use <code>aria-expanded</code> and <code>aria-controls</code>
+      to communicate open and closed state to assistive technologies.
+    </p>
+
+    <div class="examples">
+
+      <!-- Single disclosure -->
+      <section aria-labelledby="section-single">
+        <h2 id="section-single">Single Disclosure</h2>
+
+        <div class="example">
+          <button
+            type="button"
+            class="toggle-btn"
+            aria-expanded="false"
+            aria-controls="panel-single"
+          >
+            What is a disclosure widget?
+            <svg class="toggle-icon" aria-hidden="true" focusable="false"
+                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div id="panel-single" class="details" hidden>
+            <p>
+              A disclosure widget shows or hides a panel of content using a button trigger.
+              The <code>aria-expanded</code> attribute on the button communicates current
+              state to screen readers: <code>true</code> when open, <code>false</code> when closed.
+            </p>
+            <p>
+              The <code>aria-controls</code> attribute references the panel by ID,
+              creating an explicit programmatic relationship between the trigger and its content.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ accordion -->
+      <section aria-labelledby="section-faq">
+        <h2 id="section-faq">Frequently Asked Questions</h2>
+
+        <div class="accordion">
+          <div class="example">
+            <button
+              type="button"
+              class="toggle-btn"
+              aria-expanded="false"
+              aria-controls="faq-panel-1"
+            >
+              What is WCAG and which version should I target?
+              <svg class="toggle-icon" aria-hidden="true" focusable="false"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+            <div id="faq-panel-1" class="details" hidden>
+              <p>
+                WCAG (Web Content Accessibility Guidelines) is the international standard for
+                web accessibility, published by the W3C. The current version is WCAG 2.2.
+              </p>
+              <p>
+                Level AA is the most widely adopted target and is required by many accessibility
+                laws and regulations worldwide. It balances meaningful improvement with
+                practical implementation effort.
+              </p>
+            </div>
+          </div>
+
+          <div class="example">
+            <button
+              type="button"
+              class="toggle-btn"
+              aria-expanded="false"
+              aria-controls="faq-panel-2"
+            >
+              Why must keyboard focus be visible?
+              <svg class="toggle-icon" aria-hidden="true" focusable="false"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+            <div id="faq-panel-2" class="details" hidden>
+              <p>
+                A visible focus indicator shows keyboard users which element is currently active.
+                Without it, navigating a page with a keyboard becomes impractical.
+              </p>
+              <p>
+                WCAG 2.4.7 (Focus Visible) requires that focus is visible, and WCAG 2.4.11
+                (Focus Appearance), new in WCAG 2.2, specifies minimum area and contrast
+                requirements for focus indicators at Level AA.
+              </p>
+            </div>
+          </div>
+
+          <div class="example">
+            <button
+              type="button"
+              class="toggle-btn"
+              aria-expanded="false"
+              aria-controls="faq-panel-3"
+            >
+              Can I use the native <code>&lt;details&gt;</code> element instead?
+              <svg class="toggle-icon" aria-hidden="true" focusable="false"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+            <div id="faq-panel-3" class="details" hidden>
+              <p>
+                Yes. The native HTML <code>&lt;details&gt;</code> and
+                <code>&lt;summary&gt;</code> elements provide built-in expand/collapse
+                behavior with no JavaScript required. Browser and screen reader support
+                has improved significantly.
+              </p>
+              <p>
+                The ARIA button approach shown here gives greater control over styling,
+                animation, and state announcement timing — but both patterns are valid
+                depending on the context.
+              </p>
+            </div>
+          </div>
+
+          <div class="example">
+            <button
+              type="button"
+              class="toggle-btn"
+              aria-expanded="false"
+              aria-controls="faq-panel-4"
+            >
+              What color contrast ratio is required for text?
+              <svg class="toggle-icon" aria-hidden="true" focusable="false"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+            <div id="faq-panel-4" class="details" hidden>
+              <p>
+                WCAG 1.4.3 (Contrast Minimum) requires a contrast ratio of at least 4.5:1
+                for normal text and 3:1 for large text (24px regular or 18.66px bold).
+              </p>
+              <p>
+                Non-text UI components and graphical objects require a minimum 3:1 contrast
+                against adjacent colors, per WCAG 1.4.11 (Non-text Contrast). This includes
+                focus indicators, form control boundaries, and icons that convey meaning.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>Accessibility pattern examples &mdash; WCAG 2.2 Level AA</p>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.toggle-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var isExpanded = this.getAttribute('aria-expanded') === 'true';
+        var panelId = this.getAttribute('aria-controls');
+        var panel = document.getElementById(panelId);
+        if (!panel) return;
+        this.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+        if (isExpanded) {
+          panel.setAttribute('hidden', '');
+        } else {
+          panel.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

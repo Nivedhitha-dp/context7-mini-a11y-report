@@ -1,0 +1,129 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expand/Collapse Widget</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f4f4f5;
+      color: #1a1a1a;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .example {
+      background: #fff;
+      border: 1px solid #d4d4d8;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .example button {
+      all: unset;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #18181b;
+      cursor: pointer;
+      gap: 0.75rem;
+    }
+
+    .example button:focus-visible {
+      outline: 3px solid #2563eb;
+      outline-offset: -3px;
+      border-radius: 0.5rem;
+    }
+
+    .example button:hover {
+      background: #f4f4f5;
+    }
+
+    .example button .icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      transition: transform 0.2s ease;
+      color: #52525b;
+    }
+
+    .example button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .example .details {
+      padding: 0 1.25rem 1rem;
+      color: #3f3f46;
+      font-size: 0.95rem;
+      border-top: 1px solid #e4e4e7;
+      padding-top: 0.75rem;
+    }
+
+    .example .details[hidden] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Expand / Collapse Widgets</h1>
+
+  <div class="example">
+    <button type="button" aria-expanded="false" aria-controls="details-1" id="btn-1">
+      What is WCAG?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="details" id="details-1" role="region" aria-labelledby="btn-1" hidden>
+      WCAG stands for Web Content Accessibility Guidelines. These guidelines, published by the W3C, explain how to make web content more accessible to people with disabilities.
+    </div>
+  </div>
+
+  <div class="example">
+    <button type="button" aria-expanded="false" aria-controls="details-2" id="btn-2">
+      Why does accessibility matter?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="details" id="details-2" role="region" aria-labelledby="btn-2" hidden>
+      Accessible design ensures that everyone, including people who use assistive technologies such as screen readers or keyboard-only navigation, can fully use your product.
+    </div>
+  </div>
+
+  <div class="example">
+    <button type="button" aria-expanded="false" aria-controls="details-3" id="btn-3">
+      How do I test for accessibility?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="details" id="details-3" role="region" aria-labelledby="btn-3" hidden>
+      Use automated tools like axe or Lighthouse for a quick baseline, then validate with keyboard-only navigation and a screen reader such as NVDA, VoiceOver, or JAWS.
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.example button[aria-controls]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        var panel = document.getElementById(btn.getAttribute('aria-controls'));
+        btn.setAttribute('aria-expanded', String(!expanded));
+        panel.hidden = expanded;
+      });
+    });
+  </script>
+</body>
+</html>

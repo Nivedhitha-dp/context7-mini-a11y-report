@@ -1,0 +1,262 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Dialog Example</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #1a202c;
+    }
+
+    button {
+      cursor: pointer;
+      font: inherit;
+    }
+
+    button.trigger {
+      background: #3b5bdb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.625rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+
+    button.trigger:hover { background: #2f4ac4; }
+    button.trigger:focus-visible {
+      outline: 3px solid #a5b4fc;
+      outline-offset: 3px;
+    }
+
+    /* Backdrop */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+    }
+
+    .modal-backdrop.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Dialog */
+    .modal {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      width: min(480px, calc(100vw - 2rem));
+      padding: 1.75rem;
+      transform: translateY(12px) scale(0.97);
+      transition: transform 0.2s;
+    }
+
+    .modal-backdrop.is-open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    .modal-close {
+      background: none;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #4a5568;
+      font-size: 1.1rem;
+      line-height: 1;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .modal-close:hover { background: #f7fafc; border-color: #a0aec0; }
+    .modal-close:focus-visible {
+      outline: 3px solid #a5b4fc;
+      outline-offset: 2px;
+    }
+
+    .modal-body {
+      color: #4a5568;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: #4a5568;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+
+    .btn-secondary:hover { background: #f7fafc; }
+    .btn-secondary:focus-visible {
+      outline: 3px solid #a5b4fc;
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: #3b5bdb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+
+    .btn-primary:hover { background: #2f4ac4; }
+    .btn-primary:focus-visible {
+      outline: 3px solid #a5b4fc;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="trigger" aria-haspopup="dialog" aria-controls="example-modal">
+    Open Dialog
+  </button>
+
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div
+      id="example-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-desc"
+      tabindex="-1"
+      class="modal"
+    >
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Confirm Action</h2>
+        <button class="modal-close" aria-label="Close dialog">&#x2715;</button>
+      </div>
+
+      <div class="modal-body" id="modal-desc">
+        <p>Are you sure you want to proceed? This action cannot be undone. Please review your selection before confirming.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" data-modal-cancel>Cancel</button>
+        <button class="btn-primary" data-modal-confirm>Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const trigger   = document.querySelector('button.trigger');
+      const backdrop  = document.getElementById('modal-backdrop');
+      const dialog    = document.getElementById('example-modal');
+      const closeBtn  = dialog.querySelector('.modal-close');
+      const cancelBtn = dialog.querySelector('[data-modal-cancel]');
+      const confirmBtn = dialog.querySelector('[data-modal-confirm]');
+
+      const FOCUSABLE = [
+        'a[href]',
+        'button:not([disabled])',
+        'input:not([disabled])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])',
+      ].join(',');
+
+      function getFocusable() {
+        return Array.from(dialog.querySelectorAll(FOCUSABLE));
+      }
+
+      function openModal() {
+        backdrop.classList.add('is-open');
+        trigger.setAttribute('aria-expanded', 'true');
+        dialog.focus();
+      }
+
+      function closeModal() {
+        backdrop.classList.remove('is-open');
+        trigger.removeAttribute('aria-expanded');
+        trigger.focus();
+      }
+
+      function trapFocus(e) {
+        if (e.key !== 'Tab') return;
+        const focusable = getFocusable();
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+
+      function handleKeydown(e) {
+        if (e.key === 'Escape') closeModal();
+        trapFocus(e);
+      }
+
+      trigger.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      confirmBtn.addEventListener('click', closeModal);
+
+      backdrop.addEventListener('click', function (e) {
+        if (e.target === backdrop) closeModal();
+      });
+
+      dialog.addEventListener('keydown', handleKeydown);
+    })();
+  </script>
+
+</body>
+</html>

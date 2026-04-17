@@ -1,0 +1,1087 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopNest – Home</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-brand:       #1a4fba;
+      --color-brand-dark:  #143d93;
+      --color-accent:      #e05c00;
+      --color-accent-dark: #b84d00;
+      --color-bg:          #f5f6fa;
+      --color-surface:     #ffffff;
+      --color-text:        #1a1a2e;
+      --color-muted:       #5a5f7a;
+      --color-border:      #d0d4e4;
+      --color-focus:       #0057d8;
+      --radius:            0.5rem;
+      --shadow:            0 2px 8px rgba(0,0,0,.1);
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+
+    /* ── Skip link ── */
+    .skip-link {
+      position: absolute;
+      top: -999px;
+      left: 1rem;
+      z-index: 9999;
+      background: var(--color-brand);
+      color: #fff;
+      padding: .5rem 1rem;
+      border-radius: var(--radius);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* ── Focus ring ── */
+    :focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 3px;
+    }
+
+    /* ── Utility ── */
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* ── Header / Nav ── */
+    .site-header {
+      background: var(--color-brand);
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    }
+
+    .site-header .container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding-block: .75rem;
+    }
+
+    .site-logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .site-logo:focus-visible { outline-color: #fff; }
+
+    .main-nav { flex: 1; }
+
+    .main-nav ul {
+      list-style: none;
+      display: flex;
+      gap: .25rem;
+      flex-wrap: wrap;
+    }
+
+    .main-nav a {
+      color: #dce8ff;
+      text-decoration: none;
+      padding: .4rem .75rem;
+      border-radius: var(--radius);
+      font-size: .95rem;
+      transition: background .15s, color .15s;
+    }
+    .main-nav a:hover,
+    .main-nav a[aria-current="page"] {
+      background: rgba(255,255,255,.18);
+      color: #fff;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      padding: .4rem;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .9rem;
+      transition: background .15s;
+    }
+    .btn-icon:hover { background: rgba(255,255,255,.18); }
+    .btn-icon svg { width: 22px; height: 22px; fill: currentColor; }
+
+    .cart-count {
+      background: var(--color-accent);
+      color: #fff;
+      border-radius: 999px;
+      padding: .1em .45em;
+      font-size: .75rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #1a4fba 0%, #0f2e78 60%, #061a4a 100%);
+      color: #fff;
+      padding: 5rem 1.25rem;
+      text-align: center;
+    }
+
+    .hero__eyebrow {
+      display: inline-block;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .25rem .75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .hero__sub {
+      font-size: 1.1rem;
+      color: #b8ccf4;
+      max-width: 38rem;
+      margin: 0 auto 2rem;
+    }
+
+    .hero__ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      padding: .8rem 2rem;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background .15s, transform .1s;
+    }
+    .btn-primary:hover { background: var(--color-accent-dark); transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,.6);
+      padding: .75rem 2rem;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: border-color .15s, background .15s;
+    }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+
+    /* ── Trust bar ── */
+    .trust-bar {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .trust-bar .container {
+      display: flex;
+      gap: 1.5rem;
+      padding-block: .9rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .88rem;
+      color: var(--color-muted);
+      font-weight: 500;
+    }
+    .trust-item svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--color-brand); fill: currentColor; }
+
+    /* ── Sections ── */
+    .section { padding: 3.5rem 1.25rem; }
+    .section--alt { background: var(--color-surface); }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+
+    .section-link {
+      color: var(--color-brand);
+      font-weight: 600;
+      font-size: .9rem;
+      text-decoration: none;
+    }
+    .section-link:hover { text-decoration: underline; }
+
+    /* ── Product grid ── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .product-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .2s, transform .15s;
+    }
+    .product-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.13); transform: translateY(-2px); }
+
+    .product-card__img-wrap {
+      position: relative;
+      background: #eef1f8;
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+
+    .product-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-card__badge {
+      position: absolute;
+      top: .5rem;
+      left: .5rem;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: .15rem .5rem;
+      border-radius: 999px;
+    }
+
+    .product-card__body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: .5rem;
+    }
+
+    .product-card__category {
+      font-size: .75rem;
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-weight: 600;
+    }
+
+    .product-card__name {
+      font-size: .95rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .product-card__name a {
+      color: var(--color-text);
+      text-decoration: none;
+    }
+    .product-card__name a:hover { color: var(--color-brand); text-decoration: underline; }
+
+    .product-card__rating {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .8rem;
+      color: var(--color-muted);
+    }
+
+    .stars { color: #f5a623; }
+
+    .product-card__price-row {
+      display: flex;
+      align-items: baseline;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .product-card__price {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--color-text);
+    }
+
+    .product-card__price--original {
+      font-size: .85rem;
+      font-weight: 400;
+      color: var(--color-muted);
+      text-decoration: line-through;
+    }
+
+    .product-card__footer { padding: 0 1rem 1rem; margin-top: auto; }
+
+    .btn-add-cart {
+      width: 100%;
+      background: var(--color-brand);
+      color: #fff;
+      border: none;
+      padding: .6rem;
+      border-radius: var(--radius);
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-add-cart:hover { background: var(--color-brand-dark); }
+
+    /* ── Deals ── */
+    .deals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .deal-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .deal-card__inner {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      align-items: center;
+    }
+
+    .deal-card__img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: calc(var(--radius) - 2px);
+      flex-shrink: 0;
+      background: #eef1f8;
+    }
+
+    .deal-card__info { flex: 1; display: flex; flex-direction: column; gap: .35rem; }
+
+    .deal-card__name {
+      font-size: .95rem;
+      font-weight: 700;
+    }
+
+    .deal-card__name a {
+      color: var(--color-text);
+      text-decoration: none;
+    }
+    .deal-card__name a:hover { color: var(--color-brand); text-decoration: underline; }
+
+    .deal-card__save {
+      font-size: .8rem;
+      color: #197a3e;
+      font-weight: 700;
+    }
+
+    .deal-card__prices { display: flex; align-items: baseline; gap: .5rem; }
+
+    .deal-card__price-now {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .deal-card__price-was {
+      font-size: .85rem;
+      color: var(--color-muted);
+      text-decoration: line-through;
+    }
+
+    .deal-card__progress-wrap {
+      padding: 0 1rem 1rem;
+    }
+
+    .deal-card__progress-label {
+      font-size: .75rem;
+      color: var(--color-muted);
+      margin-bottom: .3rem;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #e0e4f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar__fill {
+      height: 100%;
+      background: var(--color-accent);
+      border-radius: 999px;
+    }
+
+    /* ── Blog ── */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .blog-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .2s, transform .15s;
+    }
+    .blog-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.13); transform: translateY(-2px); }
+
+    .blog-card__img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      background: #eef1f8;
+      display: block;
+    }
+
+    .blog-card__body { padding: 1.25rem; display: flex; flex-direction: column; gap: .5rem; flex: 1; }
+
+    .blog-card__meta {
+      display: flex;
+      gap: .75rem;
+      font-size: .75rem;
+      color: var(--color-muted);
+      flex-wrap: wrap;
+    }
+
+    .blog-card__tag {
+      background: #e8edfc;
+      color: var(--color-brand);
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .blog-card__title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .blog-card__title a {
+      color: var(--color-text);
+      text-decoration: none;
+    }
+    .blog-card__title a:hover { color: var(--color-brand); text-decoration: underline; }
+
+    .blog-card__excerpt {
+      font-size: .88rem;
+      color: var(--color-muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .blog-card__read-more {
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--color-brand);
+      text-decoration: none;
+      margin-top: .25rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+    }
+    .blog-card__read-more:hover { text-decoration: underline; }
+
+    /* ── Newsletter ── */
+    .newsletter {
+      background: linear-gradient(135deg, #0f2e78 0%, #1a4fba 100%);
+      color: #fff;
+      padding: 3.5rem 1.25rem;
+      text-align: center;
+    }
+
+    .newsletter h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: .5rem; }
+    .newsletter p { color: #b8ccf4; margin-bottom: 1.5rem; }
+
+    .newsletter-form {
+      display: flex;
+      gap: .5rem;
+      max-width: 28rem;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .newsletter-form label { display: contents; }
+
+    .newsletter-form input[type="email"] {
+      flex: 1;
+      min-width: 0;
+      padding: .75rem 1rem;
+      border-radius: var(--radius);
+      border: none;
+      font-size: .95rem;
+      color: var(--color-text);
+    }
+    .newsletter-form input[type="email"]:focus-visible { outline-color: #fff; }
+
+    /* ── Footer ── */
+    .site-footer {
+      background: #0d1a3b;
+      color: #aab4cc;
+      padding: 3rem 1.25rem 1.5rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 420px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    .footer-brand p { font-size: .88rem; margin-top: .75rem; line-height: 1.7; }
+
+    .footer-col h3 {
+      color: #fff;
+      font-size: .9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: .75rem;
+    }
+
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .4rem; }
+
+    .footer-col a {
+      color: #aab4cc;
+      text-decoration: none;
+      font-size: .88rem;
+      transition: color .15s;
+    }
+    .footer-col a:hover { color: #fff; }
+
+    .footer-bottom {
+      border-top: 1px solid #1e2d55;
+      padding-top: 1.25rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      font-size: .8rem;
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip navigation -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ══ Header ══ -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <a class="site-logo" href="/" aria-label="ShopNest – go to home page">ShopNest</a>
+
+      <nav class="main-nav" aria-label="Primary navigation">
+        <ul role="list">
+          <li><a href="/" aria-current="page">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/deals">Deals</a></li>
+          <li><a href="/new-arrivals">New Arrivals</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions" role="group" aria-label="Account and cart">
+        <button class="btn-icon" type="button" aria-label="Search products">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        </button>
+        <button class="btn-icon" type="button" aria-label="My account">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2" fill="none"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        </button>
+        <button class="btn-icon" type="button" aria-label="Shopping cart, 3 items">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" stroke="currentColor" stroke-width="2" fill="none"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2"/><path d="M16 10a4 4 0 0 1-8 0" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          <span class="cart-count" aria-hidden="true">3</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ Main ══ -->
+  <main id="main-content">
+
+    <!-- ── Hero ── -->
+    <section class="hero" aria-label="Welcome banner">
+      <div class="container">
+        <span class="hero__eyebrow" aria-hidden="true">Spring Sale — Up to 50% Off</span>
+        <h1>Find Everything<br>You Love, Delivered Fast</h1>
+        <p class="hero__sub">Thousands of products across electronics, fashion, home &amp; living — with free shipping on orders over $50.</p>
+        <div class="hero__ctas">
+          <a class="btn-primary" href="/shop">Shop Now</a>
+          <a class="btn-outline" href="/deals">See Today's Deals</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Trust bar ── -->
+    <div class="trust-bar" role="list" aria-label="Shopping guarantees">
+      <div class="container">
+        <div class="trust-item" role="listitem">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Free shipping over $50
+        </div>
+        <div class="trust-item" role="listitem">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          Secure checkout
+        </div>
+        <div class="trust-item" role="listitem">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          30-day easy returns
+        </div>
+        <div class="trust-item" role="listitem">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+          24/7 customer support
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Popular Items ── -->
+    <section class="section container" aria-labelledby="popular-heading">
+      <div class="section-header">
+        <h2 id="popular-heading">Popular Right Now</h2>
+        <a class="section-link" href="/shop?sort=popular">View all popular items</a>
+      </div>
+
+      <ul class="product-grid" role="list">
+
+        <li class="product-card">
+          <div class="product-card__img-wrap">
+            <img src="https://placehold.co/400x400/dce8ff/1a4fba?text=Wireless+Earbuds" alt="ProSound X3 Wireless Earbuds in white with charging case" width="400" height="400" loading="lazy" />
+            <span class="product-card__badge" aria-label="Best seller badge">Best Seller</span>
+          </div>
+          <div class="product-card__body">
+            <span class="product-card__category">Electronics</span>
+            <h3 class="product-card__name"><a href="/products/prosound-x3">ProSound X3 Wireless Earbuds</a></h3>
+            <div class="product-card__rating">
+              <span class="stars" aria-hidden="true">★★★★★</span>
+              <span><span class="visually-hidden">Rating:</span> 4.8 <span class="visually-hidden">out of 5,</span> (2,314 reviews)</span>
+            </div>
+            <div class="product-card__price-row">
+              <span class="product-card__price">$59.99</span>
+            </div>
+          </div>
+          <div class="product-card__footer">
+            <button class="btn-add-cart" type="button" aria-label="Add ProSound X3 Wireless Earbuds to cart">Add to Cart</button>
+          </div>
+        </li>
+
+        <li class="product-card">
+          <div class="product-card__img-wrap">
+            <img src="https://placehold.co/400x400/ddf0e8/197a3e?text=Yoga+Mat" alt="EcoFlex Premium Yoga Mat in teal, 6mm thick, non-slip surface" width="400" height="400" loading="lazy" />
+          </div>
+          <div class="product-card__body">
+            <span class="product-card__category">Sports &amp; Fitness</span>
+            <h3 class="product-card__name"><a href="/products/ecoflex-yoga-mat">EcoFlex Premium Yoga Mat</a></h3>
+            <div class="product-card__rating">
+              <span class="stars" aria-hidden="true">★★★★☆</span>
+              <span><span class="visually-hidden">Rating:</span> 4.5 <span class="visually-hidden">out of 5,</span> (876 reviews)</span>
+            </div>
+            <div class="product-card__price-row">
+              <span class="product-card__price">$34.95</span>
+            </div>
+          </div>
+          <div class="product-card__footer">
+            <button class="btn-add-cart" type="button" aria-label="Add EcoFlex Premium Yoga Mat to cart">Add to Cart</button>
+          </div>
+        </li>
+
+        <li class="product-card">
+          <div class="product-card__img-wrap">
+            <img src="https://placehold.co/400x400/f9e8d0/b84d00?text=Coffee+Maker" alt="BrewMaster 12-cup programmable drip coffee maker in brushed stainless steel" width="400" height="400" loading="lazy" />
+          </div>
+          <div class="product-card__body">
+            <span class="product-card__category">Kitchen</span>
+            <h3 class="product-card__name"><a href="/products/brewmaster-12-cup">BrewMaster 12-Cup Coffee Maker</a></h3>
+            <div class="product-card__rating">
+              <span class="stars" aria-hidden="true">★★★★★</span>
+              <span><span class="visually-hidden">Rating:</span> 4.9 <span class="visually-hidden">out of 5,</span> (4,102 reviews)</span>
+            </div>
+            <div class="product-card__price-row">
+              <span class="product-card__price">$44.00</span>
+              <span class="product-card__price--original"><span class="visually-hidden">Originally</span> $60.00</span>
+            </div>
+          </div>
+          <div class="product-card__footer">
+            <button class="btn-add-cart" type="button" aria-label="Add BrewMaster 12-Cup Coffee Maker to cart">Add to Cart</button>
+          </div>
+        </li>
+
+        <li class="product-card">
+          <div class="product-card__img-wrap">
+            <img src="https://placehold.co/400x400/ecdcf9/6b2fa0?text=Backpack" alt="UrbanPack Pro laptop backpack in charcoal grey, fits up to 15-inch laptop" width="400" height="400" loading="lazy" />
+            <span class="product-card__badge" aria-label="New arrival badge">New</span>
+          </div>
+          <div class="product-card__body">
+            <span class="product-card__category">Bags &amp; Accessories</span>
+            <h3 class="product-card__name"><a href="/products/urbanpack-pro">UrbanPack Pro Laptop Backpack</a></h3>
+            <div class="product-card__rating">
+              <span class="stars" aria-hidden="true">★★★★☆</span>
+              <span><span class="visually-hidden">Rating:</span> 4.4 <span class="visually-hidden">out of 5,</span> (511 reviews)</span>
+            </div>
+            <div class="product-card__price-row">
+              <span class="product-card__price">$49.99</span>
+            </div>
+          </div>
+          <div class="product-card__footer">
+            <button class="btn-add-cart" type="button" aria-label="Add UrbanPack Pro Laptop Backpack to cart">Add to Cart</button>
+          </div>
+        </li>
+
+        <li class="product-card">
+          <div class="product-card__img-wrap">
+            <img src="https://placehold.co/400x400/fde8e8/b81c1c?text=Skincare+Set" alt="GlowLab 3-piece daily skincare set including cleanser, toner, and moisturiser" width="400" height="400" loading="lazy" />
+          </div>
+          <div class="product-card__body">
+            <span class="product-card__category">Beauty &amp; Personal Care</span>
+            <h3 class="product-card__name"><a href="/products/glowlab-starter-set">GlowLab Daily Skincare Set</a></h3>
+            <div class="product-card__rating">
+              <span class="stars" aria-hidden="true">★★★★★</span>
+              <span><span class="visually-hidden">Rating:</span> 4.7 <span class="visually-hidden">out of 5,</span> (1,209 reviews)</span>
+            </div>
+            <div class="product-card__price-row">
+              <span class="product-card__price">$29.95</span>
+              <span class="product-card__price--original"><span class="visually-hidden">Originally</span> $39.95</span>
+            </div>
+          </div>
+          <div class="product-card__footer">
+            <button class="btn-add-cart" type="button" aria-label="Add GlowLab Daily Skincare Set to cart">Add to Cart</button>
+          </div>
+        </li>
+
+        <li class="product-card">
+          <div class="product-card__img-wrap">
+            <img src="https://placehold.co/400x400/e8f4fd/0d5fa0?text=Smart+Watch" alt="FitTrack Lite smartwatch in midnight blue, showing heart rate and step count display" width="400" height="400" loading="lazy" />
+          </div>
+          <div class="product-card__body">
+            <span class="product-card__category">Electronics</span>
+            <h3 class="product-card__name"><a href="/products/fittrack-lite">FitTrack Lite Smartwatch</a></h3>
+            <div class="product-card__rating">
+              <span class="stars" aria-hidden="true">★★★★☆</span>
+              <span><span class="visually-hidden">Rating:</span> 4.3 <span class="visually-hidden">out of 5,</span> (703 reviews)</span>
+            </div>
+            <div class="product-card__price-row">
+              <span class="product-card__price">$79.00</span>
+            </div>
+          </div>
+          <div class="product-card__footer">
+            <button class="btn-add-cart" type="button" aria-label="Add FitTrack Lite Smartwatch to cart">Add to Cart</button>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- ── Flash Deals ── -->
+    <section class="section section--alt" aria-labelledby="deals-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="deals-heading">Today's Flash Deals</h2>
+          <a class="section-link" href="/deals">See all deals</a>
+        </div>
+
+        <ul class="deals-grid" role="list">
+
+          <li class="deal-card">
+            <div class="deal-card__inner">
+              <img class="deal-card__img" src="https://placehold.co/180x180/fff8e8/b84d00?text=Blender" alt="PowerBlend Pro 1200W blender in red" width="90" height="90" loading="lazy" />
+              <div class="deal-card__info">
+                <p class="deal-card__name"><a href="/products/powerblend-pro">PowerBlend Pro 1200W Blender</a></p>
+                <p class="deal-card__save">Save $30 — 38% off</p>
+                <div class="deal-card__prices">
+                  <span class="deal-card__price-now" aria-label="Sale price: $49.99">$49.99</span>
+                  <span class="deal-card__price-was"><span class="visually-hidden">Original price:</span> $79.99</span>
+                </div>
+              </div>
+            </div>
+            <div class="deal-card__progress-wrap">
+              <p class="deal-card__progress-label" aria-live="polite">72% claimed — only 28% of stock remains</p>
+              <div class="progress-bar" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" aria-label="72% of deal stock claimed">
+                <div class="progress-bar__fill" style="width:72%"></div>
+              </div>
+            </div>
+          </li>
+
+          <li class="deal-card">
+            <div class="deal-card__inner">
+              <img class="deal-card__img" src="https://placehold.co/180x180/e8f4fd/0d5fa0?text=Headphones" alt="SoundSurge ANC over-ear headphones in black" width="90" height="90" loading="lazy" />
+              <div class="deal-card__info">
+                <p class="deal-card__name"><a href="/products/soundsurge-anc">SoundSurge ANC Headphones</a></p>
+                <p class="deal-card__save">Save $50 — 50% off</p>
+                <div class="deal-card__prices">
+                  <span class="deal-card__price-now" aria-label="Sale price: $49.99">$49.99</span>
+                  <span class="deal-card__price-was"><span class="visually-hidden">Original price:</span> $99.99</span>
+                </div>
+              </div>
+            </div>
+            <div class="deal-card__progress-wrap">
+              <p class="deal-card__progress-label" aria-live="polite">55% claimed — 45% of stock remains</p>
+              <div class="progress-bar" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100" aria-label="55% of deal stock claimed">
+                <div class="progress-bar__fill" style="width:55%"></div>
+              </div>
+            </div>
+          </li>
+
+          <li class="deal-card">
+            <div class="deal-card__inner">
+              <img class="deal-card__img" src="https://placehold.co/180x180/e8f9ee/197a3e?text=Air+Purifier" alt="CleanAir 360 HEPA air purifier in white" width="90" height="90" loading="lazy" />
+              <div class="deal-card__info">
+                <p class="deal-card__name"><a href="/products/cleanair-360">CleanAir 360 HEPA Purifier</a></p>
+                <p class="deal-card__save">Save $45 — 30% off</p>
+                <div class="deal-card__prices">
+                  <span class="deal-card__price-now" aria-label="Sale price: $104.99">$104.99</span>
+                  <span class="deal-card__price-was"><span class="visually-hidden">Original price:</span> $149.99</span>
+                </div>
+              </div>
+            </div>
+            <div class="deal-card__progress-wrap">
+              <p class="deal-card__progress-label" aria-live="polite">40% claimed — 60% of stock remains</p>
+              <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" aria-label="40% of deal stock claimed">
+                <div class="progress-bar__fill" style="width:40%"></div>
+              </div>
+            </div>
+          </li>
+
+          <li class="deal-card">
+            <div class="deal-card__inner">
+              <img class="deal-card__img" src="https://placehold.co/180x180/f9e8f9/8b1fa0?text=Desk+Lamp" alt="LumiDesk LED desk lamp with wireless charging pad in white" width="90" height="90" loading="lazy" />
+              <div class="deal-card__info">
+                <p class="deal-card__name"><a href="/products/lumidesk-led">LumiDesk LED Lamp + Charger</a></p>
+                <p class="deal-card__save">Save $20 — 40% off</p>
+                <div class="deal-card__prices">
+                  <span class="deal-card__price-now" aria-label="Sale price: $29.99">$29.99</span>
+                  <span class="deal-card__price-was"><span class="visually-hidden">Original price:</span> $49.99</span>
+                </div>
+              </div>
+            </div>
+            <div class="deal-card__progress-wrap">
+              <p class="deal-card__progress-label" aria-live="polite">88% claimed — only 12% of stock remains</p>
+              <div class="progress-bar" role="progressbar" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100" aria-label="88% of deal stock claimed">
+                <div class="progress-bar__fill" style="width:88%"></div>
+              </div>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── Blog Posts ── -->
+    <section class="section container" aria-labelledby="blog-heading">
+      <div class="section-header">
+        <h2 id="blog-heading">From Our Blog</h2>
+        <a class="section-link" href="/blog">Read all articles</a>
+      </div>
+
+      <ul class="blog-grid" role="list">
+
+        <li class="blog-card">
+          <img class="blog-card__img" src="https://placehold.co/640x360/dce8ff/1a4fba?text=Home+Tech+Guide" alt="Illustration showing smart home devices including speakers, thermostat, and lights" width="640" height="360" loading="lazy" />
+          <div class="blog-card__body">
+            <div class="blog-card__meta">
+              <span class="blog-card__tag">Tech</span>
+              <time datetime="2026-04-10">April 10, 2026</time>
+              <span>5 min read</span>
+            </div>
+            <h3 class="blog-card__title">
+              <a href="/blog/smart-home-starter-guide">The Complete Smart Home Starter Guide for 2026</a>
+            </h3>
+            <p class="blog-card__excerpt">Ready to automate your home but not sure where to begin? We break down the best entry-level devices and how to get them talking to each other.</p>
+            <a class="blog-card__read-more" href="/blog/smart-home-starter-guide" aria-label="Read full article: The Complete Smart Home Starter Guide for 2026">
+              Read article <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </li>
+
+        <li class="blog-card">
+          <img class="blog-card__img" src="https://placehold.co/640x360/ddf0e8/197a3e?text=Sustainable+Shopping" alt="Photo of reusable shopping bags and eco-friendly packaged products" width="640" height="360" loading="lazy" />
+          <div class="blog-card__body">
+            <div class="blog-card__meta">
+              <span class="blog-card__tag">Sustainability</span>
+              <time datetime="2026-04-07">April 7, 2026</time>
+              <span>4 min read</span>
+            </div>
+            <h3 class="blog-card__title">
+              <a href="/blog/sustainable-shopping-tips">10 Easy Ways to Shop More Sustainably Online</a>
+            </h3>
+            <p class="blog-card__excerpt">Small choices add up. From packaging preferences to carbon-neutral shipping, here's how to reduce your footprint without sacrificing convenience.</p>
+            <a class="blog-card__read-more" href="/blog/sustainable-shopping-tips" aria-label="Read full article: 10 Easy Ways to Shop More Sustainably Online">
+              Read article <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </li>
+
+        <li class="blog-card">
+          <img class="blog-card__img" src="https://placehold.co/640x360/f9e8d0/b84d00?text=Kitchen+Gadgets" alt="Assortment of modern kitchen gadgets on a wooden countertop" width="640" height="360" loading="lazy" />
+          <div class="blog-card__body">
+            <div class="blog-card__meta">
+              <span class="blog-card__tag">Home</span>
+              <time datetime="2026-04-03">April 3, 2026</time>
+              <span>6 min read</span>
+            </div>
+            <h3 class="blog-card__title">
+              <a href="/blog/kitchen-gadgets-worth-buying">7 Kitchen Gadgets That Are Actually Worth the Counter Space</a>
+            </h3>
+            <p class="blog-card__excerpt">Not every gadget earns its place. We tested dozens so you don't have to — here are the ones our team genuinely uses every week.</p>
+            <a class="blog-card__read-more" href="/blog/kitchen-gadgets-worth-buying" aria-label="Read full article: 7 Kitchen Gadgets That Are Actually Worth the Counter Space">
+              Read article <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- ── Newsletter ── -->
+    <section class="newsletter" aria-labelledby="newsletter-heading">
+      <div class="container">
+        <h2 id="newsletter-heading">Get Deals Delivered to Your Inbox</h2>
+        <p>Join over 200,000 shoppers who never miss a flash sale. Unsubscribe any time.</p>
+        <form class="newsletter-form" action="/subscribe" method="post" novalidate>
+          <label for="newsletter-email" class="visually-hidden">Email address</label>
+          <input
+            type="email"
+            id="newsletter-email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+            aria-required="true"
+            aria-describedby="newsletter-hint"
+          />
+          <button class="btn-primary" type="submit">Subscribe</button>
+          <p id="newsletter-hint" class="visually-hidden">We'll send you weekly deal digests and exclusive offers. You can unsubscribe at any time.</p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══ Footer ══ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+
+        <div class="footer-brand footer-col">
+          <a class="site-logo" href="/" aria-label="ShopNest – go to home page" style="color:#fff">ShopNest</a>
+          <p>Your one-stop destination for great products at honest prices. Fast shipping, easy returns, and a team that actually picks up the phone.</p>
+        </div>
+
+        <div class="footer-col">
+          <h3>Shop</h3>
+          <ul role="list">
+            <li><a href="/shop/electronics">Electronics</a></li>
+            <li><a href="/shop/fashion">Fashion</a></li>
+            <li><a href="/shop/home-living">Home &amp; Living</a></li>
+            <li><a href="/shop/sports">Sports &amp; Fitness</a></li>
+            <li><a href="/shop/beauty">Beauty &amp; Care</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Help</h3>
+          <ul role="list">
+            <li><a href="/help/shipping">Shipping Info</a></li>
+            <li><a href="/help/returns">Returns &amp; Refunds</a></li>
+            <li><a href="/help/track-order">Track My Order</a></li>
+            <li><a href="/help/faq">FAQ</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Company</h3>
+          <ul role="list">
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/press">Press</a></li>
+            <li><a href="/affiliate">Affiliate Program</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 ShopNest, Inc. All rights reserved.</p>
+        <nav aria-label="Legal links">
+          <ul style="list-style:none;display:flex;gap:1rem;flex-wrap:wrap" role="list">
+            <li><a href="/privacy" style="color:#aab4cc;font-size:.8rem;text-decoration:none">Privacy Policy</a></li>
+            <li><a href="/terms" style="color:#aab4cc;font-size:.8rem;text-decoration:none">Terms of Service</a></li>
+            <li><a href="/accessibility" style="color:#aab4cc;font-size:.8rem;text-decoration:none">Accessibility</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand / Collapse Widget</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+      color: #111;
+    }
+
+    /* skip link for keyboard users */
+    .skip-link {
+      position: absolute;
+      top: -999px;
+      left: 0;
+      padding: 0.5rem 1rem;
+      background: #005fcc;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 0 0 4px 0;
+      z-index: 100;
+    }
+    .skip-link:focus { top: 0; }
+
+    .example {
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    /* trigger button fills the example header */
+    .example__trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      background: none;
+      border: none;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    /* visible focus ring — never remove focus styles */
+    .example__trigger:focus-visible {
+      outline: 3px solid #005fcc;
+      outline-offset: -3px;
+    }
+
+    .example__trigger:hover { background: #f0f4ff; }
+
+    /* animated chevron icon */
+    .example__icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    /* rotate chevron when expanded */
+    .example__trigger[aria-expanded="true"] .example__icon {
+      transform: rotate(180deg);
+    }
+
+    /* controlled content panel */
+    .details {
+      border-top: 1px solid #e5e7eb;
+      padding: 1rem 1.25rem;
+      color: #374151;
+    }
+
+    /* hide when collapsed — display:none removes from accessibility tree correctly */
+    .details[hidden] { display: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .example__icon { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- skip-link: lets keyboard users bypass repeated navigation -->
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <main id="main">
+    <h1>Expand / Collapse Widget</h1>
+
+    <!-- Widget 1 -->
+    <div class="example">
+      <!--
+        aria-expanded: communicates open/closed state to screen readers
+        aria-controls: associates button with the panel it controls
+      -->
+      <button
+        class="example__trigger"
+        aria-expanded="false"
+        aria-controls="panel-1"
+      >
+        What is accessibility?
+        <!-- SVG chevron — aria-hidden because it is purely decorative -->
+        <svg class="example__icon" aria-hidden="true" focusable="false"
+             viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="5 8 10 13 15 8"/>
+        </svg>
+      </button>
+      <!-- hidden attribute removes panel from both display and accessibility tree when collapsed -->
+      <div class="details" id="panel-1" hidden>
+        <p>Accessibility means designing and building products so that people with disabilities can perceive, understand, navigate, and interact with them. It covers visual, auditory, motor, and cognitive needs.</p>
+      </div>
+    </div>
+
+    <!-- Widget 2 -->
+    <div class="example">
+      <button
+        class="example__trigger"
+        aria-expanded="false"
+        aria-controls="panel-2"
+      >
+        Why does WCAG matter?
+        <svg class="example__icon" aria-hidden="true" focusable="false"
+             viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="5 8 10 13 15 8"/>
+        </svg>
+      </button>
+      <div class="details" id="panel-2" hidden>
+        <p>The Web Content Accessibility Guidelines (WCAG) provide a shared international standard. Meeting WCAG 2.1 AA is both a legal requirement in many jurisdictions and the right thing to do for your users.</p>
+      </div>
+    </div>
+
+    <!-- Widget 3 -->
+    <div class="example">
+      <button
+        class="example__trigger"
+        aria-expanded="false"
+        aria-controls="panel-3"
+      >
+        How do keyboard users interact?
+        <svg class="example__icon" aria-hidden="true" focusable="false"
+             viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="5 8 10 13 15 8"/>
+        </svg>
+      </button>
+      <div class="details" id="panel-3" hidden>
+        <p>Keyboard users navigate with Tab to reach interactive elements and use Enter or Space to activate buttons. Every focusable element must have a visible focus indicator so users always know where they are on the page.</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Each trigger toggles its associated panel independently
+    document.querySelectorAll('.example__trigger').forEach(function(trigger) {
+      trigger.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        var panelId  = this.getAttribute('aria-controls');
+        var panel    = document.getElementById(panelId);
+
+        // flip state
+        this.setAttribute('aria-expanded', String(!expanded));
+
+        // hidden attribute is the semantic correct way to hide content
+        if (expanded) {
+          panel.setAttribute('hidden', '');
+        } else {
+          panel.removeAttribute('hidden');
+        }
+      });
+
+      // keyboard: Enter and Space are natively handled by <button>,
+      // but guard against non-button fallbacks if markup changes
+    });
+  </script>
+</body>
+</html>

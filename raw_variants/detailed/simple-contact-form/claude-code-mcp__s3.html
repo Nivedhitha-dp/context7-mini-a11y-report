@@ -1,0 +1,395 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Your Company</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #1a1a1a;
+      --color-muted-text: #4a4a4a;
+      --color-border: #6b7280;
+      --color-border-focus: #1d4ed8;
+      --color-focus-ring: #1d4ed8;
+      --color-danger: #b91c1c;
+      --color-danger-border: #991b1b;
+      --color-danger-bg: #fef2f2;
+      --color-success: #166534;
+      --color-success-bg: #f0fdf4;
+      --color-success-border: #16a34a;
+      --color-primary: #1d4ed8;
+      --color-primary-hover: #1e40af;
+      --color-primary-text: #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--color-primary-text);
+      background-color: var(--color-primary);
+      border-radius: 0 0 4px 0;
+    }
+
+    .skip-link:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    .skip-link:focus {
+      outline: 3px solid #fbbf24;
+      outline-offset: 2px;
+    }
+
+    /* Header */
+    header {
+      background-color: #1e293b;
+      padding: 1rem 1.5rem;
+    }
+
+    .site-name {
+      margin: 0;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    /* Main */
+    main {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+    }
+
+    .form-intro {
+      margin: 0 0 1.5rem;
+      color: var(--color-muted-text);
+    }
+
+    /* Success message */
+    .success-message {
+      display: none;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid var(--color-success-border);
+      border-radius: 6px;
+      background-color: var(--color-success-bg);
+      color: var(--color-success);
+      font-weight: 600;
+    }
+
+    /* Required note */
+    .required-note {
+      font-size: 0.875rem;
+      color: var(--color-muted-text);
+      margin: 0 0 1.5rem;
+    }
+
+    .req {
+      color: var(--color-danger);
+      font-weight: 700;
+      margin-right: 0.15em;
+    }
+
+    /* Form fields */
+    .form-field {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .helper-text {
+      margin: 0.25rem 0;
+      font-size: 0.875rem;
+      color: var(--color-muted-text);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      padding: 0.625rem 0.75rem;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      border: 2px solid var(--color-border);
+      border-radius: 4px;
+    }
+
+    input:focus {
+      outline: 3px solid var(--color-focus-ring);
+      outline-offset: 2px;
+      border-color: var(--color-border-focus);
+    }
+
+    input[aria-invalid="true"] {
+      border-color: var(--color-danger-border);
+      background-color: var(--color-danger-bg);
+    }
+
+    /* Error messages */
+    .error-message {
+      display: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-danger);
+      margin-top: 0.375rem;
+    }
+
+    .error-message:not(:empty) {
+      display: block;
+    }
+
+    /* Submit button */
+    .submit-btn {
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--color-primary-text);
+      background-color: var(--color-primary);
+      border: 2px solid transparent;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--color-primary-hover);
+    }
+
+    .submit-btn:focus {
+      outline: 3px solid var(--color-focus-ring);
+      outline-offset: 2px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid #e5e7eb;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--color-muted-text);
+    }
+
+    /* Forced colors */
+    @media (forced-colors: active) {
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"] {
+        border: 2px solid ButtonBorder;
+        background-color: Field;
+        color: FieldText;
+      }
+
+      input[aria-invalid="true"] {
+        border-width: 3px;
+        outline: 2px solid Highlight;
+        outline-offset: 2px;
+      }
+
+      .submit-btn {
+        border: 2px solid ButtonBorder;
+        background-color: ButtonFace;
+        color: ButtonText;
+      }
+
+      .submit-btn:focus,
+      .skip-link:focus,
+      input:focus {
+        outline: 3px solid Highlight;
+        outline-offset: 2px;
+      }
+
+      .success-message {
+        border: 2px solid CanvasText;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#maincontent" class="skip-link">Skip to main content</a>
+    <p class="site-name">Your Company</p>
+  </header>
+
+  <main id="maincontent" tabindex="-1">
+    <h1>Contact Us</h1>
+    <p class="form-intro">Complete the form below and we will get back to you as soon as possible.</p>
+
+    <div
+      class="success-message"
+      id="success-message"
+      role="status"
+      tabindex="-1"
+    >
+      Your message has been sent. We will be in touch soon.
+    </div>
+
+    <p class="required-note">
+      <span class="req" aria-hidden="true">*</span>Indicates a required field
+    </p>
+
+    <form id="contact-form" novalidate>
+
+      <!-- Full Name -->
+      <div class="form-field">
+        <label for="full-name">
+          <span class="req" aria-hidden="true">*</span>Full Name
+        </label>
+        <input
+          type="text"
+          id="full-name"
+          name="full-name"
+          autocomplete="name"
+          aria-required="true"
+          aria-describedby="full-name-error"
+        >
+        <span
+          class="error-message"
+          id="full-name-error"
+          role="alert"
+        ></span>
+      </div>
+
+      <!-- Email Address -->
+      <div class="form-field">
+        <label for="email">
+          <span class="req" aria-hidden="true">*</span>Email Address
+        </label>
+        <p class="helper-text" id="email-helper">Use the format: name@example.com</p>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          spellcheck="false"
+          aria-required="true"
+          aria-describedby="email-helper email-error"
+        >
+        <span
+          class="error-message"
+          id="email-error"
+          role="alert"
+        ></span>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="form-field">
+        <label for="phone">Phone Number</label>
+        <p class="helper-text" id="phone-helper">Optional. Preferred format: (555) 555-5555</p>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autocomplete="tel"
+          aria-describedby="phone-helper"
+        >
+      </div>
+
+      <!-- Submit -->
+      <div class="form-field">
+        <button type="submit" class="submit-btn">Send Message</button>
+      </div>
+
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Your Company. All rights reserved.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var form = document.getElementById('contact-form');
+      var successMsg = document.getElementById('success-message');
+
+      function setError(inputId, errorId, message) {
+        var input = document.getElementById(inputId);
+        var error = document.getElementById(errorId);
+        if (message) {
+          input.setAttribute('aria-invalid', 'true');
+          error.textContent = message;
+        } else {
+          input.removeAttribute('aria-invalid');
+          error.textContent = '';
+        }
+      }
+
+      function isValidEmail(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        var nameInput = document.getElementById('full-name');
+        var emailInput = document.getElementById('email');
+        var nameVal = nameInput.value.trim();
+        var emailVal = emailInput.value.trim();
+
+        var nameErr = nameVal ? '' : 'Please enter your full name.';
+        var emailErr = !emailVal
+          ? 'Please enter your email address.'
+          : !isValidEmail(emailVal)
+          ? 'Please enter a valid email address, for example name@example.com.'
+          : '';
+
+        setError('full-name', 'full-name-error', nameErr);
+        setError('email', 'email-error', emailErr);
+
+        if (nameErr || emailErr) {
+          (nameErr ? nameInput : emailInput).focus();
+          return;
+        }
+
+        form.reset();
+        successMsg.style.display = 'block';
+        successMsg.focus();
+      });
+
+      document.getElementById('full-name').addEventListener('input', function () {
+        if (this.value.trim()) setError('full-name', 'full-name-error', '');
+      });
+
+      document.getElementById('email').addEventListener('input', function () {
+        var v = this.value.trim();
+        if (v && isValidEmail(v)) setError('email', 'email-error', '');
+      });
+    }());
+  </script>
+</body>
+</html>

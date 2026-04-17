@@ -1,0 +1,291 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget - Accessibility Demo</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #1a1a1a;
+      --color-muted-text: #4a4a4a;
+      --color-border: #6b6b6b;
+      --color-focus: #0057b8;
+      --color-focus-bg: #e8f0fe;
+      --color-surface: #f4f4f4;
+      --color-surface-hover: #e3e3e3;
+      --color-primary: #0057b8;
+      --color-primary-text: #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    /* Skip link */
+    .skip-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: var(--color-primary);
+      color: var(--color-primary-text);
+      font-weight: 700;
+      text-decoration: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 200;
+    }
+    .skip-link:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    header {
+      background: var(--color-primary);
+      color: var(--color-primary-text);
+      padding: 1rem 1.5rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.375rem;
+    }
+
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    h2 {
+      font-size: 1.125rem;
+      margin: 0 0 1.25rem;
+    }
+
+    /* Example wrapper */
+    .example {
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    /* Disclosure button */
+    .disclosure-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 1rem 1.25rem;
+      background: var(--color-surface);
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--color-text);
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      min-width: 0;
+    }
+
+    .disclosure-btn:hover {
+      background: var(--color-surface-hover);
+    }
+
+    .disclosure-btn:focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: -3px;
+      background: var(--color-focus-bg);
+    }
+
+    .disclosure-btn[aria-expanded="true"] {
+      border-bottom-color: var(--color-border);
+    }
+
+    /* Chevron icon */
+    .chevron {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .disclosure-btn[aria-expanded="true"] .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Controlled content panel */
+    .details {
+      padding: 1.25rem;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details p,
+    .details ul {
+      margin: 0 0 0.75rem;
+      overflow-wrap: anywhere;
+    }
+
+    .details p:last-child,
+    .details ul:last-child {
+      margin-bottom: 0;
+    }
+
+    .details li + li {
+      margin-top: 0.25rem;
+    }
+
+    code {
+      font-family: monospace;
+      font-size: 0.9em;
+      background: var(--color-surface);
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+      border: 1px solid var(--color-border);
+    }
+
+    footer {
+      border-top: 1px solid var(--color-border);
+      padding: 1rem 1.5rem;
+      color: var(--color-muted-text);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+
+    /* Reflow: ensure layout holds at 320px */
+    @media (max-width: 360px) {
+      main { padding: 1rem 0.75rem; }
+      .disclosure-btn { padding: 0.875rem 1rem; }
+      .details { padding: 1rem; }
+    }
+
+    /* Forced colors */
+    @media (forced-colors: active) {
+      .example { border: 2px solid ButtonBorder; }
+      .disclosure-btn { border: 2px solid ButtonBorder; border-bottom-color: transparent; }
+      .disclosure-btn[aria-expanded="true"] { border-bottom-color: ButtonBorder; }
+      .disclosure-btn:focus-visible { outline: 3px solid Highlight; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#maincontent" class="skip-link">Skip to main content</a>
+
+  <header>
+    <h1>Expand / Collapse Widget</h1>
+  </header>
+
+  <main id="maincontent" tabindex="-1">
+    <h2>Disclosure widget examples</h2>
+
+    <!-- Example 1 -->
+    <div class="example">
+      <button
+        class="disclosure-btn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="panel-1"
+      >
+        What is an expand/collapse widget?
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div id="panel-1" class="details" hidden>
+        <p>
+          An expand/collapse widget, also called a disclosure widget, lets people show or hide a
+          section of content on demand. This reduces visual clutter while keeping information
+          accessible without navigating to a new page.
+        </p>
+        <p>
+          The control uses a native <code>&lt;button&gt;</code> with <code>aria-expanded</code>
+          so assistive technologies announce the current state automatically.
+        </p>
+      </div>
+    </div>
+
+    <!-- Example 2 -->
+    <div class="example">
+      <button
+        class="disclosure-btn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="panel-2"
+      >
+        Who benefits from this pattern?
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div id="panel-2" class="details" hidden>
+        <p>This pattern benefits a wide range of people:</p>
+        <ul>
+          <li>Screen reader users receive clear expanded/collapsed state announcements.</li>
+          <li>Keyboard users can reach and activate the control without a pointer device.</li>
+          <li>People with cognitive disabilities benefit from reduced visual clutter.</li>
+          <li>Mobile and small-screen users get progressive disclosure without page changes.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Example 3 — starts expanded -->
+    <div class="example">
+      <button
+        class="disclosure-btn"
+        type="button"
+        aria-expanded="true"
+        aria-controls="panel-3"
+      >
+        Keyboard interaction
+        <svg class="chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div id="panel-3" class="details">
+        <p>Because the trigger is a native <code>&lt;button&gt;</code>, keyboard support is built in:</p>
+        <ul>
+          <li><strong>Tab</strong> — moves focus to the button.</li>
+          <li><strong>Enter</strong> or <strong>Space</strong> — toggles the panel open or closed.</li>
+          <li>No custom key-event handling is required.</li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Accessible expand/collapse pattern &mdash; WCAG 2.2 Level AA</p>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.disclosure-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        var panel = document.getElementById(this.getAttribute('aria-controls'));
+        if (expanded) {
+          panel.setAttribute('hidden', '');
+        } else {
+          panel.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

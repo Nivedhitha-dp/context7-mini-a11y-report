@@ -1,0 +1,150 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expand/Collapse Widget</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 640px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      background: #f9f9f9;
+      color: #1a1a1a;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .example {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 1.25rem;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .example button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.875rem 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      gap: 0.5rem;
+    }
+
+    .example button:focus-visible {
+      outline: 3px solid #005fcc;
+      outline-offset: -3px;
+    }
+
+    .example button:hover {
+      background: #f0f0f0;
+    }
+
+    .example button .icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      transition: transform 0.2s ease;
+      aria-hidden: true;
+    }
+
+    .example button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .details {
+      border-top: 1px solid #ccc;
+      padding: 1rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Expand/Collapse Examples</h1>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-1"
+      id="btn-1"
+    >
+      What is accessibility?
+      <svg class="icon" viewBox="0 0 20 20" fill="currentColor" focusable="false" aria-hidden="true">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <div class="details" id="details-1" role="region" aria-labelledby="btn-1" hidden>
+      <p>Accessibility (a11y) means designing products, devices, services, or environments so that people with disabilities can use them. Web accessibility ensures that websites and web applications are usable by everyone, including people with visual, auditory, motor, or cognitive disabilities.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-2"
+      id="btn-2"
+    >
+      What is WCAG?
+      <svg class="icon" viewBox="0 0 20 20" fill="currentColor" focusable="false" aria-hidden="true">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <div class="details" id="details-2" role="region" aria-labelledby="btn-2" hidden>
+      <p>The Web Content Accessibility Guidelines (WCAG) are a set of recommendations published by the W3C to make web content more accessible. WCAG 2.1 Level AA is the most widely adopted conformance target, covering criteria for perceivability, operability, understandability, and robustness.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-3"
+      id="btn-3"
+    >
+      How do screen readers work?
+      <svg class="icon" viewBox="0 0 20 20" fill="currentColor" focusable="false" aria-hidden="true">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <div class="details" id="details-3" role="region" aria-labelledby="btn-3" hidden>
+      <p>Screen readers are software programs that convert digital text into synthesized speech or Braille output. They rely on the accessibility tree — a structured representation of the page built from semantic HTML and ARIA attributes — to convey meaning, roles, states, and properties to users who cannot see the screen.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.example button[aria-controls]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        var target = document.getElementById(btn.getAttribute('aria-controls'));
+
+        btn.setAttribute('aria-expanded', String(!expanded));
+        if (expanded) {
+          target.setAttribute('hidden', '');
+        } else {
+          target.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

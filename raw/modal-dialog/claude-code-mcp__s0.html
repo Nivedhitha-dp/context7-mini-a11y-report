@@ -1,0 +1,400 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Dialog Example</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg: #f5f5f5;
+      --color-surface: #ffffff;
+      --color-primary: #1a56db;       /* contrast ≥ 4.5:1 on white */
+      --color-primary-dark: #1340a6;
+      --color-text: #1a1a1a;
+      --color-text-muted: #595959;    /* 7:1 on white */
+      --color-border: #767676;        /* 4.54:1 on white */
+      --color-danger: #b91c1c;
+      --color-overlay: rgba(0, 0, 0, 0.55);
+      --radius: 10px;
+      --focus-ring: 0 0 0 3px #1a56db, 0 0 0 5px #ffffff;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Skip link ── */
+    .skip-link {
+      position: absolute;
+      top: -9999px;
+      left: 1rem;
+      background: var(--color-primary);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      z-index: 9999;
+    }
+    .skip-link:focus {
+      top: 1rem;
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    /* ── Layout ── */
+    header {
+      background: var(--color-surface);
+      border-bottom: 1px solid #e0e0e0;
+      padding: 1rem 2rem;
+    }
+    header h1 { font-size: 1.25rem; font-weight: 700; }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      gap: 1rem;
+    }
+    main p { color: var(--color-text-muted); }
+
+    /* ── Trigger button ── */
+    .trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--color-primary);
+      color: #ffffff;
+      border: 2px solid transparent;
+      padding: 0.625rem 1.5rem;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+    .trigger:hover { background: var(--color-primary-dark); }
+    .trigger:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    /* ── Overlay backdrop ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--color-overlay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 1000;
+      /* Hidden state */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+    }
+    .modal-overlay.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ── Dialog ── */
+    .modal-dialog {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      /* Hidden state: slight scale for polish */
+      transform: scale(0.95);
+      transition: transform 0.2s;
+    }
+    .modal-overlay.is-open .modal-dialog {
+      transform: scale(1);
+    }
+
+    /* ── Dialog header ── */
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem 1rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .modal-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    /* ── Close button ── */
+    .modal-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      width: 2.25rem;
+      height: 2.25rem;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      font-size: 1.25rem;
+      line-height: 1;
+      transition: background 0.15s, color 0.15s;
+      /* Minimum 44×44 touch target via padding trick */
+      margin: -0.25rem;
+    }
+    .modal-close:hover {
+      background: #f0f0f0;
+      color: var(--color-text);
+    }
+    .modal-close:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    /* ── Dialog body ── */
+    .modal-body {
+      padding: 1.25rem 1.5rem;
+      color: var(--color-text);
+    }
+    .modal-body p + p { margin-top: 0.75rem; }
+
+    /* ── Dialog footer ── */
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem 1.25rem;
+      border-top: 1px solid #e0e0e0;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s;
+      border: 2px solid transparent;
+    }
+    .btn:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--color-border);
+      color: var(--color-text);
+    }
+    .btn-secondary:hover { background: #f0f0f0; }
+    .btn-primary {
+      background: var(--color-primary);
+      color: #ffffff;
+    }
+    .btn-primary:hover { background: var(--color-primary-dark); }
+
+    /* ── Reduced motion: strip transitions ── */
+    @media (prefers-reduced-motion: reduce) {
+      .modal-overlay,
+      .modal-dialog,
+      .trigger,
+      .btn,
+      .modal-close { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip-link: lets keyboard users bypass repeated navigation -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header>
+    <h1>Modal Dialog Demo</h1>
+  </header>
+
+  <main id="main-content">
+    <p>Press the button below to open the dialog.</p>
+
+    <!-- trigger: the only opener; aria-haspopup+controls wires it to the dialog -->
+    <button
+      class="trigger"
+      type="button"
+      aria-haspopup="dialog"
+      aria-controls="example-modal"
+    >
+      Open dialog
+    </button>
+  </main>
+
+  <!--
+    role="dialog"        — identifies this as a dialog to assistive technology
+    aria-modal="true"   — tells screen readers to ignore content behind the overlay
+    aria-labelledby     — points to the visible title so the dialog has an accessible name
+    aria-describedby    — optional: links to body text for extra context on open
+  -->
+  <div
+    class="modal-overlay"
+    id="example-modal-overlay"
+    role="presentation"
+  >
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-desc"
+      id="example-modal"
+      class="modal-dialog"
+      tabindex="-1"
+    >
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Confirm your action</h2>
+
+        <!-- aria-label on close provides accessible name for the × icon button -->
+        <button
+          class="modal-close"
+          type="button"
+          aria-label="Close dialog"
+          data-modal-close
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p id="modal-desc">
+          You're about to make a change that cannot be undone. Please review the
+          details below before confirming.
+        </p>
+        <p>
+          If you change your mind, press <strong>Cancel</strong> or the
+          <strong>Escape</strong> key to close without saving.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-modal-close>
+          Cancel
+        </button>
+        <button class="btn btn-primary" type="button" data-modal-confirm>
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const overlay   = document.getElementById('example-modal-overlay');
+      const dialog    = document.getElementById('example-modal');
+      const trigger   = document.querySelector('.trigger');
+
+      /* Collect all focusable elements within the dialog for the focus trap */
+      const FOCUSABLE = [
+        'a[href]',
+        'button:not([disabled])',
+        'input:not([disabled])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])',
+      ].join(', ');
+
+      function getFocusable() {
+        return [...dialog.querySelectorAll(FOCUSABLE)];
+      }
+
+      /* ── Open ── */
+      function openModal() {
+        overlay.classList.add('is-open');
+        /* aria-expanded lets the trigger communicate open/closed state */
+        trigger.setAttribute('aria-expanded', 'true');
+        /* Move focus into the dialog; screen readers announce role + name */
+        dialog.focus();
+        document.addEventListener('keydown', handleKeydown);
+      }
+
+      /* ── Close ── */
+      function closeModal() {
+        overlay.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded', 'false');
+        /* Return focus to the element that opened the dialog */
+        trigger.focus();
+        document.removeEventListener('keydown', handleKeydown);
+      }
+
+      /* ── Focus trap ── */
+      function handleKeydown(e) {
+        /* ESC closes the dialog */
+        if (e.key === 'Escape') {
+          closeModal();
+          return;
+        }
+
+        /* Tab / Shift+Tab cycles only within the dialog */
+        if (e.key === 'Tab') {
+          const focusable = getFocusable();
+          if (!focusable.length) { e.preventDefault(); return; }
+
+          const first = focusable[0];
+          const last  = focusable[focusable.length - 1];
+
+          if (e.shiftKey) {
+            /* Shift+Tab: wrap from first to last */
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            /* Tab: wrap from last to first */
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
+      }
+
+      /* ── Wire up opener ── */
+      trigger.addEventListener('click', openModal);
+      trigger.setAttribute('aria-expanded', 'false');
+
+      /* ── Wire up all close triggers inside the dialog ── */
+      dialog.querySelectorAll('[data-modal-close]').forEach(btn => {
+        btn.addEventListener('click', closeModal);
+      });
+
+      /* ── Confirm action (example: just close) ── */
+      dialog.querySelectorAll('[data-modal-confirm]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          /* Replace with real confirmation logic */
+          closeModal();
+        });
+      });
+
+      /* ── Click-outside backdrop closes modal ── */
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay) closeModal();
+      });
+    })();
+  </script>
+
+</body>
+</html>

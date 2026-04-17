@@ -1,0 +1,1091 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopNest — Find What You Love</title>
+  <meta name="description" content="ShopNest offers top deals, popular items, and curated picks. Shop electronics, fashion, home goods, and more." />
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --color-bg:          #ffffff;
+      --color-surface:     #f8f7f4;
+      --color-border:      #d9d5ce;
+      --color-text:        #1a1816;
+      --color-text-muted:  #5c5651;
+      --color-primary:     #c0392b;   /* 5.1:1 on white */
+      --color-primary-dk:  #96231a;   /* hover — 7.1:1 */
+      --color-accent:      #d35400;   /* 4.6:1 on white */
+      --color-focus:       #1a56db;
+      --color-badge-bg:    #fef3cd;
+      --color-badge-text:  #7d4e00;   /* 4.6:1 on badge bg */
+      --radius-sm:         6px;
+      --radius-md:         12px;
+      --radius-lg:         20px;
+      --shadow-card:       0 2px 8px rgba(0,0,0,.10), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-card-hover: 0 6px 20px rgba(0,0,0,.14), 0 2px 6px rgba(0,0,0,.08);
+      --transition:        0.18s ease;
+    }
+
+    /* ─── Reset & Base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; }
+
+    /* ─── Skip Link (keyboard bypass for repeated nav) ──────────── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 9999;
+      padding: .5rem 1rem;
+      background: var(--color-focus);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      text-decoration: none;
+      font-size: .9rem;
+    }
+    .skip-link:focus { top: 0; outline: 3px solid #fff; outline-offset: 2px; }
+
+    /* ─── Global Focus Style (3px contrast ring, never removed) ─── */
+    :focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* ─── Utility ───────────────────────────────────────────────── */
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+    .container { max-width: 1200px; margin-inline: auto; padding-inline: 1.25rem; }
+    .section-header {
+      display: flex; align-items: baseline;
+      justify-content: space-between; flex-wrap: wrap;
+      gap: .5rem; margin-bottom: 1.5rem;
+    }
+    .section-header h2 { font-size: clamp(1.25rem, 3vw, 1.6rem); font-weight: 700; }
+    .link-all {
+      font-size: .875rem; font-weight: 600;
+      color: var(--color-primary); text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .link-all:hover { color: var(--color-primary-dk); }
+    .badge {
+      display: inline-block;
+      padding: .15rem .5rem; border-radius: 100px;
+      font-size: .75rem; font-weight: 700;
+      background: var(--color-badge-bg); color: var(--color-badge-text);
+    }
+
+    /* ─── Header & Nav ──────────────────────────────────────────── */
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .header-inner {
+      display: flex; align-items: center; gap: 1rem;
+      padding-block: .75rem;
+    }
+    .site-logo {
+      font-size: 1.4rem; font-weight: 800; letter-spacing: -.5px;
+      color: var(--color-primary); text-decoration: none; flex-shrink: 0;
+    }
+    .site-logo span { color: var(--color-text); }
+
+    .site-nav { flex: 1; }
+    .site-nav ul {
+      list-style: none;
+      display: flex; gap: .25rem; flex-wrap: wrap;
+    }
+    .site-nav a {
+      display: block; padding: .4rem .75rem;
+      border-radius: var(--radius-sm);
+      font-size: .9rem; font-weight: 500;
+      text-decoration: none; color: var(--color-text-muted);
+      transition: background var(--transition), color var(--transition);
+    }
+    .site-nav a:hover, .site-nav a[aria-current="page"] {
+      background: var(--color-surface); color: var(--color-text);
+    }
+    .site-nav a[aria-current="page"] { font-weight: 700; }
+
+    .header-actions { display: flex; gap: .5rem; margin-left: auto; flex-shrink: 0; }
+    .icon-btn {
+      position: relative;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: var(--radius-sm);
+      background: transparent; border: none; cursor: pointer;
+      color: var(--color-text-muted);
+      transition: background var(--transition), color var(--transition);
+    }
+    .icon-btn:hover { background: var(--color-surface); color: var(--color-text); }
+    .icon-btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+    .cart-count {
+      position: absolute; top: 3px; right: 3px;
+      min-width: 16px; height: 16px; padding: 0 3px;
+      background: var(--color-primary); color: #fff;
+      border-radius: 100px; font-size: .65rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      line-height: 1;
+    }
+
+    /* ─── Search Bar ────────────────────────────────────────────── */
+    .search-bar { padding-block: .5rem .75rem; }
+    .search-form { position: relative; max-width: 640px; }
+    .search-form label {
+      display: block; font-size: .8rem; font-weight: 600;
+      color: var(--color-text-muted); margin-bottom: .3rem;
+    }
+    .search-input-wrap { display: flex; }
+    .search-input {
+      flex: 1;
+      padding: .55rem 1rem;
+      border: 1.5px solid var(--color-border);
+      border-right: none;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+      font-size: .95rem;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+    .search-input:focus { outline: none; border-color: var(--color-focus); }
+    .search-input:focus + .search-submit { border-color: var(--color-focus); }
+    .search-submit {
+      padding: .55rem 1rem;
+      border: 1.5px solid var(--color-border);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: var(--color-primary);
+      color: #fff; font-weight: 700; font-size: .9rem;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .search-submit:hover { background: var(--color-primary-dk); }
+
+    /* ─── Hero Banner ───────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #1a1816 0%, #3d2b1f 100%);
+      color: #fff; overflow: hidden;
+    }
+    .hero-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 2rem;
+      padding-block: 4rem;
+    }
+    .hero-eyebrow {
+      font-size: .8rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: #f4a261; margin-bottom: .5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900; line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .hero h1 em { font-style: normal; color: #f4a261; }
+    .hero-desc {
+      font-size: 1.05rem; color: #c8c0b8;
+      max-width: 42ch; margin-bottom: 1.75rem;
+    }
+    .hero-cta-group { display: flex; gap: .75rem; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block; padding: .7rem 1.5rem;
+      background: var(--color-primary); color: #fff;
+      border-radius: var(--radius-sm); font-weight: 700;
+      text-decoration: none; border: 2px solid transparent;
+      transition: background var(--transition);
+    }
+    .btn-primary:hover { background: var(--color-primary-dk); }
+    .btn-outline {
+      display: inline-block; padding: .7rem 1.5rem;
+      background: transparent; color: #fff;
+      border: 2px solid rgba(255,255,255,.5);
+      border-radius: var(--radius-sm); font-weight: 700;
+      text-decoration: none;
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.08); }
+    .hero-image-col { display: flex; justify-content: center; }
+    .hero-image-placeholder {
+      width: 100%; max-width: 420px; aspect-ratio: 4/3;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #c0392b33 0%, #d3540033 100%);
+      display: flex; align-items: center; justify-content: center;
+      border: 2px dashed rgba(255,255,255,.15);
+    }
+    .hero-image-placeholder span {
+      font-size: .8rem; color: rgba(255,255,255,.4); text-align: center; padding: 1rem;
+    }
+
+    /* ─── Category Strip ────────────────────────────────────────── */
+    .categories { padding-block: 2rem; background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+    .categories-list {
+      list-style: none;
+      display: flex; gap: .75rem; overflow-x: auto;
+      padding-bottom: .5rem; scrollbar-width: thin;
+    }
+    .categories-list li { flex-shrink: 0; }
+    .cat-link {
+      display: flex; flex-direction: column; align-items: center; gap: .35rem;
+      padding: .75rem 1.25rem; border-radius: var(--radius-md);
+      background: var(--color-bg); border: 1.5px solid var(--color-border);
+      text-decoration: none; font-size: .82rem; font-weight: 600;
+      color: var(--color-text-muted); width: 90px;
+      transition: border-color var(--transition), color var(--transition), box-shadow var(--transition);
+    }
+    .cat-link:hover { border-color: var(--color-primary); color: var(--color-primary); box-shadow: var(--shadow-card); }
+    .cat-icon { font-size: 1.6rem; line-height: 1; }
+
+    /* ─── Product Cards (shared) ────────────────────────────────── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .product-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .product-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+
+    /* Reduce motion: disable transform animations */
+    @media (prefers-reduced-motion: reduce) {
+      .product-card:hover, .blog-card:hover { transform: none; }
+      html { scroll-behavior: auto; }
+      * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+
+    .product-img-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      background: var(--color-surface);
+      overflow: hidden;
+    }
+    .product-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+    }
+    .product-badge {
+      position: absolute; top: .6rem; left: .6rem;
+      padding: .15rem .5rem; border-radius: 100px;
+      font-size: .7rem; font-weight: 800;
+    }
+    .badge-new  { background: #1a56db; color: #fff; }
+    .badge-sale { background: var(--color-primary); color: #fff; }
+    .badge-hot  { background: var(--color-accent); color: #fff; }
+
+    .wishlist-btn {
+      position: absolute; top: .5rem; right: .5rem;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(255,255,255,.9); border: 1px solid var(--color-border);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .wishlist-btn:hover { background: #fff; }
+    .wishlist-btn svg { width: 16px; height: 16px; fill: none; stroke: var(--color-text-muted); stroke-width: 2; }
+    .wishlist-btn[aria-pressed="true"] svg { fill: var(--color-primary); stroke: var(--color-primary); }
+
+    .product-info { padding: .85rem; flex: 1; display: flex; flex-direction: column; gap: .3rem; }
+    .product-category { font-size: .72rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: .06em; }
+    .product-name {
+      font-size: .95rem; font-weight: 700; line-height: 1.3;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .product-rating { display: flex; align-items: center; gap: .3rem; font-size: .8rem; }
+    .stars { color: #d97706; }
+    .rating-count { color: var(--color-text-muted); }
+    .product-price-row { display: flex; align-items: baseline; gap: .5rem; margin-top: auto; padding-top: .4rem; }
+    .price-current { font-size: 1.05rem; font-weight: 800; color: var(--color-text); }
+    .price-was { font-size: .82rem; color: var(--color-text-muted); text-decoration: line-through; }
+    .price-save { font-size: .72rem; font-weight: 700; color: var(--color-primary); }
+    .add-to-cart {
+      width: 100%; margin-top: .65rem;
+      padding: .5rem;
+      background: var(--color-text); color: var(--color-bg);
+      border: none; border-radius: var(--radius-sm);
+      font-size: .875rem; font-weight: 700; cursor: pointer;
+      transition: background var(--transition);
+    }
+    .add-to-cart:hover { background: #333; }
+
+    /* ─── Section Padding ───────────────────────────────────────── */
+    .section { padding-block: 3rem; }
+    .section:nth-child(even) { background: var(--color-surface); }
+
+    /* ─── Deals Countdown Banner ────────────────────────────────── */
+    .deals-banner {
+      background: linear-gradient(90deg, #c0392b 0%, #d35400 100%);
+      color: #fff; padding: .6rem 1.25rem;
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .deals-banner strong { font-size: .9rem; }
+    .countdown {
+      display: flex; gap: .4rem; align-items: center;
+      font-size: .82rem; font-weight: 700;
+    }
+    .countdown-unit {
+      background: rgba(0,0,0,.25); padding: .2rem .45rem;
+      border-radius: 4px; min-width: 2.2rem; text-align: center;
+    }
+    .countdown-label { font-size: .65rem; font-weight: 400; display: block; }
+    .countdown-sep { font-size: 1rem; line-height: 1; }
+
+    /* ─── Blog Cards ────────────────────────────────────────────── */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .blog-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .blog-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+    .blog-img-wrap {
+      aspect-ratio: 16/9; background: var(--color-surface);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; overflow: hidden;
+    }
+    .blog-body { padding: 1.1rem; flex: 1; display: flex; flex-direction: column; gap: .45rem; }
+    .blog-meta { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+    .blog-tag { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--color-primary); }
+    .blog-date { font-size: .75rem; color: var(--color-text-muted); }
+    .blog-title {
+      font-size: 1rem; font-weight: 700; line-height: 1.35;
+    }
+    .blog-title a {
+      text-decoration: none; color: inherit;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .blog-title a:hover { color: var(--color-primary); text-decoration: underline; text-underline-offset: 3px; }
+    .blog-excerpt {
+      font-size: .875rem; color: var(--color-text-muted); line-height: 1.5;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+      flex: 1;
+    }
+    .blog-read-more {
+      font-size: .82rem; font-weight: 700; color: var(--color-primary);
+      text-decoration: underline; text-underline-offset: 3px;
+      align-self: flex-start; margin-top: .3rem;
+    }
+    .blog-read-more:hover { color: var(--color-primary-dk); }
+
+    /* ─── Newsletter ────────────────────────────────────────────── */
+    .newsletter {
+      background: linear-gradient(135deg, #1a1816 0%, #3d2b1f 100%);
+      color: #fff; text-align: center; padding-block: 3.5rem;
+    }
+    .newsletter h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 900; margin-bottom: .5rem; }
+    .newsletter p { font-size: .95rem; color: #c8c0b8; max-width: 48ch; margin-inline: auto; margin-bottom: 1.5rem; }
+    .newsletter-form {
+      display: flex; gap: .5rem; flex-wrap: wrap;
+      justify-content: center; max-width: 480px; margin-inline: auto;
+    }
+    .newsletter-form label { /* visually associated via aria-label */ }
+    .newsletter-input {
+      flex: 1; min-width: 220px;
+      padding: .65rem 1rem;
+      border: 2px solid rgba(255,255,255,.2);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,.08);
+      color: #fff; font-size: .95rem;
+    }
+    .newsletter-input::placeholder { color: rgba(255,255,255,.4); }
+    .newsletter-input:focus { outline: none; border-color: var(--color-focus); }
+    .newsletter-submit {
+      padding: .65rem 1.4rem;
+      background: var(--color-primary); color: #fff;
+      border: none; border-radius: var(--radius-sm);
+      font-weight: 700; font-size: .95rem; cursor: pointer;
+      transition: background var(--transition);
+    }
+    .newsletter-submit:hover { background: var(--color-primary-dk); }
+    .newsletter-disclaimer { font-size: .75rem; color: rgba(255,255,255,.4); margin-top: .75rem; }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    .site-footer {
+      background: #111; color: #d0ccc7;
+      padding-block: 3rem 1.5rem;
+      font-size: .875rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 2.5rem; margin-bottom: 2.5rem;
+    }
+    .footer-brand .site-logo { font-size: 1.3rem; display: inline-block; margin-bottom: .75rem; }
+    .footer-brand p { color: #968f87; line-height: 1.6; max-width: 32ch; }
+    .footer-social { display: flex; gap: .5rem; margin-top: 1rem; }
+    .social-link {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,.08);
+      display: flex; align-items: center; justify-content: center;
+      color: #d0ccc7; text-decoration: none; font-size: 1rem;
+      transition: background var(--transition);
+    }
+    .social-link:hover { background: var(--color-primary); }
+    .footer-col h3 { font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #fff; margin-bottom: .85rem; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .footer-links a { color: #968f87; text-decoration: none; transition: color var(--transition); }
+    .footer-links a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid #2a2520;
+      padding-top: 1.25rem;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem;
+      font-size: .78rem; color: #5c5651;
+    }
+    .footer-legal { display: flex; gap: 1rem; }
+    .footer-legal a { color: #5c5651; text-decoration: none; }
+    .footer-legal a:hover { color: #d0ccc7; }
+
+    /* ─── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; padding-block: 2.5rem; }
+      .hero-image-col { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .site-nav { display: none; } /* simplified — a real implementation would use a hamburger menu */
+      .header-inner { gap: .5rem; }
+    }
+
+    /* ─── Announcement banner ───────────────────────────────────── */
+    .announcement {
+      background: var(--color-text); color: var(--color-bg);
+      text-align: center; font-size: .8rem; font-weight: 600;
+      padding: .4rem 1rem;
+    }
+    .announcement a { color: #f4a261; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- skip-link: lets keyboard users jump past the header nav directly to content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Live region: cart and other status messages are announced here -->
+  <div id="status-message" role="status" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
+
+  <!-- ── Announcement bar ──────────────────────────────────────── -->
+  <div role="banner" aria-label="Promotions">
+    <p class="announcement">
+      Free shipping on orders over $50 — <a href="/shipping">Learn more</a>
+    </p>
+  </div>
+
+  <!-- ── Site Header ───────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Logo links to home; aria-current="page" set on Home nav link instead -->
+        <a href="/" class="site-logo" aria-label="ShopNest — Go to homepage">Shop<span>Nest</span></a>
+
+        <!-- Primary navigation -->
+        <nav class="site-nav" aria-label="Primary navigation">
+          <ul role="list">
+            <li><a href="/" aria-current="page">Home</a></li>
+            <li><a href="/shop">Shop</a></li>
+            <li><a href="/deals">Deals</a></li>
+            <li><a href="/new-arrivals">New Arrivals</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+
+        <!-- Header action buttons -->
+        <div class="header-actions">
+          <button class="icon-btn" aria-label="Open search">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+          <button class="icon-btn" aria-label="Account">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </button>
+          <!-- Cart: count announced in the button label -->
+          <button class="icon-btn" aria-label="Shopping cart, 3 items">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span class="cart-count" aria-hidden="true">3</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search bar (visible; in a real app this could be toggled) -->
+      <div class="search-bar">
+        <form class="search-form" role="search" action="/search" method="get">
+          <label for="site-search">Search products</label>
+          <div class="search-input-wrap">
+            <input
+              type="search"
+              id="site-search"
+              name="q"
+              class="search-input"
+              placeholder="Try "wireless headphones" or "running shoes""
+              autocomplete="off"
+              aria-describedby="search-hint"
+            />
+            <button type="submit" class="search-submit">Search</button>
+          </div>
+          <!-- Extra hint for screen readers -->
+          <p id="search-hint" class="visually-hidden">Search the ShopNest catalog. Press Enter or click Search to submit.</p>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main Content ──────────────────────────────────────────── -->
+  <main id="main-content" tabindex="-1">
+
+    <!-- ── Hero Section ──────────────────────────────────────── -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <p class="hero-eyebrow" aria-hidden="true">Spring Sale — Up to 60% Off</p>
+            <h1 id="hero-heading">Discover <em>deals</em> made for you</h1>
+            <p class="hero-desc">
+              Thousands of items across electronics, fashion, home goods, and more —
+              curated weekly and priced to move.
+            </p>
+            <div class="hero-cta-group">
+              <a href="/deals" class="btn-primary">Shop the Sale</a>
+              <a href="/new-arrivals" class="btn-outline">See New Arrivals</a>
+            </div>
+          </div>
+          <div class="hero-image-col" aria-hidden="true">
+            <div class="hero-image-placeholder">
+              <span>Hero product image<br />(replace with &lt;img&gt;)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Category Navigation ────────────────────────────────── -->
+    <nav class="categories" aria-label="Shop by category">
+      <div class="container">
+        <ul class="categories-list" role="list">
+          <li>
+            <a href="/category/electronics" class="cat-link">
+              <span class="cat-icon" aria-hidden="true">💻</span>
+              Electronics
+            </a>
+          </li>
+          <li>
+            <a href="/category/fashion" class="cat-link">
+              <span class="cat-icon" aria-hidden="true">👗</span>
+              Fashion
+            </a>
+          </li>
+          <li>
+            <a href="/category/home" class="cat-link">
+              <span class="cat-icon" aria-hidden="true">🏠</span>
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="/category/sports" class="cat-link">
+              <span class="cat-icon" aria-hidden="true">⚽</span>
+              Sports
+            </a>
+          </li>
+          <li>
+            <a href="/category/beauty" class="cat-link">
+              <span class="cat-icon" aria-hidden="true">💄</span>
+              Beauty
+            </a>
+          </li>
+          <li>
+            <a href="/category/books" class="cat-link">
+              <span class="cat-icon" aria-hidden="true">📚</span>
+              Books
+            </a>
+          </li>
+          <li>
+            <a href="/category/toys" class="cat-link">
+              <span class="cat-icon" aria-hidden="true">🧸</span>
+              Toys
+            </a>
+          </li>
+          <li>
+            <a href="/category/garden" class="cat-link">
+              <span class="cat-icon" aria-hidden="true">🌿</span>
+              Garden
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- ── Popular Items ──────────────────────────────────────── -->
+    <section class="section" aria-labelledby="popular-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="popular-heading">Popular Right Now</h2>
+          <a href="/shop?sort=popular" class="link-all" aria-label="View all popular items">View all</a>
+        </div>
+
+        <!-- Each card is an <article> — an independent, self-contained unit of content -->
+        <ul class="products-grid" role="list" aria-label="Popular items">
+
+          <li>
+            <article class="product-card" aria-labelledby="prod1-name">
+              <div class="product-img-wrap">
+                <!-- Decorative placeholder emoji; real implementation uses <img alt="..."> -->
+                <div class="product-img-placeholder" aria-hidden="true">🎧</div>
+                <span class="product-badge badge-hot" aria-label="Hot item">Hot</span>
+                <!-- aria-pressed conveys wishlist toggle state to screen readers -->
+                <button class="wishlist-btn" aria-label="Add Sony WH-1000XM5 to wishlist" aria-pressed="false">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Electronics</p>
+                <h3 class="product-name" id="prod1-name">Sony WH-1000XM5 Wireless Headphones</h3>
+                <div class="product-rating">
+                  <!-- Stars are decorative; the text conveys the rating -->
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="rating-count">4.9 <span class="visually-hidden">out of 5 stars,</span> (2,341)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$279.99</span>
+                  <span class="price-was" aria-label="Was $349.99">$349.99</span>
+                  <span class="price-save">Save 20%</span>
+                </div>
+                <button class="add-to-cart" aria-label="Add Sony WH-1000XM5 to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="prod2-name">
+              <div class="product-img-wrap">
+                <div class="product-img-placeholder" aria-hidden="true">👟</div>
+                <span class="product-badge badge-new" aria-label="New arrival">New</span>
+                <button class="wishlist-btn" aria-label="Add Nike Air Max 270 to wishlist" aria-pressed="false">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Fashion</p>
+                <h3 class="product-name" id="prod2-name">Nike Air Max 270 React</h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">4.7 <span class="visually-hidden">out of 5 stars,</span> (876)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$139.99</span>
+                </div>
+                <button class="add-to-cart" aria-label="Add Nike Air Max 270 React to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="prod3-name">
+              <div class="product-img-wrap">
+                <div class="product-img-placeholder" aria-hidden="true">☕</div>
+                <button class="wishlist-btn" aria-label="Add Breville Espresso Machine to wishlist" aria-pressed="false">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Home</p>
+                <h3 class="product-name" id="prod3-name">Breville Barista Express Espresso Machine</h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="rating-count">4.8 <span class="visually-hidden">out of 5 stars,</span> (1,109)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$599.00</span>
+                  <span class="price-was" aria-label="Was $699.00">$699.00</span>
+                  <span class="price-save">Save $100</span>
+                </div>
+                <button class="add-to-cart" aria-label="Add Breville Barista Express to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="prod4-name">
+              <div class="product-img-wrap">
+                <div class="product-img-placeholder" aria-hidden="true">📸</div>
+                <span class="product-badge badge-sale" aria-label="On sale">Sale</span>
+                <button class="wishlist-btn" aria-label="Add Canon EOS R50 to wishlist" aria-pressed="false">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Electronics</p>
+                <h3 class="product-name" id="prod4-name">Canon EOS R50 Mirrorless Camera</h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">4.6 <span class="visually-hidden">out of 5 stars,</span> (543)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$679.00</span>
+                  <span class="price-was" aria-label="Was $849.00">$849.00</span>
+                  <span class="price-save">Save 20%</span>
+                </div>
+                <button class="add-to-cart" aria-label="Add Canon EOS R50 to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── Flash Deals Section ────────────────────────────────── -->
+    <section class="section" aria-labelledby="deals-heading">
+      <div class="deals-banner" role="complementary" aria-label="Flash sale countdown">
+        <strong>⚡ Flash Deals — Ends in:</strong>
+        <!-- Countdown is decorative/supplementary; screen readers get the text -->
+        <div class="countdown" aria-label="Time remaining: 4 hours, 22 minutes, 15 seconds">
+          <div class="countdown-unit">
+            <span aria-hidden="true">04</span>
+            <span class="countdown-label">hrs</span>
+          </div>
+          <span class="countdown-sep" aria-hidden="true">:</span>
+          <div class="countdown-unit">
+            <span aria-hidden="true">22</span>
+            <span class="countdown-label">min</span>
+          </div>
+          <span class="countdown-sep" aria-hidden="true">:</span>
+          <div class="countdown-unit">
+            <span aria-hidden="true">15</span>
+            <span class="countdown-label">sec</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container" style="padding-top: 1.75rem;">
+        <div class="section-header">
+          <h2 id="deals-heading">Today's Deals</h2>
+          <a href="/deals" class="link-all" aria-label="View all deals">View all deals</a>
+        </div>
+
+        <ul class="products-grid" role="list" aria-label="Today's deals">
+
+          <li>
+            <article class="product-card" aria-labelledby="deal1-name">
+              <div class="product-img-wrap">
+                <div class="product-img-placeholder" aria-hidden="true">🖥️</div>
+                <span class="product-badge badge-sale" aria-label="On sale">−35%</span>
+                <button class="wishlist-btn" aria-label="Add LG 27-inch Monitor to wishlist" aria-pressed="false">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Electronics</p>
+                <h3 class="product-name" id="deal1-name">LG 27" UltraGear QHD Gaming Monitor</h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="rating-count">4.9 <span class="visually-hidden">out of 5 stars,</span> (4,203)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$259.99</span>
+                  <span class="price-was" aria-label="Was $399.99">$399.99</span>
+                  <span class="price-save">Save 35%</span>
+                </div>
+                <button class="add-to-cart" aria-label="Add LG UltraGear Monitor to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="deal2-name">
+              <div class="product-img-wrap">
+                <div class="product-img-placeholder" aria-hidden="true">🏋️</div>
+                <span class="product-badge badge-sale" aria-label="On sale">−40%</span>
+                <button class="wishlist-btn" aria-label="Add Resistance Bands Set to wishlist" aria-pressed="false">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Sports</p>
+                <h3 class="product-name" id="deal2-name">Pro Resistance Bands Set (11 Piece)</h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">4.5 <span class="visually-hidden">out of 5 stars,</span> (782)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$23.99</span>
+                  <span class="price-was" aria-label="Was $39.99">$39.99</span>
+                  <span class="price-save">Save 40%</span>
+                </div>
+                <button class="add-to-cart" aria-label="Add Resistance Bands Set to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="deal3-name">
+              <div class="product-img-wrap">
+                <div class="product-img-placeholder" aria-hidden="true">💡</div>
+                <span class="product-badge badge-sale" aria-label="On sale">−50%</span>
+                <button class="wishlist-btn" aria-label="Add Philips Hue Smart Bulbs to wishlist" aria-pressed="false">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Home</p>
+                <h3 class="product-name" id="deal3-name">Philips Hue Smart Bulbs Starter Kit</h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="rating-count">4.8 <span class="visually-hidden">out of 5 stars,</span> (3,015)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$59.99</span>
+                  <span class="price-was" aria-label="Was $119.99">$119.99</span>
+                  <span class="price-save">Save 50%</span>
+                </div>
+                <button class="add-to-cart" aria-label="Add Philips Hue Starter Kit to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="product-card" aria-labelledby="deal4-name">
+              <div class="product-img-wrap">
+                <div class="product-img-placeholder" aria-hidden="true">🎮</div>
+                <span class="product-badge badge-sale" aria-label="On sale">−25%</span>
+                <button class="wishlist-btn" aria-label="Add Xbox Wireless Controller to wishlist" aria-pressed="false">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+              <div class="product-info">
+                <p class="product-category">Electronics</p>
+                <h3 class="product-name" id="deal4-name">Xbox Wireless Controller — Carbon Black</h3>
+                <div class="product-rating">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">4.7 <span class="visually-hidden">out of 5 stars,</span> (9,870)</span>
+                </div>
+                <div class="product-price-row">
+                  <span class="price-current">$44.99</span>
+                  <span class="price-was" aria-label="Was $59.99">$59.99</span>
+                  <span class="price-save">Save 25%</span>
+                </div>
+                <button class="add-to-cart" aria-label="Add Xbox Wireless Controller to cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── Blog / Inspiration Section ─────────────────────────── -->
+    <section class="section" aria-labelledby="blog-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="blog-heading">From the Blog</h2>
+          <a href="/blog" class="link-all" aria-label="Read all blog posts">Read all posts</a>
+        </div>
+
+        <ul class="blog-grid" role="list" aria-label="Blog posts">
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog1-title">
+              <!-- Decorative image placeholder; real img must have descriptive alt text -->
+              <div class="blog-img-wrap" aria-hidden="true">🎧</div>
+              <div class="blog-body">
+                <div class="blog-meta">
+                  <span class="blog-tag">Buying Guide</span>
+                  <time class="blog-date" datetime="2026-04-10">April 10, 2026</time>
+                </div>
+                <h3 class="blog-title" id="blog1-title">
+                  <a href="/blog/best-noise-cancelling-headphones-2026">The 7 Best Noise-Cancelling Headphones of 2026</a>
+                </h3>
+                <p class="blog-excerpt">
+                  We tested over 20 models across price ranges to find the headphones that actually deliver on their
+                  noise-cancelling promises — whether you're on a plane or in a busy office.
+                </p>
+                <a href="/blog/best-noise-cancelling-headphones-2026" class="blog-read-more"
+                   aria-label="Read more about the best noise-cancelling headphones of 2026">Read more →</a>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog2-title">
+              <div class="blog-img-wrap" aria-hidden="true">🏡</div>
+              <div class="blog-body">
+                <div class="blog-meta">
+                  <span class="blog-tag">Home &amp; Living</span>
+                  <time class="blog-date" datetime="2026-04-07">April 7, 2026</time>
+                </div>
+                <h3 class="blog-title" id="blog2-title">
+                  <a href="/blog/smart-home-essentials-starter-guide">Smart Home Essentials: A Beginner's Starter Guide</a>
+                </h3>
+                <p class="blog-excerpt">
+                  Smart bulbs, thermostats, and voice assistants are easier to set up than ever. Here's what to buy
+                  first, how they work together, and what to skip until later.
+                </p>
+                <a href="/blog/smart-home-essentials-starter-guide" class="blog-read-more"
+                   aria-label="Read the smart home essentials starter guide">Read more →</a>
+              </div>
+            </article>
+          </li>
+
+          <li>
+            <article class="blog-card" aria-labelledby="blog3-title">
+              <div class="blog-img-wrap" aria-hidden="true">🏃</div>
+              <div class="blog-body">
+                <div class="blog-meta">
+                  <span class="blog-tag">Fitness</span>
+                  <time class="blog-date" datetime="2026-04-02">April 2, 2026</time>
+                </div>
+                <h3 class="blog-title" id="blog3-title">
+                  <a href="/blog/home-gym-under-500">Build a Solid Home Gym for Under $500</a>
+                </h3>
+                <p class="blog-excerpt">
+                  You don't need a full rack and a squat cage to get fit at home. We picked the most versatile, space-saving
+                  gear that covers cardio, strength, and flexibility — all under budget.
+                </p>
+                <a href="/blog/home-gym-under-500" class="blog-read-more"
+                   aria-label="Read the article on building a home gym for under $500">Read more →</a>
+              </div>
+            </article>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── Newsletter ─────────────────────────────────────────── -->
+    <section class="newsletter" aria-labelledby="newsletter-heading">
+      <div class="container">
+        <h2 id="newsletter-heading">Get deals before everyone else</h2>
+        <p>Join 200,000+ subscribers. No spam — just hand-picked deals, new arrivals, and exclusive discounts.</p>
+        <form class="newsletter-form" action="/newsletter/subscribe" method="post" novalidate>
+          <!-- Label is visually hidden but associated with the input for screen readers -->
+          <label for="newsletter-email" class="visually-hidden">Email address</label>
+          <input
+            type="email"
+            id="newsletter-email"
+            name="email"
+            class="newsletter-input"
+            placeholder="your@email.com"
+            autocomplete="email"
+            required
+            aria-required="true"
+            aria-describedby="newsletter-note"
+          />
+          <button type="submit" class="newsletter-submit">Subscribe</button>
+        </form>
+        <p id="newsletter-note" class="newsletter-disclaimer">
+          We respect your privacy. Unsubscribe at any time.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ────────────────────────────────────────────────── -->
+  <footer class="site-footer" aria-label="Site footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="site-logo" aria-label="ShopNest — Return to homepage">Shop<span style="color:#d0ccc7">Nest</span></a>
+          <p>Your one-stop destination for electronics, fashion, home goods, and more — delivered fast.</p>
+          <nav class="footer-social" aria-label="Social media links">
+            <a href="https://twitter.com/shopnest" class="social-link" aria-label="ShopNest on Twitter">𝕏</a>
+            <a href="https://instagram.com/shopnest" class="social-link" aria-label="ShopNest on Instagram">📷</a>
+            <a href="https://facebook.com/shopnest" class="social-link" aria-label="ShopNest on Facebook">f</a>
+            <a href="https://youtube.com/shopnest" class="social-link" aria-label="ShopNest on YouTube">▶</a>
+          </nav>
+        </div>
+
+        <div class="footer-col">
+          <h3>Shop</h3>
+          <ul class="footer-links" role="list">
+            <li><a href="/new-arrivals">New Arrivals</a></li>
+            <li><a href="/deals">Today's Deals</a></li>
+            <li><a href="/bestsellers">Best Sellers</a></li>
+            <li><a href="/gift-cards">Gift Cards</a></li>
+            <li><a href="/registry">Gift Registry</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Help</h3>
+          <ul class="footer-links" role="list">
+            <li><a href="/account">Your Account</a></li>
+            <li><a href="/orders">Track Orders</a></li>
+            <li><a href="/returns">Returns &amp; Refunds</a></li>
+            <li><a href="/shipping-info">Shipping Info</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Company</h3>
+          <ul class="footer-links" role="list">
+            <li><a href="/about">About ShopNest</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/press">Press</a></li>
+            <li><a href="/sustainability">Sustainability</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 ShopNest, Inc. All rights reserved.</p>
+        <nav class="footer-legal" aria-label="Legal links">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
+          <a href="/accessibility">Accessibility</a>
+          <a href="/cookies">Cookie Settings</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Wishlist toggle — updates aria-pressed and announces change to screen readers
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pressed = btn.getAttribute('aria-pressed') === 'true';
+        btn.setAttribute('aria-pressed', String(!pressed));
+        // Extract product name from the aria-label: "Add X to wishlist" / "Remove X from wishlist"
+        const label = btn.getAttribute('aria-label') || '';
+        const name  = label.replace(/^(Add|Remove)\s+/i, '').replace(/\s+(to|from)\s+wishlist$/i, '');
+        btn.setAttribute('aria-label', pressed ? `Add ${name} to wishlist` : `Remove ${name} from wishlist`);
+        // Announce to live region
+        const msg = document.getElementById('status-message');
+        if (msg) msg.textContent = pressed ? `${name} removed from wishlist.` : `${name} added to wishlist.`;
+      });
+    });
+
+    // Add to cart — announces confirmation to the live region
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const label = btn.getAttribute('aria-label') || '';
+        const name  = label.replace(/^Add\s+/i, '').replace(/\s+to\s+cart$/i, '');
+        const msg   = document.getElementById('status-message');
+        if (msg) msg.textContent = `${name} added to cart.`;
+      });
+    });
+  </script>
+
+</body>
+</html>

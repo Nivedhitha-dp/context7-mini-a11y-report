@@ -1,0 +1,324 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modal Dialog Example</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg: #f8f9fa;
+      --color-surface: #ffffff;
+      --color-primary: #2563eb;
+      --color-primary-dark: #1d4ed8;
+      --color-text: #111827;
+      --color-text-muted: #6b7280;
+      --color-border: #d1d5db;
+      --color-overlay: rgba(0, 0, 0, 0.6);
+      --radius: 8px;
+      --focus-ring: 0 0 0 3px #2563eb, 0 0 0 5px #ffffff;
+    }
+
+    /* skip link: lets keyboard users bypass repeated content */
+    .skip-link {
+      position: absolute;
+      top: -999px;
+      left: 8px;
+      padding: 8px 16px;
+      background: var(--color-primary);
+      color: #fff;
+      font-weight: 600;
+      border-radius: var(--radius);
+      text-decoration: none;
+      z-index: 9999;
+    }
+    .skip-link:focus {
+      top: 8px;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      line-height: 1.5;
+    }
+
+    /* visible focus for all interactive elements */
+    :focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    button {
+      cursor: pointer;
+      font: inherit;
+      border: none;
+    }
+
+    .trigger {
+      background: var(--color-primary);
+      color: #ffffff;
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.15s;
+      min-height: 44px;
+      min-width: 44px;
+    }
+    .trigger:hover {
+      background: var(--color-primary-dark);
+    }
+
+    /* overlay backdrop */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--color-overlay);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    /* dialog panel */
+    .modal {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      padding: 2rem;
+      width: min(90vw, 480px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    /* close button — 44×44 touch target */
+    .modal-close {
+      background: transparent;
+      color: var(--color-text-muted);
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+      transition: background 0.15s, color 0.15s;
+    }
+    .modal-close:hover {
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    .modal-body {
+      color: var(--color-text-muted);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      min-height: 44px;
+    }
+    .btn-secondary:hover {
+      background: var(--color-bg);
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      min-height: 44px;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover {
+      background: var(--color-primary-dark);
+    }
+
+    /* prevent body scroll when modal is open */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    /* respect reduced-motion preference */
+    @media (prefers-reduced-motion: no-preference) {
+      .modal {
+        animation: modal-in 0.2s ease;
+      }
+      @keyframes modal-in {
+        from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+        to   { opacity: 1; transform: none; }
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip link: lets keyboard users jump past repeated navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <main id="main-content">
+    <!-- aria-haspopup="dialog" signals to screen readers this opens a dialog -->
+    <button
+      class="trigger"
+      aria-haspopup="dialog"
+      aria-controls="example-modal"
+      id="open-modal-btn"
+    >
+      Open Modal
+    </button>
+  </main>
+
+  <!--
+    role="dialog": identifies this as a dialog landmark
+    aria-modal="true": tells AT the rest of the page is inert while open
+    aria-labelledby: associates the visible title as the dialog's accessible name
+  -->
+  <div
+    class="modal-backdrop"
+    id="modal-backdrop"
+    role="presentation"
+  >
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-desc"
+      id="example-modal"
+      class="modal"
+      tabindex="-1"
+    >
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Confirm Action</h2>
+        <!-- aria-label provides an accessible name for the icon-only close button -->
+        <button
+          class="modal-close"
+          id="modal-close-btn"
+          aria-label="Close dialog"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body" id="modal-desc">
+        Are you sure you want to proceed? This action cannot be undone.
+        Review the details before confirming.
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="modal-cancel-btn">Cancel</button>
+        <button class="btn-primary" id="modal-confirm-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const openBtn    = document.getElementById('open-modal-btn');
+    const backdrop   = document.getElementById('modal-backdrop');
+    const modal      = document.getElementById('example-modal');
+    const closeBtn   = document.getElementById('modal-close-btn');
+    const cancelBtn  = document.getElementById('modal-cancel-btn');
+    const confirmBtn = document.getElementById('modal-confirm-btn');
+
+    // all focusable elements inside the modal (for focus trapping)
+    const focusableSelectors =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+    function getFocusableElements() {
+      return Array.from(modal.querySelectorAll(focusableSelectors));
+    }
+
+    function openModal() {
+      backdrop.classList.add('is-open');
+      document.body.classList.add('modal-open');
+      // move focus to the dialog panel itself on open
+      modal.focus();
+    }
+
+    function closeModal() {
+      backdrop.classList.remove('is-open');
+      document.body.classList.remove('modal-open');
+      // return focus to the element that opened the dialog
+      openBtn.focus();
+    }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    confirmBtn.addEventListener('click', closeModal);
+
+    // close on backdrop click (click outside modal panel)
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeModal();
+    });
+
+    // keyboard handling: Escape closes, Tab traps focus inside modal
+    modal.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        const focusable = getFocusableElements();
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          // shift+tab: if focus is on first element, wrap to last
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          // tab: if focus is on last element, wrap to first
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

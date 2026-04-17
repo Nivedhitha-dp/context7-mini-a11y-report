@@ -1,0 +1,146 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expand/Collapse Widget</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 640px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      color: #1a1a1a;
+      background: #f9f9f9;
+    }
+
+    h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+
+    .example {
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      margin-bottom: 1.25rem;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .example button[aria-expanded] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.85rem 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      background: #fff;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      gap: 0.5rem;
+    }
+
+    .example button[aria-expanded]:focus-visible {
+      outline: 3px solid #005fcc;
+      outline-offset: -3px;
+    }
+
+    .example button[aria-expanded]:hover {
+      background: #f0f4ff;
+    }
+
+    .example button[aria-expanded] .icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      transition: transform 0.2s ease;
+    }
+
+    .example button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .details {
+      border-top: 1px solid #d0d0d0;
+      padding: 1rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .details[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Expand/Collapse Widget</h1>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-1"
+    >
+      What is accessibility?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 6 8 10 12 6" />
+      </svg>
+    </button>
+    <div class="details" id="details-1" hidden>
+      Accessibility (a11y) means designing and building products so people with
+      disabilities can perceive, understand, navigate, and interact with them.
+      It benefits everyone, not just people with disabilities.
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-2"
+    >
+      What is WCAG?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 6 8 10 12 6" />
+      </svg>
+    </button>
+    <div class="details" id="details-2" hidden>
+      The Web Content Accessibility Guidelines (WCAG) are a set of
+      internationally recognised standards published by the W3C. WCAG 2.1
+      Level AA is the most widely required conformance level for public-facing
+      websites.
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="details-3"
+    >
+      Why use <code>aria-expanded</code>?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 6 8 10 12 6" />
+      </svg>
+    </button>
+    <div class="details" id="details-3" hidden>
+      <code>aria-expanded</code> communicates the open/closed state of a
+      disclosure widget to assistive technologies. Screen readers announce
+      "expanded" or "collapsed" so users know whether activating the button
+      will reveal or hide content.
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('button[aria-expanded]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        var panel = document.getElementById(this.getAttribute('aria-controls'));
+        if (panel) {
+          panel.hidden = expanded;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

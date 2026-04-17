@@ -1,0 +1,320 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us</title>
+  <style>
+    /* CSS custom properties for consistent theming and easy high-contrast overrides */
+    :root {
+      --color-bg: #ffffff;
+      --color-surface: #f8f9fa;
+      --color-border: #6b7280;
+      --color-border-focus: #1d4ed8;
+      --color-text: #111827;
+      --color-text-muted: #374151;
+      --color-helper: #4b5563;
+      --color-error: #b91c1c;
+      --color-required: #b91c1c;
+      --color-btn-bg: #1d4ed8;
+      --color-btn-text: #ffffff;
+      --color-btn-hover: #1e40af;
+      --radius: 6px;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+    }
+
+    /* skip-link: lets keyboard users bypass repeated navigation */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: var(--spacing-md);
+      z-index: 9999;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--color-btn-bg);
+      color: var(--color-btn-text);
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    /* Becomes visible when focused via keyboard Tab */
+    .skip-link:focus {
+      top: var(--spacing-md);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 560px;
+      margin: var(--spacing-xl) auto;
+      padding: 0 var(--spacing-md);
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0 0 var(--spacing-xs);
+      color: var(--color-text);
+    }
+
+    .form-description {
+      color: var(--color-text-muted);
+      margin: 0 0 var(--spacing-lg);
+      font-size: 0.95rem;
+    }
+
+    form {
+      background: var(--color-surface);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius);
+      border: 1px solid #e5e7eb;
+    }
+
+    /* Wrapper for each label + input + helper text unit */
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-field:last-of-type {
+      margin-bottom: 0;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-text);
+    }
+
+    /* required-marker: visual asterisk paired with screen-reader-only text for full meaning */
+    .required-marker {
+      color: var(--color-required);
+      margin-left: 2px;
+      aria-hidden: true; /* announced via aria-required on the input instead */
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--color-text);
+      background: var(--color-bg);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius);
+      transition: border-color 0.15s ease;
+      /* Minimum 44px touch target height (WCAG 2.5.5) */
+      min-height: 44px;
+    }
+
+    input[type="text"]:hover,
+    input[type="email"]:hover,
+    input[type="tel"]:hover {
+      border-color: var(--color-text);
+    }
+
+    /* focus-visible: clearly visible focus ring at 3:1+ contrast against bg (WCAG 1.4.11) */
+    input[type="text"]:focus-visible,
+    input[type="email"]:focus-visible,
+    input[type="tel"]:focus-visible {
+      outline: 3px solid var(--color-border-focus);
+      outline-offset: 2px;
+      border-color: var(--color-border-focus);
+    }
+
+    /* helper-text: supplementary instructions; linked via aria-describedby */
+    .helper-text {
+      font-size: 0.85rem;
+      color: var(--color-helper);
+      /* contrast: #4b5563 on #f8f9fa = 5.7:1, passes AA for small text */
+    }
+
+    .form-actions {
+      margin-top: var(--spacing-lg);
+    }
+
+    button[type="submit"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--color-btn-text);
+      background: var(--color-btn-bg);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      /* Minimum 44px touch target (WCAG 2.5.5) */
+      min-height: 44px;
+      transition: background 0.15s ease;
+    }
+
+    button[type="submit"]:hover {
+      background: var(--color-btn-hover);
+    }
+
+    /* Focus ring on button matches input pattern */
+    button[type="submit"]:focus-visible {
+      outline: 3px solid var(--color-border-focus);
+      outline-offset: 3px;
+    }
+
+    /* required-legend: communicates meaning of asterisk before the form */
+    .required-legend {
+      font-size: 0.85rem;
+      color: var(--color-helper);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .required-legend span[aria-hidden="true"] {
+      color: var(--color-required);
+      font-weight: 700;
+    }
+
+    /* Reduced motion: disable transitions for users who prefer it (WCAG 2.3.3) */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    /* Responsive: readable at 320px wide without horizontal scroll (WCAG 1.4.10) */
+    @media (max-width: 400px) {
+      form {
+        padding: var(--spacing-md);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip-link: first focusable element so keyboard users can jump past chrome to the form -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <main id="main-content">
+    <!-- Single h1 per page (WCAG 2.4.6) -->
+    <h1>Contact Us</h1>
+    <p class="form-description">Fill out the form below and we'll get back to you shortly.</p>
+
+    <!-- required-legend communicates asterisk meaning before users encounter fields -->
+    <p class="required-legend">
+      Fields marked <span aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.
+    </p>
+
+    <form
+      action="#"
+      method="post"
+      novalidate
+      aria-label="Contact form"
+    >
+
+      <!-- ── Full Name ─────────────────────────────────────────────────── -->
+      <div class="form-field">
+        <!--
+          for/id association: most reliable label technique across all AT.
+          aria-required tells screen readers the field is required without
+          relying solely on the visual asterisk.
+        -->
+        <label for="full-name">
+          Full Name
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="full-name"
+          name="full-name"
+          autocomplete="name"
+          required
+          aria-required="true"
+          spellcheck="false"
+        >
+      </div>
+
+      <!-- ── Email Address ──────────────────────────────────────────────── -->
+      <div class="form-field">
+        <!--
+          aria-describedby links the input to helper text, announced after
+          the label and field type by screen readers.
+          type="email" enables mobile email keyboard and browser validation.
+        -->
+        <label for="email">
+          Email Address
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          required
+          aria-required="true"
+          aria-describedby="email-helper"
+          inputmode="email"
+        >
+        <span id="email-helper" class="helper-text">
+          Enter a valid email address, for example: name@example.com
+        </span>
+      </div>
+
+      <!-- ── Phone Number ───────────────────────────────────────────────── -->
+      <div class="form-field">
+        <!--
+          No aria-required because this field is optional — absence of the
+          attribute (and the visual asterisk) signals it is not required.
+          type="tel" + inputmode="tel" triggers the numeric phone keyboard on mobile.
+        -->
+        <label for="phone">
+          Phone Number
+          <span class="helper-text" aria-hidden="true">(optional)</span>
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autocomplete="tel"
+          aria-describedby="phone-helper"
+          inputmode="tel"
+        >
+        <span id="phone-helper" class="helper-text">
+          Preferred format: (555) 867-5309. Include country code for international numbers, e.g. +1 555 867 5309.
+        </span>
+      </div>
+
+      <!-- ── Submit ─────────────────────────────────────────────────────── -->
+      <div class="form-actions">
+        <!--
+          type="submit" on a <button> inside a <form> is the semantic,
+          keyboard-native submit action — no JS required, no div/span hacks.
+        -->
+        <button type="submit">Send Message</button>
+      </div>
+
+    </form>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand/Collapse Widget</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 640px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      color: #1a1a1a;
+      background: #f5f5f5;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+
+    .example {
+      background: #fff;
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .example button[aria-expanded] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .example button[aria-expanded]:focus-visible {
+      outline: 3px solid #0057d9;
+      outline-offset: -3px;
+    }
+
+    .example button[aria-expanded]:hover {
+      background: #f0f4ff;
+    }
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+      fill: currentColor;
+    }
+
+    button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .details {
+      border-top: 1px solid #d0d0d0;
+      padding: 1rem;
+    }
+
+    .details[hidden] {
+      display: none;
+    }
+
+    .details p { margin: 0 0 0.75rem; line-height: 1.6; }
+    .details p:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <h1>Expand / Collapse Widget</h1>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="panel-1"
+      id="btn-1"
+    >
+      What is WCAG?
+      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M8 10.5L2.5 5h11L8 10.5z"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-1" role="region" aria-labelledby="btn-1" hidden>
+      <p>WCAG stands for Web Content Accessibility Guidelines. These guidelines are published by the W3C Web Accessibility Initiative (WAI).</p>
+      <p>WCAG 2.1 AA is the most widely adopted conformance target for web accessibility compliance.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="panel-2"
+      id="btn-2"
+    >
+      Why does keyboard accessibility matter?
+      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M8 10.5L2.5 5h11L8 10.5z"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-2" role="region" aria-labelledby="btn-2" hidden>
+      <p>Many users rely exclusively on a keyboard to navigate the web — including people with motor disabilities, power users, and screen reader users.</p>
+      <p>All interactive elements must be reachable via Tab and operable via Enter or Space.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="panel-3"
+      id="btn-3"
+    >
+      What is ARIA?
+      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M8 10.5L2.5 5h11L8 10.5z"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-3" role="region" aria-labelledby="btn-3" hidden>
+      <p>Accessible Rich Internet Applications (ARIA) is a set of roles, states, and properties that supplement native HTML semantics.</p>
+      <p>The first rule of ARIA: use native HTML elements whenever possible before reaching for ARIA attributes.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('button[aria-expanded]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        var panelId = this.getAttribute('aria-controls');
+        var panel = document.getElementById(panelId);
+
+        this.setAttribute('aria-expanded', String(!expanded));
+        panel.hidden = expanded;
+      });
+    });
+  </script>
+</body>
+</html>

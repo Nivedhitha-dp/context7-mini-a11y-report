@@ -1,0 +1,151 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expand / Collapse Widget</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .example {
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .example button[aria-expanded] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 1rem 1.25rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+      gap: 0.5rem;
+    }
+
+    .example button[aria-expanded]:focus-visible {
+      outline: 3px solid #005fcc;
+      outline-offset: -3px;
+    }
+
+    .example button[aria-expanded]:hover {
+      background: #f0f4ff;
+    }
+
+    .example button[aria-expanded] .icon {
+      flex-shrink: 0;
+      width: 1.25em;
+      height: 1.25em;
+      transition: transform 0.2s ease;
+      aria-hidden: true;
+    }
+
+    .example button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .example .details {
+      padding: 0 1.25rem 1rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .example .details p {
+      margin-top: 0.75rem;
+      color: #374151;
+    }
+
+    .example .details[hidden] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Expand / Collapse Widget</h1>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="panel-1"
+      id="btn-1"
+    >
+      What is an accordion widget?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-1" role="region" aria-labelledby="btn-1" hidden>
+      <p>An accordion widget is a vertically stacked set of interactive headings that each contain a title, content snippet, or thumbnail representing a section of content.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="panel-2"
+      id="btn-2"
+    >
+      How does keyboard navigation work?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-2" role="region" aria-labelledby="btn-2" hidden>
+      <p>Use <kbd>Tab</kbd> to move focus to the button. Press <kbd>Enter</kbd> or <kbd>Space</kbd> to toggle the panel open or closed. Screen readers announce the expanded or collapsed state automatically via <code>aria-expanded</code>.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button
+      type="button"
+      aria-expanded="false"
+      aria-controls="panel-3"
+      id="btn-3"
+    >
+      Why avoid using the native &lt;details&gt; element?
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    <div class="details" id="panel-3" role="region" aria-labelledby="btn-3" hidden>
+      <p>The native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> element has inconsistent screen reader support across browsers and assistive technologies. A custom ARIA disclosure pattern using <code>aria-expanded</code> and <code>aria-controls</code> provides more predictable and reliable accessibility.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('button[aria-expanded]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        var panel = document.getElementById(btn.getAttribute('aria-controls'));
+        if (expanded) {
+          panel.setAttribute('hidden', '');
+        } else {
+          panel.removeAttribute('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

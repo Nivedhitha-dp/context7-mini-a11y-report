@@ -1,0 +1,224 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Dialog Example</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #f0f2f5;
+    }
+
+    .trigger {
+      padding: 0.625rem 1.25rem;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .trigger:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: 2px;
+    }
+    .trigger:hover { background: #1d4ed8; }
+
+    /* Backdrop */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.is-open { display: flex; }
+
+    /* Dialog */
+    .modal {
+      background: #fff;
+      border-radius: 0.5rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 2rem;
+      width: min(90vw, 28rem);
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 0.25rem;
+      color: #6b7280;
+      font-size: 1.25rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close:hover { background: #f3f4f6; color: #111827; }
+    .modal-close:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: 2px;
+    }
+
+    .modal-body {
+      color: #374151;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary {
+      padding: 0.5rem 1rem;
+      background: #fff;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      font-size: 0.9375rem;
+      cursor: pointer;
+    }
+    .btn-secondary:hover { background: #f9fafb; }
+    .btn-secondary:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      padding: 0.5rem 1rem;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 0.9375rem;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-primary:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="trigger" aria-haspopup="dialog" aria-controls="example-modal">
+    Open Modal
+  </button>
+
+  <div class="modal-backdrop" id="modal-backdrop" aria-hidden="true">
+    <div
+      role="dialog"
+      id="example-modal"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-desc"
+      class="modal"
+    >
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Confirm Action</h2>
+        <button class="modal-close" aria-label="Close dialog">&#x2715;</button>
+      </div>
+      <div class="modal-body" id="modal-desc">
+        <p>Are you sure you want to proceed? This action cannot be undone once confirmed.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-modal-cancel>Cancel</button>
+        <button class="btn-primary" data-modal-confirm>Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const backdrop = document.getElementById('modal-backdrop');
+      const modal = document.getElementById('example-modal');
+      const trigger = document.querySelector('.trigger');
+      const closeBtn = modal.querySelector('.modal-close');
+      const cancelBtn = modal.querySelector('[data-modal-cancel]');
+      const confirmBtn = modal.querySelector('[data-modal-confirm]');
+
+      const FOCUSABLE = [
+        'a[href]', 'button:not([disabled])', 'input:not([disabled])',
+        'select:not([disabled])', 'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])'
+      ].join(', ');
+
+      function openModal() {
+        backdrop.classList.add('is-open');
+        backdrop.removeAttribute('aria-hidden');
+        document.body.inert = true;
+        modal.closest('.modal-backdrop').inert = false;
+        // Move focus to first focusable element
+        const first = modal.querySelector(FOCUSABLE);
+        if (first) first.focus();
+      }
+
+      function closeModal() {
+        backdrop.classList.remove('is-open');
+        backdrop.setAttribute('aria-hidden', 'true');
+        document.body.inert = false;
+        trigger.focus();
+      }
+
+      trigger.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      confirmBtn.addEventListener('click', closeModal);
+
+      // Close on backdrop click
+      backdrop.addEventListener('click', function (e) {
+        if (e.target === backdrop) closeModal();
+      });
+
+      // Escape key closes modal
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && backdrop.classList.contains('is-open')) {
+          closeModal();
+        }
+      });
+
+      // Focus trap
+      modal.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab') return;
+        const focusable = Array.from(modal.querySelectorAll(FOCUSABLE));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,288 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modal Dialog Example</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* skip link: visually hidden until focused */
+    .skip-link {
+      position: absolute;
+      top: -9999px;
+      left: 0;
+      background: #0057b8;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      z-index: 10000;
+      border-radius: 0 0 4px 0;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .skip-link:focus { top: 0; }
+
+    button { cursor: pointer; }
+
+    /* trigger button */
+    .trigger {
+      background: #0057b8;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .trigger:hover { background: #004494; }
+    .trigger:focus-visible {
+      outline: 3px solid #ffbf00;
+      outline-offset: 3px;
+    }
+
+    /* backdrop */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    /* dialog */
+    .modal-dialog {
+      background: #fff;
+      border-radius: 10px;
+      padding: 2rem;
+      width: min(90vw, 480px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    /* close button inside modal */
+    .modal-close {
+      background: none;
+      border: none;
+      padding: 0.25rem;
+      border-radius: 4px;
+      color: #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close:hover { background: #f0f0f0; color: #111; }
+    .modal-close:focus-visible {
+      outline: 3px solid #0057b8;
+      outline-offset: 2px;
+    }
+    .modal-close svg { width: 20px; height: 20px; }
+
+    .modal-body {
+      font-size: 0.975rem;
+      line-height: 1.65;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary {
+      background: none;
+      border: 2px solid #ccc;
+      color: #333;
+      padding: 0.6rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { border-color: #999; background: #f5f5f5; }
+    .btn-secondary:focus-visible {
+      outline: 3px solid #0057b8;
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: #0057b8;
+      border: 2px solid transparent;
+      color: #fff;
+      padding: 0.6rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: #004494; }
+    .btn-primary:focus-visible {
+      outline: 3px solid #ffbf00;
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- skip link: lets keyboard users bypass repeated nav -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <main id="main-content">
+    <!-- aria-haspopup="dialog" tells screen readers this opens a dialog -->
+    <button
+      class="trigger"
+      aria-haspopup="dialog"
+      aria-controls="demo-modal"
+      id="modal-trigger"
+    >
+      Open Dialog
+    </button>
+  </main>
+
+  <!-- role="dialog" + aria-modal="true" creates a true modal boundary for AT -->
+  <div
+    class="modal-backdrop"
+    id="modal-backdrop"
+    role="presentation"
+  >
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-desc"
+      id="demo-modal"
+      class="modal-dialog"
+    >
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Confirm Action</h2>
+        <!-- aria-label overrides button text for screen readers -->
+        <button class="modal-close" id="modal-close" aria-label="Close dialog">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body" id="modal-desc">
+        <p>Are you sure you want to continue? This action will apply your selected changes. You can cancel at any time to return to the previous state.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="modal-cancel">Cancel</button>
+        <button class="btn-primary" id="modal-confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const backdrop  = document.getElementById('modal-backdrop');
+      const dialog    = document.getElementById('demo-modal');
+      const trigger   = document.getElementById('modal-trigger');
+      const closeBtn  = document.getElementById('modal-close');
+      const cancelBtn = document.getElementById('modal-cancel');
+      const confirmBtn = document.getElementById('modal-confirm');
+
+      // Collect all focusable elements inside the dialog for focus trapping
+      const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+      function getFocusable() {
+        return Array.from(dialog.querySelectorAll(FOCUSABLE)).filter(
+          el => !el.hasAttribute('disabled') && el.offsetParent !== null
+        );
+      }
+
+      function openModal() {
+        backdrop.classList.add('is-open');
+        // aria-expanded on trigger communicates open state
+        trigger.setAttribute('aria-expanded', 'true');
+        // Move focus to the dialog's first focusable element
+        const focusable = getFocusable();
+        if (focusable.length) focusable[0].focus();
+      }
+
+      function closeModal() {
+        backdrop.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded', 'false');
+        // Restore focus to the element that opened the dialog
+        trigger.focus();
+      }
+
+      // Trap focus inside the dialog while open
+      function trapFocus(e) {
+        if (!backdrop.classList.contains('is-open')) return;
+        const focusable = getFocusable();
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+
+        if (e.key === 'Tab') {
+          if (e.shiftKey) {
+            // Shift+Tab: wrap backward
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            // Tab: wrap forward
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
+
+        // Escape closes the modal
+        if (e.key === 'Escape') {
+          closeModal();
+        }
+      }
+
+      // Close when clicking the backdrop (outside the dialog box)
+      backdrop.addEventListener('click', function (e) {
+        if (e.target === backdrop) closeModal();
+      });
+
+      trigger.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      confirmBtn.addEventListener('click', closeModal);
+      document.addEventListener('keydown', trapFocus);
+    })();
+  </script>
+
+</body>
+</html>
