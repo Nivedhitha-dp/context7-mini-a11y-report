@@ -1,0 +1,126 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .example {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .toggle-header {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-header:hover {
+            background-color: #0056b3;
+        }
+        
+        .toggle-icon {
+            margin-right: 10px;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-icon.expanded {
+            transform: rotate(90deg);
+        }
+        
+        .details {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease-out;
+            padding: 0 15px;
+        }
+        
+        .details.open {
+            max-height: 500px;
+            padding: 15px;
+            margin-top: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        h3 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Expand/Collapse Widget Examples</h1>
+    
+    <div class="example">
+        <div class="toggle-header" onclick="toggleDetails(this)">
+            <span class="toggle-icon">▶</span>
+            <h3>Widget 1: Basic Information</h3>
+        </div>
+        <div class="details">
+            <p>This is a simple expand/collapse widget. Click the header above to toggle the visibility of this content.</p>
+            <p>You can include any HTML content here including text, images, lists, and more.</p>
+        </div>
+    </div>
+    
+    <div class="example">
+        <div class="toggle-header" onclick="toggleDetails(this)">
+            <span class="toggle-icon">▶</span>
+            <h3>Widget 2: Features List</h3>
+        </div>
+        <div class="details">
+            <ul>
+                <li>Smooth animations</li>
+                <li>Easy to customize</li>
+                <li>Responsive design</li>
+                <li>No dependencies required</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="example">
+        <div class="toggle-header" onclick="toggleDetails(this)">
+            <span class="toggle-icon">▶</span>
+            <h3>Widget 3: Technical Details</h3>
+        </div>
+        <div class="details">
+            <p><strong>Implementation:</strong> Pure HTML, CSS, and JavaScript</p>
+            <p><strong>Animation:</strong> CSS transitions for smooth expand/collapse</p>
+            <p><strong>Browser Support:</strong> All modern browsers</p>
+            <p>The widget uses simple DOM manipulation to toggle classes and create an intuitive user experience.</p>
+        </div>
+    </div>
+    
+    <script>
+        function toggleDetails(header) {
+            const icon = header.querySelector('.toggle-icon');
+            const details = header.nextElementSibling;
+            
+            icon.classList.toggle('expanded');
+            details.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>

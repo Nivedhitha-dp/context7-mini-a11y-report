@@ -1,0 +1,146 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .example {
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .toggle-button {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-button:hover {
+            background-color: #45a049;
+        }
+
+        .toggle-button::after {
+            content: '▼';
+            transition: transform 0.3s;
+        }
+
+        .toggle-button.active::after {
+            transform: rotate(-180deg);
+        }
+
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #fafafa;
+        }
+
+        .details.expanded {
+            max-height: 500px;
+        }
+
+        .details-content {
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .example:nth-child(odd) .toggle-button {
+            background-color: #2196F3;
+        }
+
+        .example:nth-child(odd) .toggle-button:hover {
+            background-color: #0b7dda;
+        }
+
+        .example:nth-child(3) .toggle-button {
+            background-color: #ff9800;
+        }
+
+        .example:nth-child(3) .toggle-button:hover {
+            background-color: #e68900;
+        }
+    </style>
+</head>
+<body>
+    <h1>Expand/Collapse Widget Demo</h1>
+
+    <div class="example">
+        <button class="toggle-button">
+            <span>Section 1: Introduction</span>
+        </button>
+        <div class="details">
+            <div class="details-content">
+                <h3>Welcome to the Expand/Collapse Widget</h3>
+                <p>This is a simple and elegant way to show and hide content on your webpage. Click the button above to collapse this section.</p>
+                <p>It's perfect for FAQs, accordion menus, and any content that you want to keep hidden until the user needs it.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="example">
+        <button class="toggle-button">
+            <span>Section 2: Features</span>
+        </button>
+        <div class="details">
+            <div class="details-content">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Smooth animations for expand and collapse</li>
+                    <li>Clean and modern design</li>
+                    <li>Easy to customize</li>
+                    <li>Responsive and mobile-friendly</li>
+                    <li>Accessible with keyboard navigation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="example">
+        <button class="toggle-button">
+            <span>Section 3: Usage</span>
+        </button>
+        <div class="details">
+            <div class="details-content">
+                <h3>How to Use</h3>
+                <p>Simply click on any section header to expand or collapse the content. You can have multiple sections open at the same time, or collapse them all for a cleaner view.</p>
+                <p>The widget uses pure JavaScript for functionality and CSS for smooth transitions.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.toggle-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const details = this.nextElementSibling;
+                
+                this.classList.toggle('active');
+                details.classList.toggle('expanded');
+            });
+        });
+    </script>
+</body>
+</html>

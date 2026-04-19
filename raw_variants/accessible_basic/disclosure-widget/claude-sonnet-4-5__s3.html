@@ -1,0 +1,167 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 2rem;
+        }
+        
+        .example {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .example h2 {
+            margin-top: 0;
+            font-size: 1.25rem;
+            color: #555;
+        }
+        
+        .expand-button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s;
+            width: 100%;
+            text-align: left;
+        }
+        
+        .expand-button:hover {
+            background-color: #0052a3;
+        }
+        
+        .expand-button:focus {
+            outline: 3px solid #4d90fe;
+            outline-offset: 2px;
+        }
+        
+        .expand-button::before {
+            content: '▶';
+            display: inline-block;
+            transition: transform 0.2s;
+            font-size: 0.875rem;
+        }
+        
+        .expand-button[aria-expanded="true"]::before {
+            transform: rotate(90deg);
+        }
+        
+        .details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-left: 4px solid #0066cc;
+            border-radius: 4px;
+        }
+        
+        .details[hidden] {
+            display: none;
+        }
+        
+        .details p {
+            margin: 0 0 1rem 0;
+        }
+        
+        .details p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Expand/Collapse Widget Examples</h1>
+    
+    <div class="example">
+        <h2>Example 1: Basic Information</h2>
+        <button type="button" class="expand-button" aria-expanded="false" aria-controls="details-1">
+            What is an expand/collapse widget?
+        </button>
+        <div id="details-1" class="details" hidden>
+            <p>An expand/collapse widget is an interactive UI component that allows users to show or hide content on demand. This helps manage screen space and reduces cognitive load by allowing users to access information progressively.</p>
+            <p>These widgets are commonly used in FAQs, navigation menus, and content-heavy pages where not all information needs to be visible at once.</p>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h2>Example 2: Accessibility Features</h2>
+        <button type="button" class="expand-button" aria-expanded="false" aria-controls="details-2">
+            Why is accessibility important?
+        </button>
+        <div id="details-2" class="details" hidden>
+            <p>Accessibility ensures that all users, regardless of their abilities or disabilities, can access and use web content effectively. This includes users who rely on keyboard navigation, screen readers, or other assistive technologies.</p>
+            <p>Proper implementation includes using semantic HTML, ARIA attributes, keyboard support, and sufficient color contrast ratios to meet WCAG 2.2 Level AA standards.</p>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h2>Example 3: Keyboard Navigation</h2>
+        <button type="button" class="expand-button" aria-expanded="false" aria-controls="details-3">
+            How do I navigate this with a keyboard?
+        </button>
+        <div id="details-3" class="details" hidden>
+            <p><strong>Tab:</strong> Move focus to the expand/collapse button</p>
+            <p><strong>Enter or Space:</strong> Toggle the content visibility</p>
+            <p><strong>Shift + Tab:</strong> Move focus backward</p>
+            <p>All interactive elements are fully accessible via keyboard, ensuring users who cannot use a mouse can still interact with the content.</p>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h2>Example 4: Implementation Details</h2>
+        <button type="button" class="expand-button" aria-expanded="false" aria-controls="details-4">
+            What makes this implementation accessible?
+        </button>
+        <div id="details-4" class="details" hidden>
+            <p><strong>Semantic HTML:</strong> Uses a <code>&lt;button&gt;</code> element for interaction, which is natively keyboard accessible and recognized by assistive technologies.</p>
+            <p><strong>ARIA Attributes:</strong> The <code>aria-expanded</code> attribute communicates the current state (expanded or collapsed) to screen readers, while <code>aria-controls</code> creates a relationship between the button and the content it controls.</p>
+            <p><strong>Focus Management:</strong> Visible focus indicators ensure users can see which element is currently focused.</p>
+            <p><strong>Visual Indicators:</strong> The arrow icon rotates to provide a visual cue about the expanded/collapsed state.</p>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.expand-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const expanded = this.getAttribute('aria-expanded') === 'true';
+                const controlsId = this.getAttribute('aria-controls');
+                const details = document.getElementById(controlsId);
+                
+                this.setAttribute('aria-expanded', !expanded);
+                details.hidden = expanded;
+            });
+            
+            button.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

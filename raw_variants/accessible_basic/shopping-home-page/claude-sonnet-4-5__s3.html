@@ -1,0 +1,616 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopHub - Your One-Stop Shopping Destination</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #000;
+            color: #fff;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        header {
+            background: #2c3e50;
+            color: #fff;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover,
+        nav a:focus {
+            color: #3498db;
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-input {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            min-width: 200px;
+        }
+
+        .search-button {
+            padding: 0.5rem 1rem;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .search-button:hover,
+        .search-button:focus {
+            background: #2980b9;
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #fff;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover,
+        .cta-button:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+
+        .product-grid,
+        .deal-grid,
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card,
+        .deal-card,
+        .blog-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover,
+        .product-card:focus-within,
+        .deal-card:hover,
+        .deal-card:focus-within,
+        .blog-card:hover,
+        .blog-card:focus-within {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .product-image,
+        .deal-image,
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #ecf0f1;
+        }
+
+        .product-content,
+        .deal-content,
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .product-title,
+        .deal-title,
+        .blog-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .product-title a,
+        .deal-title a,
+        .blog-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .product-title a:hover,
+        .product-title a:focus,
+        .deal-title a:hover,
+        .deal-title a:focus,
+        .blog-title a:hover,
+        .blog-title a:focus {
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+        .product-description,
+        .deal-description,
+        .blog-excerpt {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 0.75rem;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .add-to-cart:hover,
+        .add-to-cart:focus {
+            background: #2980b9;
+            outline: 2px solid #2c3e50;
+            outline-offset: 2px;
+        }
+
+        .blog-meta {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .read-more {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .read-more:hover,
+        .read-more:focus {
+            text-decoration: underline;
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: #fff;
+            padding: 3rem 1rem 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover,
+        .footer-section a:focus {
+            color: #3498db;
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #34495e;
+            color: #95a5a6;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-form {
+                width: 100%;
+            }
+
+            .search-input {
+                flex: 1;
+                min-width: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">ShopHub</a>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="#popular-items">Popular</a></li>
+                    <li><a href="#deals">Deals</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/account">Account</a></li>
+                </ul>
+            </nav>
+            <form class="search-form" role="search" action="/search" method="get">
+                <label for="search" class="visually-hidden">Search products</label>
+                <input type="search" id="search" name="q" class="search-input" placeholder="Search products..." aria-label="Search products">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Welcome to ShopHub</h1>
+            <p>Discover amazing products at unbeatable prices. Shop the latest trends and exclusive deals today!</p>
+            <a href="#deals" class="cta-button">Shop Deals Now</a>
+        </div>
+    </div>
+
+    <main id="main-content">
+        <section id="popular-items">
+            <h2>Popular Items</h2>
+            <div class="product-grid">
+                <article class="product-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EWireless Headphones%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title"><a href="/product/wireless-headphones">Premium Wireless Headphones</a></h3>
+                        <p class="product-description">High-quality audio with active noise cancellation and 30-hour battery life.</p>
+                        <div class="price">$129.99</div>
+                        <button class="add-to-cart" aria-label="Add Premium Wireless Headphones to cart">Add to Cart</button>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ESmart Watch%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title"><a href="/product/smart-watch">Smart Fitness Watch</a></h3>
+                        <p class="product-description">Track your fitness goals with heart rate monitoring and GPS navigation.</p>
+                        <div class="price">$199.99</div>
+                        <button class="add-to-cart" aria-label="Add Smart Fitness Watch to cart">Add to Cart</button>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EBackpack%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title"><a href="/product/travel-backpack">Travel Backpack Pro</a></h3>
+                        <p class="product-description">Spacious and durable backpack with laptop compartment and USB charging port.</p>
+                        <div class="price">$79.99</div>
+                        <button class="add-to-cart" aria-label="Add Travel Backpack Pro to cart">Add to Cart</button>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EPortable Speaker%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title"><a href="/product/bluetooth-speaker">Waterproof Bluetooth Speaker</a></h3>
+                        <p class="product-description">Powerful sound in a compact design, perfect for outdoor adventures.</p>
+                        <div class="price">$59.99</div>
+                        <button class="add-to-cart" aria-label="Add Waterproof Bluetooth Speaker to cart">Add to Cart</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="deals">
+            <h2>Today's Deals</h2>
+            <div class="deal-grid">
+                <article class="deal-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3E4K Camera%3C/text%3E%3C/svg%3E" alt="" class="deal-image">
+                    <div class="deal-content">
+                        <h3 class="deal-title"><a href="/product/action-camera">4K Action Camera</a></h3>
+                        <p class="deal-description">Capture stunning 4K video with image stabilization and waterproof design.</p>
+                        <div class="price">
+                            <span class="original-price">$299.99</span>
+                            $199.99
+                            <span class="discount-badge">33% OFF</span>
+                        </div>
+                        <button class="add-to-cart" aria-label="Add 4K Action Camera to cart">Add to Cart</button>
+                    </div>
+                </article>
+
+                <article class="deal-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EWireless Mouse%3C/text%3E%3C/svg%3E" alt="" class="deal-image">
+                    <div class="deal-content">
+                        <h3 class="deal-title"><a href="/product/ergonomic-mouse">Ergonomic Wireless Mouse</a></h3>
+                        <p class="deal-description">Comfortable design with precision tracking and long battery life.</p>
+                        <div class="price">
+                            <span class="original-price">$49.99</span>
+                            $29.99
+                            <span class="discount-badge">40% OFF</span>
+                        </div>
+                        <button class="add-to-cart" aria-label="Add Ergonomic Wireless Mouse to cart">Add to Cart</button>
+                    </div>
+                </article>
+
+                <article class="deal-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EUSB Hub%3C/text%3E%3C/svg%3E" alt="" class="deal-image">
+                    <div class="deal-content">
+                        <h3 class="deal-title"><a href="/product/usb-hub">7-Port USB-C Hub</a></h3>
+                        <p class="deal-description">Expand your connectivity with HDMI, USB 3.0, and SD card reader ports.</p>
+                        <div class="price">
+                            <span class="original-price">$69.99</span>
+                            $39.99
+                            <span class="discount-badge">43% OFF</span>
+                        </div>
+                        <button class="add-to-cart" aria-label="Add 7-Port USB-C Hub to cart">Add to Cart</button>
+                    </div>
+                </article>
+
+                <article class="deal-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ELED Strip%3C/text%3E%3C/svg%3E" alt="" class="deal-image">
+                    <div class="deal-content">
+                        <h3 class="deal-title"><a href="/product/led-strip">Smart LED Light Strip</a></h3>
+                        <p class="deal-description">16 million colors, voice control compatible, and easy installation.</p>
+                        <div class="price">
+                            <span class="original-price">$59.99</span>
+                            $34.99
+                            <span class="discount-badge">42% OFF</span>
+                        </div>
+                        <button class="add-to-cart" aria-label="Add Smart LED Light Strip to cart">Add to Cart</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="blog">
+            <h2>From Our Blog</h2>
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ETech Gadgets%3C/text%3E%3C/svg%3E" alt="" class="blog-image">
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <time datetime="2024-01-15">January 15, 2024</time> • By Sarah Johnson
+                        </div>
+                        <h3 class="blog-title"><a href="/blog/top-tech-gadgets-2024">Top 10 Tech Gadgets to Watch in 2024</a></h3>
+                        <p class="blog-excerpt">Discover the most innovative and exciting tech gadgets that are reshaping how we live, work, and play this year.</p>
+                        <a href="/blog/top-tech-gadgets-2024" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EShopping Guide%3C/text%3E%3C/svg%3E" alt="" class="blog-image">
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <time datetime="2024-01-12">January 12, 2024</time> • By Mike Chen
+                        </div>
+                        <h3 class="blog-title"><a href="/blog/smart-shopping-tips">Smart Shopping Tips for Budget-Conscious Buyers</a></h3>
+                        <p class="blog-excerpt">Learn how to get the best deals and make informed purchasing decisions without breaking the bank.</p>
+                        <a href="/blog/smart-shopping-tips" class="read-more">Read More →</a>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23ddd' width='400' height='300'/%3E%3Ctext fill='%23999' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ESustainability%3C/text%3E%3C/svg%3E" alt="" class="blog-image">
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <time datetime="2024-01-08">January 8, 2024</time> • By Emma Davis
+                        </div>
+                        <h3 class="blog-title"><a href="/blog/sustainable-shopping">The Future of Sustainable Shopping</a></h3>
+                        <p class="blog-excerpt">Explore eco-friendly products and practices that help you shop responsibly while reducing environmental impact.</p>
+                        <a href="/blog/sustainable-shopping" class="read-more">Read More →</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="/categories/electronics">Electronics</a></li>
+                    <li><a href="/categories/fashion">Fashion</a></li>
+                    <li><a href="/categories/home">Home & Garden</a></li>
+                    <li><a href="/categories/sports">Sports & Outdoors</a></li>
+                    <li><a href="/deals">Special Offers</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="/help">Help Center</a></li>
+                    <li><a href="/shipping">Shipping Information</a></li>
+                    <li><a href="/returns">Returns & Exchanges</a></li>
+                    <li><a href="/track-order">Track Your Order</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <ul>
+                    <li><a href="/about">Our Story</a></li>
+                    <li><a href="/careers">Careers</a></li>
+                    <li><a href="/press">Press</a></li>
+                    <li><a href="/sustainability">Sustainability</a></li>
+                    <li><a href="/affiliate">Affiliate Program</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <ul>
+                    <li><a href="https://facebook.com/shophub" rel="noopener noreferrer" target="_blank">Facebook</a></li>
+                    <li><a href="https://twitter.com/shophub" rel="noopener noreferrer" target="_blank">Twitter</a></li>
+                    <li><a href="https://instagram.com/shophub" rel="noopener noreferrer" target="_blank">Instagram</a></li>
+                    <li><a href="https://youtube.com/shophub" rel="noopener noreferrer" target="_blank">YouTube</a></li>
+                    <li><a href="/newsletter">Newsletter</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2024 ShopHub. All rights reserved. | <a href="/privacy">Privacy Policy</a> | <a href="/terms">Terms of Service</a></p>
+        </div>
+    </footer>
+</body>
+</html>

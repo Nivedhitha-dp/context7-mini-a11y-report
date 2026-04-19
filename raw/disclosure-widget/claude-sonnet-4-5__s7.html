@@ -1,0 +1,232 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .example {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .example:hover {
+            transform: translateY(-5px);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            color: white;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .widget-header:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .widget-header h3 {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .toggle-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+
+        .toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 15px;
+        }
+
+        .details.expanded {
+            max-height: 1000px;
+            padding: 20px 15px;
+        }
+
+        .details-content {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1em;
+        }
+
+        .details-content p {
+            margin-bottom: 15px;
+        }
+
+        .details-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .details-content li {
+            margin-bottom: 8px;
+        }
+
+        .accent-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .example {
+                padding: 15px;
+            }
+
+            .widget-header h3 {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expand/Collapse Widget Demo</h1>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <h3>What is JavaScript?</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>JavaScript is a high-level, interpreted programming language that is one of the core technologies of the World Wide Web, alongside HTML and CSS.</p>
+                    <p>Key features include:</p>
+                    <ul>
+                        <li>Dynamic typing and first-class functions</li>
+                        <li>Prototype-based object orientation</li>
+                        <li>Event-driven programming</li>
+                        <li>Asynchronous programming with promises and async/await</li>
+                    </ul>
+                    <div class="accent-box">
+                        <strong>Fun Fact:</strong> JavaScript was created in just 10 days by Brendan Eich in 1995!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <h3>Why Use Expand/Collapse Widgets?</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>Expand/collapse widgets are essential UI components that help manage content visibility and improve user experience.</p>
+                    <p>Benefits include:</p>
+                    <ul>
+                        <li><strong>Space Efficiency:</strong> Keep interfaces clean by hiding secondary content</li>
+                        <li><strong>Progressive Disclosure:</strong> Show information when users need it</li>
+                        <li><strong>Better Navigation:</strong> Help users scan content quickly</li>
+                        <li><strong>Mobile Friendly:</strong> Especially useful on smaller screens</li>
+                    </ul>
+                    <p>They're commonly used in FAQs, navigation menus, settings panels, and documentation.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <h3>How Does This Widget Work?</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>This expand/collapse widget uses a combination of HTML, CSS, and JavaScript to create smooth transitions.</p>
+                    <p>The implementation involves:</p>
+                    <ul>
+                        <li>CSS transitions for smooth animations</li>
+                        <li>JavaScript toggle function to add/remove classes</li>
+                        <li>Max-height property for expandable content</li>
+                        <li>Transform property for rotating the arrow icon</li>
+                    </ul>
+                    <div class="accent-box">
+                        <strong>Technical Note:</strong> The widget uses max-height instead of height to create smooth CSS transitions, as height: auto cannot be animated directly.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <h3>Accessibility Considerations</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>When implementing expand/collapse widgets, it's important to consider accessibility:</p>
+                    <ul>
+                        <li>Use semantic HTML or ARIA attributes (aria-expanded, aria-controls)</li>
+                        <li>Ensure keyboard navigation support (Space/Enter keys)</li>
+                        <li>Provide clear visual indicators of state</li>
+                        <li>Maintain focus management for screen readers</li>
+                        <li>Use appropriate color contrast for text and backgrounds</li>
+                    </ul>
+                    <p>These practices ensure that all users, including those with disabilities, can effectively use your interface.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleWidget(header) {
+            const details = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            details.classList.toggle('expanded');
+            icon.classList.toggle('expanded');
+        }
+    </script>
+</body>
+</html>

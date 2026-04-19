@@ -1,0 +1,247 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .example {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .example:hover {
+            transform: translateY(-5px);
+        }
+
+        .toggle-button {
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-button:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .toggle-button::after {
+            content: '▼';
+            transition: transform 0.3s ease;
+            font-size: 12px;
+        }
+
+        .toggle-button.active::after {
+            transform: rotate(180deg);
+        }
+
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 20px;
+        }
+
+        .details.expanded {
+            max-height: 500px;
+            padding: 20px;
+        }
+
+        .details-content {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .details-content h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .details-content p {
+            margin-bottom: 10px;
+        }
+
+        .details-content ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .details-content li {
+            margin-bottom: 5px;
+        }
+
+        .example-title {
+            font-size: 14px;
+            color: #764ba2;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expand/Collapse Widget Examples</h1>
+
+        <div class="example">
+            <div class="example-title">Example 1: Basic Information</div>
+            <button class="toggle-button" onclick="toggleDetails(this)">
+                <span>Click to expand basic information</span>
+            </button>
+            <div class="details">
+                <div class="details-content">
+                    <h3>Welcome to the Expand/Collapse Widget</h3>
+                    <p>This is a simple and elegant way to hide and show content on your webpage. It helps keep your interface clean and organized while allowing users to access detailed information when needed.</p>
+                    <p>Click the button above to collapse this section.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="example-title">Example 2: Features List</div>
+            <button class="toggle-button" onclick="toggleDetails(this)">
+                <span>View features</span>
+            </button>
+            <div class="details">
+                <div class="details-content">
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li>Smooth animations for expand and collapse actions</li>
+                        <li>Responsive design that works on all devices</li>
+                        <li>Easy to customize colors and styles</li>
+                        <li>Lightweight and performant</li>
+                        <li>Accessible keyboard navigation support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="example-title">Example 3: FAQ Section</div>
+            <button class="toggle-button" onclick="toggleDetails(this)">
+                <span>What is an expand/collapse widget?</span>
+            </button>
+            <div class="details">
+                <div class="details-content">
+                    <h3>Answer</h3>
+                    <p>An expand/collapse widget is a user interface component that allows content to be hidden or revealed with a click. It's commonly used in FAQ sections, accordion menus, and content-heavy pages to improve readability and user experience.</p>
+                    <p>The main benefits include:</p>
+                    <ul>
+                        <li>Reduced visual clutter</li>
+                        <li>Improved page load times</li>
+                        <li>Better mobile experience</li>
+                        <li>Enhanced content organization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="example-title">Example 4: Technical Details</div>
+            <button class="toggle-button" onclick="toggleDetails(this)">
+                <span>Show technical implementation</span>
+            </button>
+            <div class="details">
+                <div class="details-content">
+                    <h3>Implementation Details</h3>
+                    <p>This widget is built using vanilla JavaScript, HTML, and CSS. No external libraries required!</p>
+                    <p><strong>Technologies used:</strong></p>
+                    <ul>
+                        <li>HTML5 for semantic structure</li>
+                        <li>CSS3 for animations and styling</li>
+                        <li>JavaScript for interactive functionality</li>
+                        <li>CSS transitions for smooth animations</li>
+                    </ul>
+                    <p>The widget uses CSS max-height transitions for smooth expand/collapse animations and maintains accessibility standards.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="example-title">Example 5: Additional Content</div>
+            <button class="toggle-button" onclick="toggleDetails(this)">
+                <span>Discover more information</span>
+            </button>
+            <div class="details">
+                <div class="details-content">
+                    <h3>More About This Widget</h3>
+                    <p>This expand/collapse widget can be used in various scenarios:</p>
+                    <ul>
+                        <li>Documentation pages to organize content</li>
+                        <li>Product descriptions with detailed specifications</li>
+                        <li>Terms and conditions sections</li>
+                        <li>Timeline or step-by-step guides</li>
+                        <li>News articles with expandable summaries</li>
+                    </ul>
+                    <p>The widget is fully customizable and can be styled to match your brand colors and design system.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(button) {
+            const details = button.nextElementSibling;
+            const isExpanded = details.classList.contains('expanded');
+            
+            if (isExpanded) {
+                details.classList.remove('expanded');
+                button.classList.remove('active');
+            } else {
+                details.classList.add('expanded');
+                button.classList.add('active');
+            }
+        }
+
+        // Add keyboard accessibility
+        document.querySelectorAll('.toggle-button').forEach(button => {
+            button.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleDetails(this);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

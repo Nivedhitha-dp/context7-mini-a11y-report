@@ -1,0 +1,933 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home - ShopHub - Your Online Shopping Destination</title>
+<style>
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-muted-text: #595959;
+  --color-link: #0066cc;
+  --color-link-hover: #004999;
+  --color-link-visited: #551a8b;
+  --color-border: #cccccc;
+  --color-focus: #0066cc;
+  --color-danger: #c70000;
+  --color-success: #007a00;
+  --color-bg-light: #f5f5f5;
+  --color-bg-dark: #1a1a1a;
+  --color-text-on-dark: #ffffff;
+  --color-price: #cc0000;
+  --color-badge-bg: #cc0000;
+  --color-badge-text: #ffffff;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--color-link-hover);
+}
+
+a:visited {
+  color: var(--color-link-visited);
+}
+
+a:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 4px 3px rgba(0, 102, 204, 0.3);
+}
+
+@media (forced-colors: active) {
+  a:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Header */
+header {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-on-dark);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+header a {
+  color: var(--color-text-on-dark);
+}
+
+header a:visited {
+  color: var(--color-text-on-dark);
+}
+
+header a:hover {
+  color: #cccccc;
+}
+
+.header-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 1 1 300px;
+  min-width: 0;
+  max-width: 600px;
+}
+
+.search-input {
+  flex: 1 1 200px;
+  min-width: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.search-input:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 0;
+  box-shadow: 0 0 4px 3px rgba(0, 102, 204, 0.3);
+}
+
+@media (forced-colors: active) {
+  .search-input:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  background-color: var(--color-link);
+  color: var(--color-text-on-dark);
+  transition: background-color 0.2s;
+}
+
+.btn:hover {
+  background-color: var(--color-link-hover);
+  color: var(--color-text-on-dark);
+}
+
+.btn:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 4px 3px rgba(0, 102, 204, 0.7);
+}
+
+@media (forced-colors: active) {
+  .btn {
+    border: 2px solid ButtonBorder;
+  }
+  .btn:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* Navigation */
+nav {
+  background-color: var(--color-bg-light);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.nav-list li {
+  margin: 0;
+}
+
+.nav-list a {
+  display: block;
+  padding: 1rem;
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--color-text);
+  border-bottom: 3px solid transparent;
+}
+
+.nav-list a:visited {
+  color: var(--color-text);
+}
+
+.nav-list a:hover {
+  background-color: var(--color-bg);
+  color: var(--color-link);
+  border-bottom-color: var(--color-link);
+}
+
+.nav-list a:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+/* Main content */
+main {
+  padding: 2rem 0;
+}
+
+main:focus {
+  outline: none;
+}
+
+.section {
+  margin-bottom: 3rem;
+}
+
+.section-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+h1, h2 {
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.view-all-link {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Product grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.product-card {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (forced-colors: active) {
+  .product-card:hover {
+    border: 2px solid ButtonBorder;
+  }
+}
+
+.product-image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  background-color: var(--color-bg-light);
+  overflow: hidden;
+}
+
+.product-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: var(--color-badge-bg);
+  color: var(--color-badge-text);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+@media (forced-colors: active) {
+  .badge {
+    border: 2px solid ButtonBorder;
+  }
+}
+
+.product-info {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.product-link {
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.product-link:visited {
+  color: var(--color-text);
+}
+
+.product-link:hover {
+  color: var(--color-link);
+  text-decoration: underline;
+}
+
+.product-link:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.product-description {
+  color: var(--color-muted-text);
+  font-size: 0.875rem;
+  margin: 0 0 0.75rem 0;
+  flex-grow: 1;
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--color-price);
+  margin: 0 0 0.75rem 0;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.stars {
+  color: #f5a623;
+  display: inline-flex;
+  gap: 0.125rem;
+}
+
+.rating-count {
+  color: var(--color-muted-text);
+}
+
+.btn-add-to-cart {
+  width: 100%;
+}
+
+/* Blog grid */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.blog-card {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background-color: var(--color-bg-light);
+  overflow: hidden;
+}
+
+.blog-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-content {
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-meta {
+  color: var(--color-muted-text);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-title {
+  margin: 0 0 0.75rem 0;
+}
+
+.blog-link {
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: bold;
+}
+
+.blog-link:visited {
+  color: var(--color-text);
+}
+
+.blog-link:hover {
+  color: var(--color-link);
+  text-decoration: underline;
+}
+
+.blog-link:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.blog-excerpt {
+  color: var(--color-text);
+  margin: 0 0 1rem 0;
+  flex-grow: 1;
+}
+
+.blog-read-more {
+  align-self: flex-start;
+}
+
+/* Footer */
+footer {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-on-dark);
+  padding: 2rem 0 1rem;
+  margin-top: 3rem;
+}
+
+footer a {
+  color: var(--color-text-on-dark);
+}
+
+footer a:visited {
+  color: var(--color-text-on-dark);
+}
+
+footer a:hover {
+  color: #cccccc;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+}
+
+.footer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-list li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-list a {
+  text-decoration: none;
+}
+
+.footer-list a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  border-top: 1px solid #444;
+  padding-top: 1rem;
+  text-align: center;
+  color: var(--color-muted-text);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-form {
+    max-width: none;
+  }
+  
+  .header-actions {
+    justify-content: space-between;
+  }
+  
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.375rem;
+  }
+  
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="#maincontent" class="sr-only">Skip to main content</a>
+      <div class="header-content">
+        <a href="/" class="logo">ShopHub</a>
+        <form class="search-form" role="search" action="/search" method="get">
+          <label for="search" class="sr-only">Search products</label>
+          <input type="search" id="search" name="q" class="search-input" placeholder="Search products..." aria-label="Search products">
+          <button type="submit" class="btn">Search</button>
+        </form>
+        <div class="header-actions">
+          <a href="/account" class="icon-link">
+            <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+            Account
+          </a>
+          <a href="/cart" class="icon-link">
+            <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+              <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+            Cart
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav aria-label="Main navigation">
+    <div class="container">
+      <ul class="nav-list">
+        <li><a href="/">Home</a></li>
+        <li><a href="/electronics">Electronics</a></li>
+        <li><a href="/clothing">Clothing</a></li>
+        <li><a href="/home-garden">Home & Garden</a></li>
+        <li><a href="/sports">Sports</a></li>
+        <li><a href="/deals">Deals</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="maincontent" tabindex="-1">
+    <div class="container">
+      <h1>Welcome to ShopHub</h1>
+      
+      <section class="section" aria-labelledby="popular-heading">
+        <div class="section-header">
+          <h2 id="popular-heading">Popular Items</h2>
+          <a href="/popular" class="view-all-link">View All Popular Items</a>
+        </div>
+        <ul class="product-grid">
+          <li>
+            <article class="product-card">
+              <div class="product-image-container">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e0e0e0' width='400' height='400'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EWireless Headphones%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+              </div>
+              <div class="product-info">
+                <h3 class="product-title">
+                  <a href="/products/wireless-headphones" class="product-link">Premium Wireless Headphones</a>
+                </h3>
+                <p class="product-description">High-quality noise-canceling headphones with 30-hour battery life</p>
+                <div class="product-rating" aria-label="Rating: 4.5 out of 5 stars, 1,234 reviews">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">(1,234)</span>
+                </div>
+                <p class="product-price">$199.99</p>
+                <button type="button" class="btn btn-add-to-cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="product-card">
+              <div class="product-image-container">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e0e0e0' width='400' height='400'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ESmartwatch%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+              </div>
+              <div class="product-info">
+                <h3 class="product-title">
+                  <a href="/products/smartwatch" class="product-link">Fitness Smartwatch Pro</a>
+                </h3>
+                <p class="product-description">Track your health and fitness with GPS, heart rate monitor, and sleep tracking</p>
+                <div class="product-rating" aria-label="Rating: 4 out of 5 stars, 892 reviews">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">(892)</span>
+                </div>
+                <p class="product-price">$299.99</p>
+                <button type="button" class="btn btn-add-to-cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="product-card">
+              <div class="product-image-container">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e0e0e0' width='400' height='400'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EBackpack%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+              </div>
+              <div class="product-info">
+                <h3 class="product-title">
+                  <a href="/products/travel-backpack" class="product-link">Water-Resistant Travel Backpack</a>
+                </h3>
+                <p class="product-description">Durable backpack with laptop compartment and USB charging port</p>
+                <div class="product-rating" aria-label="Rating: 4.5 out of 5 stars, 2,156 reviews">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">(2,156)</span>
+                </div>
+                <p class="product-price">$79.99</p>
+                <button type="button" class="btn btn-add-to-cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="product-card">
+              <div class="product-image-container">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e0e0e0' width='400' height='400'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ECoffee Maker%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+              </div>
+              <div class="product-info">
+                <h3 class="product-title">
+                  <a href="/products/coffee-maker" class="product-link">Programmable Coffee Maker</a>
+                </h3>
+                <p class="product-description">Brew the perfect cup with programmable settings and thermal carafe</p>
+                <div class="product-rating" aria-label="Rating: 4.5 out of 5 stars, 3,421 reviews">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">(3,421)</span>
+                </div>
+                <p class="product-price">$129.99</p>
+                <button type="button" class="btn btn-add-to-cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section" aria-labelledby="deals-heading">
+        <div class="section-header">
+          <h2 id="deals-heading">Today's Deals</h2>
+          <a href="/deals" class="view-all-link">View All Deals</a>
+        </div>
+        <ul class="product-grid">
+          <li>
+            <article class="product-card">
+              <div class="product-image-container">
+                <span class="badge">30% OFF</span>
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e0e0e0' width='400' height='400'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EYoga Mat%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+              </div>
+              <div class="product-info">
+                <h3 class="product-title">
+                  <a href="/products/yoga-mat" class="product-link">Premium Yoga Mat</a>
+                </h3>
+                <p class="product-description">Non-slip eco-friendly yoga mat with carrying strap</p>
+                <div class="product-rating" aria-label="Rating: 4.5 out of 5 stars, 567 reviews">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">(567)</span>
+                </div>
+                <p class="product-price">$34.99 <span style="text-decoration: line-through; color: var(--color-muted-text); font-size: 1rem;">$49.99</span></p>
+                <button type="button" class="btn btn-add-to-cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="product-card">
+              <div class="product-image-container">
+                <span class="badge">50% OFF</span>
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e0e0e0' width='400' height='400'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EBluetooth Speaker%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+              </div>
+              <div class="product-info">
+                <h3 class="product-title">
+                  <a href="/products/bluetooth-speaker" class="product-link">Portable Bluetooth Speaker</a>
+                </h3>
+                <p class="product-description">Waterproof speaker with 12-hour battery life and deep bass</p>
+                <div class="product-rating" aria-label="Rating: 4 out of 5 stars, 1,089 reviews">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">(1,089)</span>
+                </div>
+                <p class="product-price">$39.99 <span style="text-decoration: line-through; color: var(--color-muted-text); font-size: 1rem;">$79.99</span></p>
+                <button type="button" class="btn btn-add-to-cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="product-card">
+              <div class="product-image-container">
+                <span class="badge">25% OFF</span>
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e0e0e0' width='400' height='400'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EDesk Lamp%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+              </div>
+              <div class="product-info">
+                <h3 class="product-title">
+                  <a href="/products/desk-lamp" class="product-link">LED Desk Lamp with USB Port</a>
+                </h3>
+                <p class="product-description">Adjustable brightness desk lamp with phone charging port</p>
+                <div class="product-rating" aria-label="Rating: 4.5 out of 5 stars, 734 reviews">
+                  <span class="stars" aria-hidden="true">★★★★☆</span>
+                  <span class="rating-count">(734)</span>
+                </div>
+                <p class="product-price">$44.99 <span style="text-decoration: line-through; color: var(--color-muted-text); font-size: 1rem;">$59.99</span></p>
+                <button type="button" class="btn btn-add-to-cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="product-card">
+              <div class="product-image-container">
+                <span class="badge">40% OFF</span>
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e0e0e0' width='400' height='400'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EWater Bottle%3C/text%3E%3C/svg%3E" alt="" class="product-image">
+              </div>
+              <div class="product-info">
+                <h3 class="product-title">
+                  <a href="/products/water-bottle" class="product-link">Insulated Water Bottle</a>
+                </h3>
+                <p class="product-description">Keep drinks cold for 24 hours or hot for 12 hours</p>
+                <div class="product-rating" aria-label="Rating: 5 out of 5 stars, 2,891 reviews">
+                  <span class="stars" aria-hidden="true">★★★★★</span>
+                  <span class="rating-count">(2,891)</span>
+                </div>
+                <p class="product-price">$23.99 <span style="text-decoration: line-through; color: var(--color-muted-text); font-size: 1rem;">$39.99</span></p>
+                <button type="button" class="btn btn-add-to-cart">Add to Cart</button>
+              </div>
+            </article>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section" aria-labelledby="blog-heading">
+        <div class="section-header">
+          <h2 id="blog-heading">From Our Blog</h2>
+          <a href="/blog" class="view-all-link">View All Blog Posts</a>
+        </div>
+        <ul class="blog-grid">
+          <li>
+            <article class="blog-card">
+              <div class="blog-image-container">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect fill='%23e0e0e0' width='800' height='450'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3EHome Office Setup%3C/text%3E%3C/svg%3E" alt="" class="blog-image">
+              </div>
+              <div class="blog-content">
+                <p class="blog-meta"><time datetime="2024-01-15">January 15, 2024</time></p>
+                <h3 class="blog-title">
+                  <a href="/blog/home-office-setup" class="blog-link">10 Essential Items for Your Home Office Setup</a>
+                </h3>
+                <p class="blog-excerpt">Create a productive workspace with these must-have items that will improve your comfort and efficiency while working from home.</p>
+                <a href="/blog/home-office-setup" class="blog-read-more">Read More</a>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="blog-card">
+              <div class="blog-image-container">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect fill='%23e0e0e0' width='800' height='450'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ETech Trends%3C/text%3E%3C/svg%3E" alt="" class="blog-image">
+              </div>
+              <div class="blog-content">
+                <p class="blog-meta"><time datetime="2024-01-12">January 12, 2024</time></p>
+                <h3 class="blog-title">
+                  <a href="/blog/tech-trends-2024" class="blog-link">Top Tech Trends to Watch in 2024</a>
+                </h3>
+                <p class="blog-excerpt">Discover the emerging technologies and gadgets that will shape the future of consumer electronics this year.</p>
+                <a href="/blog/tech-trends-2024" class="blog-read-more">Read More</a>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="blog-card">
+              <div class="blog-image-container">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect fill='%23e0e0e0' width='800' height='450'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='48' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ESustainable Shopping%3C/text%3E%3C/svg%3E" alt="" class="blog-image">
+              </div>
+              <div class="blog-content">
+                <p class="blog-meta"><time datetime="2024-01-08">January 8, 2024</time></p>
+                <h3 class="blog-title">
+                  <a href="/blog/sustainable-shopping-guide" class="blog-link">A Guide to Sustainable Shopping Practices</a>
+                </h3>
+                <p class="blog-excerpt">Learn how to make environmentally conscious purchasing decisions and reduce your carbon footprint while shopping.</p>
+                <a href="/blog/sustainable-shopping-guide" class="blog-read-more">Read More</a>
+              </div>
+            </article>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Customer Service</h3>
+          <ul class="footer-list">
+            <li><a href="/help">Help Center</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/returns">Returns & Exchanges</a></li>
+            <li><a href="/shipping">Shipping Information</a></li>
+            <li><a href="/track">Track Your Order</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>About ShopHub</h3>
+          <ul class="footer-list">
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/press">Press & Media</a></li>
+            <li><a href="/sustainability">Sustainability</a></li>
+            <li><a href="/affiliates">Affiliate Program</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>My Account</h3>
+          <ul class="footer-list">
+            <li><a href="/account">My Account</a></li>
+            <li><a href="/orders">Order History</a></li>
+            <li><a href="/wishlist">Wishlist</a></li>
+            <li><a href="/newsletter">Newsletter</a></li>
+            <li><a href="/rewards">Rewards Program</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Policies</h3>
+          <ul class="footer-list">
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/terms">Terms of Service</a></li>
+            <li><a href="/cookies">Cookie Policy</a></li>
+            <li><a href="/accessibility">Accessibility</a></li>
+            <li><a href="/legal">Legal</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 ShopHub. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

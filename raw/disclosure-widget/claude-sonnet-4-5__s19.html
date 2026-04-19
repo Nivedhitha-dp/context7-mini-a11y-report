@@ -1,0 +1,178 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .example {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .toggle-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .toggle-button:active {
+            background-color: #004085;
+        }
+        
+        .details {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+        }
+        
+        .details.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+        }
+        
+        .details.expanded {
+            max-height: 500px;
+            opacity: 1;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        
+        .arrow {
+            display: inline-block;
+            transition: transform 0.3s;
+            margin-right: 8px;
+        }
+        
+        .arrow.down {
+            transform: rotate(0deg);
+        }
+        
+        .arrow.up {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <h1>Expand/Collapse Widget Examples</h1>
+    
+    <div class="example">
+        <h2>Widget 1: Basic Information</h2>
+        <button class="toggle-button" onclick="toggleDetails('details1', this)">
+            <span class="arrow down">▼</span> Click to Expand
+        </button>
+        <div id="details1" class="details collapsed">
+            <h3>About This Widget</h3>
+            <p>This is a simple expand/collapse widget that reveals additional content when you click the button above.</p>
+            <p>The content smoothly animates in and out of view, providing a clean user experience.</p>
+            <ul>
+                <li>Smooth transitions</li>
+                <li>Easy to use</li>
+                <li>Responsive design</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h2>Widget 2: Product Details</h2>
+        <button class="toggle-button" onclick="toggleDetails('details2', this)">
+            <span class="arrow down">▼</span> Show Product Specifications
+        </button>
+        <div id="details2" class="details collapsed">
+            <h3>Technical Specifications</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Dimensions:</strong></td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">10" x 8" x 2"</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Weight:</strong></td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">2.5 lbs</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Material:</strong></td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">Aluminum Alloy</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;"><strong>Warranty:</strong></td>
+                    <td style="padding: 8px;">2 Years</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h2>Widget 3: FAQ Section</h2>
+        <button class="toggle-button" onclick="toggleDetails('details3', this)">
+            <span class="arrow down">▼</span> View Answer
+        </button>
+        <div id="details3" class="details collapsed">
+            <h3>How does the expand/collapse widget work?</h3>
+            <p>The widget uses JavaScript to toggle CSS classes on the content container. When you click the button:</p>
+            <ol>
+                <li>The JavaScript function is triggered</li>
+                <li>It checks the current state of the content (collapsed or expanded)</li>
+                <li>It toggles the appropriate CSS class</li>
+                <li>CSS transitions handle the smooth animation</li>
+                <li>The button text updates to reflect the new state</li>
+            </ol>
+            <p>This creates a smooth, professional-looking interaction without requiring any external libraries.</p>
+        </div>
+    </div>
+    
+    <script>
+        function toggleDetails(detailsId, button) {
+            const details = document.getElementById(detailsId);
+            const arrow = button.querySelector('.arrow');
+            
+            if (details.classList.contains('collapsed')) {
+                details.classList.remove('collapsed');
+                details.classList.add('expanded');
+                arrow.classList.remove('down');
+                arrow.classList.add('up');
+                button.innerHTML = '<span class="arrow up">▼</span> Click to Collapse';
+            } else {
+                details.classList.remove('expanded');
+                details.classList.add('collapsed');
+                arrow.classList.remove('up');
+                arrow.classList.add('down');
+                button.innerHTML = '<span class="arrow down">▼</span> Click to Expand';
+            }
+        }
+    </script>
+</body>
+</html>

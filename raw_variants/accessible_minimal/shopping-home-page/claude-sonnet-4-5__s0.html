@@ -1,0 +1,685 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopHub - Your One-Stop Shopping Destination</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover,
+        nav a:focus {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .search-cart {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            display: flex;
+        }
+
+        .search-box input {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px 0 0 20px;
+            min-width: 200px;
+        }
+
+        .search-box button {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: #5a67d8;
+            color: white;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .search-box button:hover,
+        .search-box button:focus {
+            background: #4c51bf;
+        }
+
+        .cart-icon {
+            background: white;
+            color: #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .cart-icon:hover,
+        .cart-icon:focus {
+            transform: scale(1.05);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #f5576c;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s;
+        }
+
+        .cta-button:hover,
+        .cta-button:focus {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #2d3748;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover,
+        .product-card:focus-within {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .product-info p {
+            color: #718096;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 0.75rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .add-to-cart:hover,
+        .add-to-cart:focus {
+            background: #5a67d8;
+        }
+
+        .deals-section {
+            background: #f7fafc;
+            padding: 3rem 0;
+        }
+
+        .deal-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .deal-image {
+            flex: 0 0 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .deal-content {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .deal-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .deal-content p {
+            color: #718096;
+            margin-bottom: 1rem;
+        }
+
+        .deal-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f5576c;
+            margin-bottom: 0.5rem;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #a0aec0;
+            font-size: 1.2rem;
+            margin-left: 1rem;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .blog-card:hover,
+        .blog-card:focus-within {
+            transform: translateY(-5px);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-date {
+            color: #a0aec0;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            color: #2d3748;
+        }
+
+        .blog-content p {
+            color: #718096;
+            margin-bottom: 1rem;
+        }
+
+        .read-more {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .read-more:hover,
+        .read-more:focus {
+            color: #5a67d8;
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover,
+        .footer-section a:focus {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #4a5568;
+            color: #cbd5e0;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .deal-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .deal-image {
+                flex: 0 0 auto;
+                width: 100%;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .search-box input {
+                min-width: 150px;
+            }
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header>
+        <div class="header-container">
+            <div class="logo">ShopHub</div>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#deals">Deals</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="search-cart">
+                <form class="search-box" role="search" aria-label="Product search">
+                    <label for="search-input" class="visually-hidden">Search products</label>
+                    <input type="search" id="search-input" placeholder="Search products..." aria-label="Search products">
+                    <button type="submit" aria-label="Submit search">Search</button>
+                </form>
+                <a href="#cart" class="cart-icon" aria-label="Shopping cart">🛒 Cart</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-heading">
+        <h1 id="hero-heading">Welcome to ShopHub</h1>
+        <p>Discover amazing products at unbeatable prices</p>
+        <a href="#products" class="cta-button">Shop Now</a>
+    </section>
+
+    <main id="main-content">
+        <section id="products" aria-labelledby="popular-heading">
+            <div class="container">
+                <h2 id="popular-heading" class="section-title">Popular Products</h2>
+                <div class="product-grid">
+                    <article class="product-card">
+                        <div class="product-image" role="img" aria-label="Wireless headphones product image">🎧</div>
+                        <div class="product-info">
+                            <h3>Wireless Headphones</h3>
+                            <p>Premium noise-cancelling headphones with 30-hour battery life</p>
+                            <div class="product-price">$129.99</div>
+                            <button class="add-to-cart" aria-label="Add Wireless Headphones to cart">Add to Cart</button>
+                        </div>
+                    </article>
+
+                    <article class="product-card">
+                        <div class="product-image" role="img" aria-label="Smart watch product image">⌚</div>
+                        <div class="product-info">
+                            <h3>Smart Watch</h3>
+                            <p>Track your fitness and stay connected with this sleek smartwatch</p>
+                            <div class="product-price">$249.99</div>
+                            <button class="add-to-cart" aria-label="Add Smart Watch to cart">Add to Cart</button>
+                        </div>
+                    </article>
+
+                    <article class="product-card">
+                        <div class="product-image" role="img" aria-label="Laptop backpack product image">🎒</div>
+                        <div class="product-info">
+                            <h3>Laptop Backpack</h3>
+                            <p>Durable backpack with padded laptop compartment and USB charging port</p>
+                            <div class="product-price">$59.99</div>
+                            <button class="add-to-cart" aria-label="Add Laptop Backpack to cart">Add to Cart</button>
+                        </div>
+                    </article>
+
+                    <article class="product-card">
+                        <div class="product-image" role="img" aria-label="Portable speaker product image">🔊</div>
+                        <div class="product-info">
+                            <h3>Portable Speaker</h3>
+                            <p>Waterproof Bluetooth speaker with 360-degree sound</p>
+                            <div class="product-price">$79.99</div>
+                            <button class="add-to-cart" aria-label="Add Portable Speaker to cart">Add to Cart</button>
+                        </div>
+                    </article>
+
+                    <article class="product-card">
+                        <div class="product-image" role="img" aria-label="Camera product image">📷</div>
+                        <div class="product-info">
+                            <h3>Digital Camera</h3>
+                            <p>Professional mirrorless camera with 4K video recording</p>
+                            <div class="product-price">$899.99</div>
+                            <button class="add-to-cart" aria-label="Add Digital Camera to cart">Add to Cart</button>
+                        </div>
+                    </article>
+
+                    <article class="product-card">
+                        <div class="product-image" role="img" aria-label="Fitness tracker product image">📱</div>
+                        <div class="product-info">
+                            <h3>Fitness Tracker</h3>
+                            <p>Monitor your health with heart rate and sleep tracking</p>
+                            <div class="product-price">$89.99</div>
+                            <button class="add-to-cart" aria-label="Add Fitness Tracker to cart">Add to Cart</button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="deals" class="deals-section" aria-labelledby="deals-heading">
+            <div class="container">
+                <h2 id="deals-heading" class="section-title">Today's Best Deals</h2>
+                
+                <article class="deal-card">
+                    <div class="deal-image" role="img" aria-label="Gaming console deal image">🎮</div>
+                    <div class="deal-content">
+                        <h3>Gaming Console Bundle</h3>
+                        <p>Next-gen gaming console with two controllers and three popular games. Limited time offer!</p>
+                        <div>
+                            <span class="deal-price">$399.99</span>
+                            <span class="original-price">$549.99</span>
+                            <span class="discount-badge">Save 27%</span>
+                        </div>
+                        <button class="add-to-cart" style="margin-top: 1rem; max-width: 200px;" aria-label="Add Gaming Console Bundle to cart">Add to Cart</button>
+                    </div>
+                </article>
+
+                <article class="deal-card">
+                    <div class="deal-image" role="img" aria-label="Tablet deal image">💻</div>
+                    <div class="deal-content">
+                        <h3>10-Inch Tablet</h3>
+                        <p>High-resolution display tablet perfect for work and entertainment. Includes stylus pen.</p>
+                        <div>
+                            <span class="deal-price">$299.99</span>
+                            <span class="original-price">$449.99</span>
+                            <span class="discount-badge">Save 33%</span>
+                        </div>
+                        <button class="add-to-cart" style="margin-top: 1rem; max-width: 200px;" aria-label="Add 10-Inch Tablet to cart">Add to Cart</button>
+                    </div>
+                </article>
+
+                <article class="deal-card">
+                    <div class="deal-image" role="img" aria-label="Robot vacuum deal image">🤖</div>
+                    <div class="deal-content">
+                        <h3>Robot Vacuum Cleaner</h3>
+                        <p>Smart navigation robot vacuum with app control and automatic charging station.</p>
+                        <div>
+                            <span class="deal-price">$179.99</span>
+                            <span class="original-price">$299.99</span>
+                            <span class="discount-badge">Save 40%</span>
+                        </div>
+                        <button class="add-to-cart" style="margin-top: 1rem; max-width: 200px;" aria-label="Add Robot Vacuum Cleaner to cart">Add to Cart</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="blog" aria-labelledby="blog-heading">
+            <div class="container">
+                <h2 id="blog-heading" class="section-title">Latest from Our Blog</h2>
+                <div class="blog-grid">
+                    <article class="blog-card">
+                        <div class="blog-image" role="img" aria-label="Tech trends blog post image">📊</div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2024-01-15">January 15, 2024</time>
+                            <h3>Top Tech Trends for 2024</h3>
+                            <p>Discover the latest technology trends that will shape the year ahead, from AI innovations to sustainable tech solutions.</p>
+                            <a href="#blog-post-1" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <article class="blog-card">
+                        <div class="blog-image" role="img" aria-label="Shopping guide blog post image">🛍️</div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2024-01-12">January 12, 2024</time>
+                            <h3>Smart Shopping Guide</h3>
+                            <p>Learn how to make the most of your online shopping experience with our expert tips and money-saving strategies.</p>
+                            <a href="#blog-post-2" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <article class="blog-card">
+                        <div class="blog-image" role="img" aria-label="Home office setup blog post image">🏠</div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2024-01-08">January 8, 2024</time>
+                            <h3>Creating the Perfect Home Office</h3>
+                            <p>Transform your workspace with our comprehensive guide to setting up an efficient and comfortable home office.</p>
+                            <a href="#blog-post-3" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About ShopHub</h4>
+                <p>Your trusted online shopping destination for quality products at great prices. We're committed to providing excellent customer service and a seamless shopping experience.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="#shipping">Shipping Information</a></li>
+                    <li><a href="#returns">Returns & Exchanges</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#track">Track Order</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#account">My Account</a></li>
+                    <li><a href="#wishlist">Wishlist</a></li>
+                    <li><a href="#deals">Current Deals</a></li>
+                    <li><a href="#new">New Arrivals</a></li>
+                    <li><a href="#gift-cards">Gift Cards</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <ul>
+                    <li><a href="#facebook">Facebook</a></li>
+                    <li><a href="#twitter">Twitter</a></li>
+                    <li><a href="#instagram">Instagram</a></li>
+                    <li><a href="#youtube">YouTube</a></li>
+                    <li><a href="#newsletter">Newsletter Signup</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 ShopHub. All rights reserved. | <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
+        </div>
+    </footer>
+</body>
+</html>

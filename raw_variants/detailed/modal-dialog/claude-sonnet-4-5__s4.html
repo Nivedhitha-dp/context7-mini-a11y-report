@@ -1,0 +1,494 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Dialog Example - Accessible Components</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #1a1a1a;
+      --color-muted-text: #4a4a4a;
+      --color-link: #0052cc;
+      --color-border: #cccccc;
+      --color-focus: #0052cc;
+      --color-button-bg: #0052cc;
+      --color-button-text: #ffffff;
+      --color-button-hover-bg: #003d99;
+      --color-danger: #c41e3a;
+      --color-overlay: rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      margin: 0;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    .sr-only:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    header {
+      margin-bottom: 2rem;
+    }
+
+    main {
+      max-width: 800px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 1rem 0;
+      color: var(--color-text);
+    }
+
+    p {
+      margin: 0 0 1rem 0;
+      color: var(--color-muted-text);
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 0.75rem 1.5rem;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:focus {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    .trigger {
+      background-color: var(--color-button-bg);
+      color: var(--color-button-text);
+    }
+
+    .trigger:hover {
+      background-color: var(--color-button-hover-bg);
+    }
+
+    .trigger:active {
+      background-color: #002b66;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--color-overlay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 1000;
+    }
+
+    .modal-overlay[hidden] {
+      display: none;
+    }
+
+    .modal {
+      background-color: var(--color-bg);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
+      max-height: calc(100vh - 2rem);
+      overflow: auto;
+      position: relative;
+    }
+
+    @media (forced-colors: active) {
+      .modal {
+        border: 2px solid CanvasText;
+      }
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--color-text);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .modal-close {
+      background-color: transparent;
+      color: var(--color-text);
+      padding: 0.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .modal-close:active {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-close svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      fill: currentColor;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-body p {
+      color: var(--color-text);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .required::after {
+      content: " *";
+      color: var(--color-danger);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--color-border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+      border-color: var(--color-focus);
+    }
+
+    input[aria-invalid="true"],
+    textarea[aria-invalid="true"] {
+      border-color: var(--color-danger);
+    }
+
+    .help-text {
+      font-size: 0.875rem;
+      color: var(--color-muted-text);
+      margin-top: 0.25rem;
+    }
+
+    .error-message {
+      font-size: 0.875rem;
+      color: var(--color-danger);
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .modal-footer {
+      padding: 1.5rem;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .button-secondary {
+      background-color: transparent;
+      color: var(--color-text);
+      border: 2px solid var(--color-border);
+    }
+
+    .button-secondary:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .button-secondary:active {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .button-primary {
+      background-color: var(--color-button-bg);
+      color: var(--color-button-text);
+    }
+
+    .button-primary:hover {
+      background-color: var(--color-button-hover-bg);
+    }
+
+    .button-primary:active {
+      background-color: #002b66;
+    }
+
+    @media (max-width: 480px) {
+      .modal-footer {
+        flex-direction: column-reverse;
+      }
+
+      .modal-footer button {
+        width: 100%;
+      }
+    }
+
+    @media (forced-colors: active) {
+      button:focus {
+        outline: 2px solid ButtonText;
+      }
+
+      .modal-overlay {
+        background-color: Canvas;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#maincontent" class="sr-only">Skip to main content</a>
+  </header>
+
+  <main id="maincontent" tabindex="-1">
+    <h1>Modal Dialog Example</h1>
+    <p>This page demonstrates an accessible modal dialog component. Click the button below to open the modal.</p>
+    
+    <button type="button" class="trigger" id="openModalBtn">
+      Open Contact Form
+    </button>
+
+    <p style="margin-top: 2rem;">This is some additional content on the page. When the modal is open, this content becomes inert and cannot receive focus.</p>
+  </main>
+
+  <div class="modal-overlay" id="modalOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Contact Us</h2>
+        <button type="button" class="modal-close" id="closeModalBtn" aria-label="Close dialog">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="contactForm" novalidate>
+          <div class="form-group">
+            <label for="userName" class="required">Name</label>
+            <input type="text" id="userName" name="userName" aria-required="true" aria-describedby="userNameError">
+            <div class="error-message" id="userNameError" role="alert">Please enter your name.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="userEmail" class="required">Email</label>
+            <input type="email" id="userEmail" name="userEmail" aria-required="true" aria-describedby="userEmailHelp userEmailError">
+            <div class="help-text" id="userEmailHelp">We'll never share your email with anyone else.</div>
+            <div class="error-message" id="userEmailError" role="alert">Please enter a valid email address.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="userMessage" class="required">Message</label>
+            <textarea id="userMessage" name="userMessage" aria-required="true" aria-describedby="userMessageError"></textarea>
+            <div class="error-message" id="userMessageError" role="alert">Please enter a message.</div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="button-secondary" id="cancelBtn">Cancel</button>
+        <button type="submit" form="contactForm" class="button-primary" id="submitBtn">Send Message</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const openModalBtn = document.getElementById('openModalBtn');
+      const modalOverlay = document.getElementById('modalOverlay');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const contactForm = document.getElementById('contactForm');
+      const submitBtn = document.getElementById('submitBtn');
+
+      let lastFocusedElement = null;
+      const focusableSelectors = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+      function openModal() {
+        lastFocusedElement = document.activeElement;
+        modalOverlay.hidden = false;
+        closeModalBtn.focus();
+      }
+
+      function closeModal() {
+        modalOverlay.hidden = true;
+        if (lastFocusedElement) {
+          lastFocusedElement.focus();
+        }
+        resetForm();
+      }
+
+      function resetForm() {
+        contactForm.reset();
+        const errorMessages = modalOverlay.querySelectorAll('.error-message');
+        errorMessages.forEach(error => error.classList.remove('visible'));
+        
+        const invalidInputs = modalOverlay.querySelectorAll('[aria-invalid="true"]');
+        invalidInputs.forEach(input => input.removeAttribute('aria-invalid'));
+      }
+
+      function validateForm() {
+        let isValid = true;
+        let firstInvalidField = null;
+
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const userMessage = document.getElementById('userMessage');
+
+        const userNameError = document.getElementById('userNameError');
+        const userEmailError = document.getElementById('userEmailError');
+        const userMessageError = document.getElementById('userMessageError');
+
+        // Reset all errors
+        [userNameError, userEmailError, userMessageError].forEach(error => {
+          error.classList.remove('visible');
+        });
+        [userName, userEmail, userMessage].forEach(input => {
+          input.removeAttribute('aria-invalid');
+        });
+
+        // Validate name
+        if (!userName.value.trim()) {
+          userName.setAttribute('aria-invalid', 'true');
+          userNameError.classList.add('visible');
+          isValid = false;
+          if (!firstInvalidField) firstInvalidField = userName;
+        }
+
+        // Validate email
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!userEmail.value.trim() || !emailPattern.test(userEmail.value)) {
+          userEmail.setAttribute('aria-invalid', 'true');
+          userEmailError.classList.add('visible');
+          isValid = false;
+          if (!firstInvalidField) firstInvalidField = userEmail;
+        }
+
+        // Validate message
+        if (!userMessage.value.trim()) {
+          userMessage.setAttribute('aria-invalid', 'true');
+          userMessageError.classList.add('visible');
+          isValid = false;
+          if (!firstInvalidField) firstInvalidField = userMessage;
+        }
+
+        if (!isValid && firstInvalidField) {
+          firstInvalidField.focus();
+        }
+
+        return isValid;
+      }
+
+      function trapFocus(event) {
+        if (modalOverlay.hidden) return;
+
+        const focusableElements = modalOverlay.querySelectorAll(focusableSelectors);
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+
+        if (event.key === 'Tab') {
+          if (event.shiftKey) {
+            if (document.activeElement === firstFocusable) {
+              event.preventDefault();
+              lastFocusable.focus();
+            }
+          } else {
+            if (document.activeElement === lastFocusable) {
+              event.preventDefault();
+              firstFocusable.focus();
+            }
+          }
+        }
+      }
+
+      function handleKeydown(event) {
+        if (event.key === 'Escape' && !modalOverlay.hidden) {
+          closeModal();
+        }
+      }
+
+      openModalBtn.addEventListener('click', openModal);
+      closeModalBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+
+      modalOverlay.addEventListener('click', function(event) {
+        if (event.target === modalOverlay) {
+          closeModal();
+        }
+      });
+
+      contactForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        if (validateForm()) {
+          alert('Form submitted successfully! (This is a demo)');
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', trapFocus);
+      document.addEventListener('keydown', handleKeydown);
+    })();
+  </script>
+</body>
+</html>

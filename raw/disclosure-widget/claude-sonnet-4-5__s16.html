@@ -1,0 +1,234 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .example {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .example:hover {
+            transform: translateY(-5px);
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .widget-header:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .widget-title {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .toggle-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+
+        .toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease, margin 0.4s ease;
+            padding: 0 15px;
+        }
+
+        .details.expanded {
+            max-height: 1000px;
+            padding: 20px 15px;
+            margin-top: 15px;
+        }
+
+        .details-content {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .details-content h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            margin-top: 15px;
+        }
+
+        .details-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .details-content p {
+            margin-bottom: 12px;
+        }
+
+        .details-content ul {
+            margin-left: 25px;
+            margin-bottom: 12px;
+        }
+
+        .details-content li {
+            margin-bottom: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expand/Collapse Widget Demo</h1>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">
+                    What is JavaScript? <span class="badge">Programming</span>
+                </div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>JavaScript is a high-level, interpreted programming language that is one of the core technologies of the World Wide Web, alongside HTML and CSS.</p>
+                    <h3>Key Features:</h3>
+                    <ul>
+                        <li>Dynamic typing and first-class functions</li>
+                        <li>Prototype-based object-orientation</li>
+                        <li>Event-driven and asynchronous programming</li>
+                        <li>Runs in browsers and on servers (Node.js)</li>
+                    </ul>
+                    <p>JavaScript enables interactive web pages and is an essential part of web applications.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">
+                    How does CSS work? <span class="badge">Styling</span>
+                </div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>CSS (Cascading Style Sheets) is a stylesheet language used to describe the presentation of a document written in HTML or XML.</p>
+                    <h3>Main Concepts:</h3>
+                    <ul>
+                        <li><strong>Selectors:</strong> Target HTML elements to style</li>
+                        <li><strong>Properties:</strong> Define what aspect to change (color, size, etc.)</li>
+                        <li><strong>Values:</strong> Specify how to change the property</li>
+                        <li><strong>Cascade:</strong> Determines which styles apply when multiple rules match</li>
+                    </ul>
+                    <p>CSS separates content from presentation, making websites easier to maintain and more accessible.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">
+                    What is Responsive Design? <span class="badge">Design</span>
+                </div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>Responsive web design is an approach to web design that makes web pages render well on a variety of devices and window or screen sizes.</p>
+                    <h3>Core Principles:</h3>
+                    <ul>
+                        <li>Fluid grids that use relative units like percentages</li>
+                        <li>Flexible images that scale within their containers</li>
+                        <li>Media queries to apply different styles for different devices</li>
+                        <li>Mobile-first approach to design and development</li>
+                    </ul>
+                    <p>This ensures optimal viewing experience across desktop computers, tablets, and mobile phones.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">
+                    Understanding the DOM <span class="badge">Concepts</span>
+                </div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>The Document Object Model (DOM) is a programming interface for web documents. It represents the page so that programs can change the document structure, style, and content.</p>
+                    <h3>How it Works:</h3>
+                    <ul>
+                        <li>The DOM represents the document as a tree of nodes</li>
+                        <li>Each element, attribute, and piece of text becomes a node</li>
+                        <li>JavaScript can manipulate these nodes to update the page</li>
+                        <li>Changes to the DOM are reflected immediately in the browser</li>
+                    </ul>
+                    <p>Understanding the DOM is crucial for creating dynamic and interactive web applications.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleWidget(header) {
+            const icon = header.querySelector('.toggle-icon');
+            const details = header.nextElementSibling;
+            
+            icon.classList.toggle('expanded');
+            details.classList.toggle('expanded');
+        }
+    </script>
+</body>
+</html>

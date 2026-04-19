@@ -1,0 +1,297 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expand/Collapse Widget - Accessibility Demo</title>
+<style>
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-muted-text: #4a4a4a;
+  --color-link: #0066cc;
+  --color-border: #cccccc;
+  --color-focus: #0066cc;
+  --color-danger: #c00000;
+  --color-success: #007a00;
+  --color-button-bg: #f5f5f5;
+  --color-button-border: #999999;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  margin: 0;
+  padding: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+header {
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 2rem 0 1rem 0;
+}
+
+main {
+  outline: none;
+}
+
+.example {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.expand-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-button-bg);
+  border: 2px solid var(--color-button-border);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.expand-button:hover {
+  background-color: #e8e8e8;
+}
+
+.expand-button:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
+}
+
+@media (forced-colors: active) {
+  .expand-button:focus {
+    outline: 2px solid ButtonText;
+  }
+}
+
+.expand-icon {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid currentColor;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.expand-button[aria-expanded="false"] .expand-icon {
+  transform: rotate(-90deg);
+}
+
+.expand-button[aria-expanded="true"] .expand-icon {
+  transform: rotate(0deg);
+}
+
+.details {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #fafafa;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.details[hidden] {
+  display: none;
+}
+
+.details p {
+  margin: 0 0 1rem 0;
+}
+
+.details p:last-child {
+  margin-bottom: 0;
+}
+
+.details ul {
+  margin: 0 0 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.details ul:last-child {
+  margin-bottom: 0;
+}
+
+@media (forced-colors: active) {
+  .example {
+    border-color: CanvasText;
+  }
+  
+  .expand-button {
+    border-color: ButtonBorder;
+    background-color: ButtonFace;
+    color: ButtonText;
+  }
+  
+  .details {
+    border-color: CanvasText;
+    background-color: Canvas;
+  }
+  
+  .expand-icon {
+    border-top-color: currentColor;
+  }
+}
+
+@media (max-width: 320px) {
+  body {
+    padding: 10px;
+  }
+  
+  .example {
+    padding: 1rem;
+  }
+  
+  .expand-button {
+    padding: 0.5rem 0.75rem;
+    overflow-wrap: anywhere;
+  }
+  
+  .details {
+    padding: 0.75rem;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <a href="#maincontent" class="sr-only">Skip to main content</a>
+  <h1>Expand/Collapse Widget Examples</h1>
+  <p>Accessible expand/collapse widgets using <code>aria-expanded</code> and proper keyboard interaction.</p>
+</header>
+
+<main id="maincontent" tabindex="-1">
+  <h2>Basic Expand/Collapse</h2>
+  
+  <div class="example">
+    <button type="button" class="expand-button" aria-expanded="false" aria-controls="details-1">
+      <span class="expand-icon" aria-hidden="true"></span>
+      <span>What is accessibility?</span>
+    </button>
+    <div id="details-1" class="details" hidden>
+      <p>Accessibility ensures that websites and applications can be used by everyone, including people with disabilities. This includes those who use assistive technologies like screen readers, voice recognition software, or alternative input devices.</p>
+      <p>Building accessible interfaces benefits all users by creating clearer, more usable experiences.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <button type="button" class="expand-button" aria-expanded="false" aria-controls="details-2">
+      <span class="expand-icon" aria-hidden="true"></span>
+      <span>Why use ARIA attributes?</span>
+    </button>
+    <div id="details-2" class="details" hidden>
+      <p>ARIA (Accessible Rich Internet Applications) attributes provide semantic information to assistive technologies when HTML alone is not sufficient.</p>
+      <p>Key principles when using ARIA:</p>
+      <ul>
+        <li>Use native HTML elements and attributes whenever possible</li>
+        <li>Do not override native semantics unnecessarily</li>
+        <li>All interactive elements must be keyboard accessible</li>
+        <li>Ensure all elements have appropriate roles, states, and properties</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="example">
+    <button type="button" class="expand-button" aria-expanded="false" aria-controls="details-3">
+      <span class="expand-icon" aria-hidden="true"></span>
+      <span>How do I test for accessibility?</span>
+    </button>
+    <div id="details-3" class="details" hidden>
+      <p>Testing for accessibility involves multiple approaches:</p>
+      <ul>
+        <li><strong>Automated tools:</strong> Use tools like Accessibility Insights, axe DevTools, or WAVE to identify common issues</li>
+        <li><strong>Keyboard testing:</strong> Navigate using only the keyboard (Tab, Shift+Tab, Enter, Space, Arrow keys, Escape)</li>
+        <li><strong>Screen reader testing:</strong> Test with NVDA, JAWS, or VoiceOver to ensure content is properly announced</li>
+        <li><strong>Visual inspection:</strong> Check color contrast, text size, focus indicators, and responsive behavior</li>
+        <li><strong>Manual review:</strong> Verify against WCAG 2.2 Level AA criteria</li>
+      </ul>
+      <p>Remember: automated tools catch only about 30-40% of accessibility issues, so manual testing is essential.</p>
+    </div>
+  </div>
+
+  <h2>Pre-Expanded Example</h2>
+  
+  <div class="example">
+    <button type="button" class="expand-button" aria-expanded="true" aria-controls="details-4">
+      <span class="expand-icon" aria-hidden="true"></span>
+      <span>Common keyboard shortcuts</span>
+    </button>
+    <div id="details-4" class="details">
+      <p>Standard keyboard interactions for web interfaces:</p>
+      <ul>
+        <li><strong>Tab:</strong> Move focus forward through interactive elements</li>
+        <li><strong>Shift + Tab:</strong> Move focus backward</li>
+        <li><strong>Enter or Space:</strong> Activate buttons and links</li>
+        <li><strong>Escape:</strong> Close dialogs, menus, or cancel operations</li>
+        <li><strong>Arrow keys:</strong> Navigate within composite widgets (tabs, menus, radio groups)</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<script>
+(function() {
+  'use strict';
+  
+  const buttons = document.querySelectorAll('.expand-button');
+  
+  buttons.forEach(button => {
+    button.addEventListener('click', function() {
+      const expanded = this.getAttribute('aria-expanded') === 'true';
+      const controlsId = this.getAttribute('aria-controls');
+      const details = document.getElementById(controlsId);
+      
+      if (!details) return;
+      
+      // Toggle expanded state
+      this.setAttribute('aria-expanded', !expanded);
+      
+      // Toggle visibility of details
+      if (expanded) {
+        details.setAttribute('hidden', '');
+      } else {
+        details.removeAttribute('hidden');
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

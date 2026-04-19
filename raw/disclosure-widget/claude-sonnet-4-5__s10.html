@@ -1,0 +1,245 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .example {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .example:hover {
+            transform: translateY(-5px);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .widget-header:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #65408b 100%);
+        }
+
+        .widget-title {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .toggle-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+
+        .toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 15px;
+        }
+
+        .details.expanded {
+            max-height: 1000px;
+            padding: 20px 15px;
+        }
+
+        .details-content {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .details-content h3 {
+            color: #667eea;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .details-content p {
+            margin-bottom: 12px;
+        }
+
+        .details-content ul {
+            margin-left: 25px;
+            margin-bottom: 12px;
+        }
+
+        .details-content li {
+            margin-bottom: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expand/Collapse Widget Demo</h1>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">
+                    What is JavaScript? <span class="badge">Beginner</span>
+                </div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>JavaScript is a high-level, interpreted programming language that is one of the core technologies of the World Wide Web, alongside HTML and CSS.</p>
+                    <h3>Key Features:</h3>
+                    <ul>
+                        <li>Dynamic typing and first-class functions</li>
+                        <li>Prototype-based object orientation</li>
+                        <li>Event-driven, functional, and imperative programming styles</li>
+                        <li>APIs for working with text, arrays, dates, and more</li>
+                    </ul>
+                    <p>JavaScript enables interactive web pages and is an essential part of web applications. The vast majority of websites use it for client-side page behavior.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">
+                    CSS Flexbox Guide <span class="badge">Intermediate</span>
+                </div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>Flexbox is a one-dimensional layout method for arranging items in rows or columns. Items flex to fill additional space or shrink to fit into smaller spaces.</p>
+                    <h3>Main Concepts:</h3>
+                    <ul>
+                        <li><strong>Flex Container:</strong> The parent element with display: flex</li>
+                        <li><strong>Flex Items:</strong> Direct children of the flex container</li>
+                        <li><strong>Main Axis:</strong> The primary axis along which flex items are laid out</li>
+                        <li><strong>Cross Axis:</strong> The axis perpendicular to the main axis</li>
+                    </ul>
+                    <h3>Common Properties:</h3>
+                    <ul>
+                        <li>justify-content: Aligns items along the main axis</li>
+                        <li>align-items: Aligns items along the cross axis</li>
+                        <li>flex-direction: Defines the direction of the main axis</li>
+                        <li>flex-wrap: Controls whether items wrap to new lines</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">
+                    HTML Semantic Elements <span class="badge">Beginner</span>
+                </div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>Semantic HTML elements clearly describe their meaning in a human- and machine-readable way. They help improve accessibility, SEO, and code readability.</p>
+                    <h3>Important Semantic Elements:</h3>
+                    <ul>
+                        <li><strong>&lt;header&gt;:</strong> Represents introductory content or navigational links</li>
+                        <li><strong>&lt;nav&gt;:</strong> Contains navigation links</li>
+                        <li><strong>&lt;main&gt;:</strong> Specifies the main content of the document</li>
+                        <li><strong>&lt;article&gt;:</strong> Represents self-contained content</li>
+                        <li><strong>&lt;section&gt;:</strong> Defines sections in a document</li>
+                        <li><strong>&lt;aside&gt;:</strong> Content tangentially related to the main content</li>
+                        <li><strong>&lt;footer&gt;:</strong> Footer for a document or section</li>
+                    </ul>
+                    <p>Using semantic elements makes your HTML more meaningful and helps screen readers and search engines better understand your content structure.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">
+                    Web Accessibility (A11y) <span class="badge">Advanced</span>
+                </div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>Web accessibility ensures that websites, tools, and technologies are designed and developed so that people with disabilities can use them effectively.</p>
+                    <h3>WCAG Principles (POUR):</h3>
+                    <ul>
+                        <li><strong>Perceivable:</strong> Information must be presentable to users in ways they can perceive</li>
+                        <li><strong>Operable:</strong> User interface components must be operable by all users</li>
+                        <li><strong>Understandable:</strong> Information and operation must be understandable</li>
+                        <li><strong>Robust:</strong> Content must be robust enough to work with current and future technologies</li>
+                    </ul>
+                    <h3>Best Practices:</h3>
+                    <ul>
+                        <li>Provide alt text for images</li>
+                        <li>Ensure sufficient color contrast</li>
+                        <li>Make all functionality keyboard accessible</li>
+                        <li>Use ARIA labels when necessary</li>
+                        <li>Structure content with proper headings</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleWidget(header) {
+            const details = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            details.classList.toggle('expanded');
+            icon.classList.toggle('expanded');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,899 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopHub - Your One-Stop Shopping Destination</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        .search-bar {
+            flex: 0 0 500px;
+            margin: 0 2rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav {
+            background: rgba(255,255,255,0.1);
+            padding: 0.75rem 0;
+            margin-top: 1rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: white;
+            color: #f5576c;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 4rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4757;
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 1rem;
+            margin-left: 0.5rem;
+        }
+
+        .add-to-cart {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .add-to-cart:hover {
+            background: #5568d3;
+        }
+
+        .deals-section {
+            background: #f8f9fa;
+        }
+
+        .deals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .deal-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .deal-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .deal-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .deal-timer {
+            background: #ff4757;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-meta {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .blog-excerpt {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .read-more {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        .newsletter {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .newsletter h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .newsletter p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+        }
+
+        .newsletter-form button {
+            padding: 1rem 2rem;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .newsletter-form button:hover {
+            background: #e84545;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #34495e;
+            color: #bdc3c7;
+        }
+
+        @media (max-width: 768px) {
+            .search-bar {
+                flex: 1;
+                margin: 0 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .product-grid, .deals-grid, .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="top-bar">
+                <a href="#" class="logo">ShopHub</a>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for products...">
+                </div>
+                <div class="header-icons">
+                    <button class="icon-btn">
+                        👤
+                    </button>
+                    <button class="icon-btn">
+                        ❤️
+                        <span class="badge">3</span>
+                    </button>
+                    <button class="icon-btn">
+                        🛒
+                        <span class="badge">5</span>
+                    </button>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#popular">Popular</a></li>
+                    <li><a href="#deals">Deals</a></li>
+                    <li><a href="#electronics">Electronics</a></li>
+                    <li><a href="#fashion">Fashion</a></li>
+                    <li><a href="#home">Home & Garden</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to ShopHub</h1>
+            <p>Discover amazing deals on your favorite products</p>
+            <a href="#deals" class="btn">Shop Now</a>
+        </div>
+    </section>
+
+    <section id="popular">
+        <div class="container">
+            <div class="section-header">
+                <h2>Popular Items</h2>
+                <p>Check out our most loved products</p>
+            </div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        📱
+                        <span class="product-badge">NEW</span>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Smartphone Pro X</h3>
+                        <p class="product-description">Latest flagship with amazing camera and performance</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$899</span>
+                                <span class="old-price">$999</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        💻
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Ultrabook Air</h3>
+                        <p class="product-description">Lightweight laptop perfect for work and play</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$1,299</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        🎧
+                        <span class="product-badge">HOT</span>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Wireless Headphones</h3>
+                        <p class="product-description">Premium sound quality with active noise cancellation</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$299</span>
+                                <span class="old-price">$349</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        ⌚
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Smart Watch Elite</h3>
+                        <p class="product-description">Track your fitness and stay connected</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$399</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        📷
+                        <span class="product-badge">SALE</span>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Digital Camera Pro</h3>
+                        <p class="product-description">Capture stunning photos with professional quality</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$799</span>
+                                <span class="old-price">$999</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        🎮
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Gaming Console</h3>
+                        <p class="product-description">Next-gen gaming experience at your fingertips</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$499</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        🏃
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Running Shoes</h3>
+                        <p class="product-description">Comfortable and stylish athletic footwear</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$129</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        👜
+                        <span class="product-badge">NEW</span>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Designer Handbag</h3>
+                        <p class="product-description">Elegant accessory for every occasion</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$249</span>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="deals" class="deals-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Today's Deals</h2>
+                <p>Limited time offers you don't want to miss</p>
+            </div>
+            <div class="deals-grid">
+                <div class="deal-card">
+                    <div class="deal-image">
+                        🖥️
+                    </div>
+                    <div class="deal-content">
+                        <div class="deal-timer">⏰ Ends in 5h 32m</div>
+                        <h3 class="product-title">4K Monitor Bundle</h3>
+                        <p class="product-description">27-inch display with HDR support and adjustable stand</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$349</span>
+                                <span class="old-price">$549</span>
+                            </div>
+                            <button class="add-to-cart">Grab Deal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deal-card">
+                    <div class="deal-image">
+                        🏋️
+                    </div>
+                    <div class="deal-content">
+                        <div class="deal-timer">⏰ Ends in 3h 15m</div>
+                        <h3 class="product-title">Home Gym Set</h3>
+                        <p class="product-description">Complete workout equipment for your home</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$599</span>
+                                <span class="old-price">$899</span>
+                            </div>
+                            <button class="add-to-cart">Grab Deal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deal-card">
+                    <div class="deal-image">
+                        🔊
+                    </div>
+                    <div class="deal-content">
+                        <div class="deal-timer">⏰ Ends in 8h 45m</div>
+                        <h3 class="product-title">Smart Speaker</h3>
+                        <p class="product-description">Voice-controlled assistant with premium audio</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$79</span>
+                                <span class="old-price">$129</span>
+                            </div>
+                            <button class="add-to-cart">Grab Deal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deal-card">
+                    <div class="deal-image">
+                        ☕
+                    </div>
+                    <div class="deal-content">
+                        <div class="deal-timer">⏰ Ends in 2h 10m</div>
+                        <h3 class="product-title">Coffee Maker Deluxe</h3>
+                        <p class="product-description">Brew the perfect cup every morning</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$149</span>
+                                <span class="old-price">$229</span>
+                            </div>
+                            <button class="add-to-cart">Grab Deal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deal-card">
+                    <div class="deal-image">
+                        🎒
+                    </div>
+                    <div class="deal-content">
+                        <div class="deal-timer">⏰ Ends in 6h 20m</div>
+                        <h3 class="product-title">Travel Backpack</h3>
+                        <p class="product-description">Durable and spacious for all your adventures</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$69</span>
+                                <span class="old-price">$119</span>
+                            </div>
+                            <button class="add-to-cart">Grab Deal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deal-card">
+                    <div class="deal-image">
+                        💡
+                    </div>
+                    <div class="deal-content">
+                        <div class="deal-timer">⏰ Ends in 4h 55m</div>
+                        <h3 class="product-title">Smart LED Bulbs</h3>
+                        <p class="product-description">Color-changing WiFi enabled lighting (4-pack)</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$39</span>
+                                <span class="old-price">$69</span>
+                            </div>
+                            <button class="add-to-cart">Grab Deal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog">
+        <div class="container">
+            <div class="section-header">
+                <h2>From Our Blog</h2>
+                <p>Latest tips, trends, and insights</p>
+            </div>
+            <div class="blog-grid">
+                <div class="blog-card">
+                    <div class="blog-image">
+                        📝
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">May 15, 2024 • Tech Reviews</div>
+                        <h3 class="blog-title">Top 10 Gadgets to Watch in 2024</h3>
+                        <p class="blog-excerpt">Discover the most innovative tech products that are reshaping the industry this year...</p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+
+                <div class="blog-card">
+                    <div class="blog-image">
+                        👗
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">May 12, 2024 • Fashion</div>
+                        <h3 class="blog-title">Summer Fashion Trends You'll Love</h3>
+                        <p class="blog-excerpt">Get ready for summer with these hot fashion trends that are taking over the runways...</p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+
+                <div class="blog-card">
+                    <div class="blog-image">
+                        🏡
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">May 10, 2024 • Home & Living</div>
+                        <h3 class="blog-title">Transform Your Space: Home Decor Tips</h3>
+                        <p class="blog-excerpt">Simple and affordable ways to refresh your home and create a space you'll love...</p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter">
+        <div class="container">
+            <h2>Subscribe to Our Newsletter</h2>
+            <p>Get exclusive deals and latest updates delivered to your inbox</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About ShopHub</h3>
+                    <p>Your trusted online shopping destination for quality products at great prices. We're committed to providing the best shopping experience.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Shipping Information</a></li>
+                        <li><a href="#">Returns & Exchanges</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Track Order</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">YouTube</a></li>
+                        <li><a href="#">Pinterest</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

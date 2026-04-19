@@ -1,0 +1,266 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .example {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .example:hover {
+            transform: translateY(-5px);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .widget-header:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .widget-title {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .toggle-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+
+        .toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 15px;
+        }
+
+        .details.open {
+            max-height: 500px;
+            padding: 20px 15px;
+        }
+
+        .details-content {
+            color: #333;
+            line-height: 1.6;
+            font-size: 1em;
+        }
+
+        .details-content h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            margin-top: 15px;
+        }
+
+        .details-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .details-content p {
+            margin-bottom: 10px;
+        }
+
+        .details-content ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .details-content li {
+            margin-bottom: 5px;
+        }
+
+        .simple-toggle {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s ease;
+        }
+
+        .simple-toggle:hover {
+            background: #764ba2;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expand/Collapse Widget Examples</h1>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleDetails(this)">
+                <div class="widget-title">
+                    Introduction to Expand/Collapse Widgets
+                    <span class="badge">Click to expand</span>
+                </div>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>Expand/collapse widgets are essential UI components that help organize content and improve user experience by hiding information until it's needed.</p>
+                    <h3>Benefits</h3>
+                    <ul>
+                        <li>Reduces visual clutter on the page</li>
+                        <li>Improves page load perception</li>
+                        <li>Allows users to focus on relevant content</li>
+                        <li>Saves screen space on mobile devices</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleDetails(this)">
+                <div class="widget-title">Features & Specifications</div>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <h3>Technical Features</h3>
+                    <p>This widget demonstrates smooth CSS transitions and vanilla JavaScript for interactivity.</p>
+                    <ul>
+                        <li>Pure CSS animations</li>
+                        <li>No dependencies required</li>
+                        <li>Responsive design</li>
+                        <li>Accessible keyboard navigation ready</li>
+                    </ul>
+                    <h3>Browser Support</h3>
+                    <p>Compatible with all modern browsers including Chrome, Firefox, Safari, and Edge.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleDetails(this)">
+                <div class="widget-title">Use Cases & Applications</div>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <h3>Common Use Cases</h3>
+                    <ul>
+                        <li><strong>FAQ Sections:</strong> Display questions with expandable answers</li>
+                        <li><strong>Product Details:</strong> Show additional specifications on demand</li>
+                        <li><strong>Navigation Menus:</strong> Create collapsible menu structures</li>
+                        <li><strong>Form Sections:</strong> Break long forms into manageable sections</li>
+                        <li><strong>Content Panels:</strong> Organize dashboard information</li>
+                    </ul>
+                    <h3>Best Practices</h3>
+                    <p>Always provide visual feedback when content is expandable, use smooth transitions, and ensure the widget is keyboard accessible for all users.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleDetails(this)">
+                <div class="widget-title">Advanced Customization Options</div>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <h3>Styling Options</h3>
+                    <p>These widgets can be customized with different colors, animations, and layouts to match your brand identity.</p>
+                    <h3>Animation Timing</h3>
+                    <p>The transition duration can be adjusted to create faster or slower expand/collapse effects based on your preference.</p>
+                    <h3>Icons & Indicators</h3>
+                    <p>Replace the default arrow with custom icons, plus/minus symbols, or even animated SVG graphics for enhanced visual appeal.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleDetails(this)">
+                <div class="widget-title">
+                    Tips & Tricks
+                    <span class="badge">Pro tips inside</span>
+                </div>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <h3>Performance Tips</h3>
+                    <ul>
+                        <li>Use CSS transitions instead of JavaScript animations when possible</li>
+                        <li>Set max-height instead of height for smoother transitions</li>
+                        <li>Consider lazy-loading content for very large sections</li>
+                    </ul>
+                    <h3>Accessibility</h3>
+                    <ul>
+                        <li>Add ARIA attributes for screen readers</li>
+                        <li>Ensure keyboard navigation works properly</li>
+                        <li>Provide clear visual indicators of state</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(header) {
+            const details = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            details.classList.toggle('open');
+            icon.classList.toggle('expanded');
+        }
+    </script>
+</body>
+</html>

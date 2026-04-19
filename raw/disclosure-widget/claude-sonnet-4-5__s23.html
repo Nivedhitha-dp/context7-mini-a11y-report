@@ -1,0 +1,229 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .example {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .example:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .toggle-header {
+            padding: 20px 25px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #333;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-header:hover {
+            background: linear-gradient(135deg, #e0e7ef 0%, #b3c0d8 100%);
+        }
+
+        .toggle-icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: #667eea;
+        }
+
+        .toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 25px;
+        }
+
+        .details.expanded {
+            max-height: 1000px;
+            padding: 25px;
+        }
+
+        .details p {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .details ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .details li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .details h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expand/Collapse Widget Demo</h1>
+
+        <div class="example">
+            <div class="toggle-header" onclick="toggleDetails(this)">
+                <span>What is Lorem Ipsum?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                <p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.</p>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="toggle-header" onclick="toggleDetails(this)">
+                <span>Features & Benefits <span class="badge">New</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <h3>Key Features:</h3>
+                <ul>
+                    <li>Smooth animations and transitions</li>
+                    <li>Responsive design that works on all devices</li>
+                    <li>Easy to customize with CSS</li>
+                    <li>Lightweight and performant</li>
+                    <li>No external dependencies required</li>
+                </ul>
+                <h3>Benefits:</h3>
+                <p>This widget helps organize content efficiently, improving user experience by allowing visitors to focus on information that matters to them. Perfect for FAQs, product details, and more!</p>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="toggle-header" onclick="toggleDetails(this)">
+                <span>Technical Specifications</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <p>The expand/collapse widget is built using vanilla JavaScript and CSS3 transitions. It provides a clean, modern interface for content organization.</p>
+                <h3>Browser Support:</h3>
+                <ul>
+                    <li>Chrome 90+</li>
+                    <li>Firefox 88+</li>
+                    <li>Safari 14+</li>
+                    <li>Edge 90+</li>
+                    <li>Opera 76+</li>
+                </ul>
+                <p>The widget uses CSS transitions for smooth animations and JavaScript for state management, ensuring broad compatibility and excellent performance.</p>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="toggle-header" onclick="toggleDetails(this)">
+                <span>How to Use</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <p>Using this expand/collapse widget is incredibly simple. Just click on any header to expand or collapse its content.</p>
+                <h3>Steps:</h3>
+                <ul>
+                    <li>Click the header to reveal hidden content</li>
+                    <li>Click again to collapse the section</li>
+                    <li>Multiple sections can be open simultaneously</li>
+                    <li>Customize colors and styles to match your brand</li>
+                </ul>
+                <p>The widget automatically handles the animation states and provides smooth transitions between collapsed and expanded states.</p>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="toggle-header" onclick="toggleDetails(this)">
+                <span>Frequently Asked Questions</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <h3>Can I customize the colors?</h3>
+                <p>Yes! All colors are defined in CSS variables and can be easily customized to match your brand.</p>
+                
+                <h3>Is it mobile-friendly?</h3>
+                <p>Absolutely! The widget is fully responsive and works seamlessly on all screen sizes, from mobile phones to large desktop displays.</p>
+                
+                <h3>Does it require jQuery?</h3>
+                <p>No external libraries are required. This widget uses pure vanilla JavaScript for maximum performance and minimal overhead.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(header) {
+            const details = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            if (details.classList.contains('expanded')) {
+                details.classList.remove('expanded');
+                icon.classList.remove('expanded');
+            } else {
+                details.classList.add('expanded');
+                icon.classList.add('expanded');
+            }
+        }
+    </script>
+</body>
+</html>

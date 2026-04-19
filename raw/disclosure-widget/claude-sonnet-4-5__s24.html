@@ -1,0 +1,238 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .example {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .example:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        .toggle-header {
+            padding: 20px 25px;
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            color: white;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-header:hover {
+            background: linear-gradient(135deg, #5a62ee 0%, #0009dd 100%);
+        }
+
+        .toggle-header h2 {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .toggle-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+
+        .toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 25px;
+        }
+
+        .details.expanded {
+            max-height: 1000px;
+            padding: 25px;
+        }
+
+        .details p {
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .details ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .details li {
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .example:nth-child(2) .toggle-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .example:nth-child(2) .toggle-header:hover {
+            background: linear-gradient(135deg, #df83eb 0%, #e5475c 100%);
+        }
+
+        .example:nth-child(3) .toggle-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .example:nth-child(3) .toggle-header:hover {
+            background: linear-gradient(135deg, #3f9cee 0%, #00e2ee 100%);
+        }
+
+        .example:nth-child(4) .toggle-header {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .example:nth-child(4) .toggle-header:hover {
+            background: linear-gradient(135deg, #33d96b 0%, #28e9c7 100%);
+        }
+
+        .code-block {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expand/Collapse Widgets</h1>
+
+        <div class="example">
+            <div class="toggle-header" onclick="toggleDetails(this)">
+                <h2>What is JavaScript?</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <p>JavaScript is a high-level, interpreted programming language that is one of the core technologies of the World Wide Web, alongside HTML and CSS.</p>
+                <p>Key features include:</p>
+                <ul>
+                    <li>Dynamic typing and first-class functions</li>
+                    <li>Prototype-based object-orientation</li>
+                    <li>Event-driven programming model</li>
+                    <li>Asynchronous programming support with Promises and async/await</li>
+                </ul>
+                <p>JavaScript enables interactive web pages and is an essential part of web applications.</p>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="toggle-header" onclick="toggleDetails(this)">
+                <h2>CSS Styling Techniques</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <p>Cascading Style Sheets (CSS) is a stylesheet language used to describe the presentation of a document written in HTML or XML.</p>
+                <p>Modern CSS techniques include:</p>
+                <ul>
+                    <li>Flexbox for one-dimensional layouts</li>
+                    <li>CSS Grid for two-dimensional layouts</li>
+                    <li>Custom properties (CSS variables) for maintainable code</li>
+                    <li>Animations and transitions for smooth effects</li>
+                    <li>Media queries for responsive design</li>
+                </ul>
+                <div class="code-block">
+                    .container { display: flex; justify-content: center; }
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="toggle-header" onclick="toggleDetails(this)">
+                <h2>HTML5 Semantic Elements</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <p>HTML5 introduced semantic elements that clearly describe their meaning in a human- and machine-readable way.</p>
+                <p>Common semantic elements:</p>
+                <ul>
+                    <li><strong>&lt;header&gt;</strong> - Defines a header for a document or section</li>
+                    <li><strong>&lt;nav&gt;</strong> - Defines navigation links</li>
+                    <li><strong>&lt;main&gt;</strong> - Specifies the main content of a document</li>
+                    <li><strong>&lt;article&gt;</strong> - Defines independent, self-contained content</li>
+                    <li><strong>&lt;section&gt;</strong> - Defines a section in a document</li>
+                    <li><strong>&lt;footer&gt;</strong> - Defines a footer for a document or section</li>
+                </ul>
+                <p>Using semantic elements improves accessibility and SEO.</p>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="toggle-header" onclick="toggleDetails(this)">
+                <h2>Web Development Best Practices</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="details">
+                <p>Following best practices ensures your web applications are maintainable, performant, and accessible.</p>
+                <p>Essential best practices:</p>
+                <ul>
+                    <li>Write clean, readable, and well-documented code</li>
+                    <li>Optimize images and assets for faster loading</li>
+                    <li>Implement responsive design for all devices</li>
+                    <li>Ensure accessibility for users with disabilities</li>
+                    <li>Use version control systems like Git</li>
+                    <li>Test across different browsers and devices</li>
+                    <li>Minimize HTTP requests and file sizes</li>
+                    <li>Implement security best practices (HTTPS, input validation, etc.)</li>
+                </ul>
+                <p>Continuous learning and staying updated with the latest technologies is crucial in web development.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(header) {
+            const details = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            details.classList.toggle('expanded');
+            icon.classList.toggle('expanded');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expand/Collapse Widget - Demonstration</title>
+<style>
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-muted-text: #666666;
+  --color-border: #cccccc;
+  --color-focus: #0066cc;
+  --color-button-bg: #f5f5f5;
+  --color-button-border: #999999;
+  --color-button-hover-bg: #e8e8e8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  margin: 0;
+  padding: 2rem 1rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.example {
+  margin-bottom: 2rem;
+  border: 1px solid var(--color-border);
+  padding: 1.5rem;
+  border-radius: 4px;
+}
+
+.expand-toggle {
+  background-color: var(--color-button-bg);
+  border: 2px solid var(--color-button-border);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+}
+
+.expand-toggle:hover {
+  background-color: var(--color-button-hover-bg);
+}
+
+.expand-toggle:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 4px 3px rgba(0, 102, 204, 0.3);
+}
+
+.expand-icon {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid currentColor;
+  transition: transform 0.2s ease;
+}
+
+.expand-toggle[aria-expanded="true"] .expand-icon {
+  transform: rotate(180deg);
+}
+
+.details {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.details[hidden] {
+  display: none;
+}
+
+p {
+  margin: 0 0 1rem 0;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+@media (forced-colors: active) {
+  .expand-toggle {
+    border: 2px solid ButtonBorder;
+  }
+  
+  .expand-toggle:focus {
+    outline: 2px solid ButtonText;
+  }
+  
+  .expand-icon {
+    border-top-color: ButtonText;
+  }
+  
+  .details {
+    border: 1px solid CanvasText;
+  }
+}
+
+@media (max-width: 320px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+  
+  .example {
+    padding: 1rem;
+  }
+  
+  .expand-toggle {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+</style>
+</head>
+<body>
+<a href="#maincontent" class="sr-only">Skip to main content</a>
+
+<header>
+<h1>Expand/Collapse Widget Examples</h1>
+</header>
+
+<main id="maincontent" tabindex="-1">
+
+<h2>Basic Expand/Collapse</h2>
+<div class="example">
+<button type="button" class="expand-toggle" aria-expanded="false" aria-controls="details1">
+<span class="expand-icon" aria-hidden="true"></span>
+Show more information
+</button>
+<div id="details1" class="details" hidden>
+<p>This is additional content that was initially hidden. Users can expand this section to read more detailed information about the topic.</p>
+<p>The expand/collapse pattern is useful for progressive disclosure, allowing users to access information as needed without overwhelming them with too much content at once.</p>
+</div>
+</div>
+
+<h2>FAQ Style</h2>
+<div class="example">
+<button type="button" class="expand-toggle" aria-expanded="false" aria-controls="details2">
+<span class="expand-icon" aria-hidden="true"></span>
+What is an accessible expand/collapse widget?
+</button>
+<div id="details2" class="details" hidden>
+<p>An accessible expand/collapse widget is an interactive component that allows users to show or hide content sections. Key accessibility features include:</p>
+<ul>
+<li>A button element with <code>aria-expanded</code> to indicate the current state</li>
+<li>Keyboard operability (Space and Enter keys toggle expansion)</li>
+<li>Clear visible focus indicators</li>
+<li>Association between the button and controlled content via <code>aria-controls</code></li>
+<li>The <code>hidden</code> attribute on collapsed content to remove it from the accessibility tree</li>
+</ul>
+</div>
+</div>
+
+<div class="example">
+<button type="button" class="expand-toggle" aria-expanded="false" aria-controls="details3">
+<span class="expand-icon" aria-hidden="true"></span>
+How do I use keyboard navigation?
+</button>
+<div id="details3" class="details" hidden>
+<p>Keyboard navigation for expand/collapse widgets is straightforward:</p>
+<ul>
+<li><strong>Tab:</strong> Move focus to the expand/collapse button</li>
+<li><strong>Enter or Space:</strong> Toggle the expanded/collapsed state</li>
+<li><strong>Tab:</strong> Once expanded, continue tabbing to navigate through content within the expanded section</li>
+</ul>
+<p>All interactive elements remain keyboard accessible and the focus order follows the visual reading order.</p>
+</div>
+</div>
+
+<h2>Multiple Sections</h2>
+<div class="example">
+<button type="button" class="expand-toggle" aria-expanded="false" aria-controls="details4">
+<span class="expand-icon" aria-hidden="true"></span>
+Section 1: Introduction
+</button>
+<div id="details4" class="details" hidden>
+<p>This is the first section with introductory content. Each section operates independently, allowing users to expand multiple sections simultaneously or just the ones they're interested in.</p>
+</div>
+</div>
+
+<div class="example">
+<button type="button" class="expand-toggle" aria-expanded="false" aria-controls="details5">
+<span class="expand-icon" aria-hidden="true"></span>
+Section 2: Details
+</button>
+<div id="details5" class="details" hidden>
+<p>This is the second section with more detailed information. Notice how the expanded state of one section does not affect the other sections.</p>
+<p>Users can expand as many or as few sections as they need to access the information they're looking for.</p>
+</div>
+</div>
+
+<div class="example">
+<button type="button" class="expand-toggle" aria-expanded="false" aria-controls="details6">
+<span class="expand-icon" aria-hidden="true"></span>
+Section 3: Conclusion
+</button>
+<div id="details6" class="details" hidden>
+<p>This is the final section with concluding remarks. The expand/collapse pattern helps manage long pages with lots of content by letting users control what they see.</p>
+</div>
+</div>
+
+</main>
+
+<script>
+(function() {
+  const toggleButtons = document.querySelectorAll('.expand-toggle');
+  
+  toggleButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      const controlsId = this.getAttribute('aria-controls');
+      const detailsElement = document.getElementById(controlsId);
+      
+      if (isExpanded) {
+        this.setAttribute('aria-expanded', 'false');
+        detailsElement.hidden = true;
+      } else {
+        this.setAttribute('aria-expanded', 'true');
+        detailsElement.hidden = false;
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

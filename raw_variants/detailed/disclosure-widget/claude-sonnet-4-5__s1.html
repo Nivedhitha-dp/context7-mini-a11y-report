@@ -1,0 +1,471 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expand/Collapse Widget Examples - Accessibility Demo</title>
+<style>
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-muted-text: #4a4a4a;
+  --color-link: #0066cc;
+  --color-border: #cccccc;
+  --color-focus: #0066cc;
+  --color-button-bg: #f5f5f5;
+  --color-button-border: #999999;
+  --color-button-hover: #e8e8e8;
+  --color-button-active: #d9d9d9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+.example {
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.expand-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  background-color: var(--color-button-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-button-border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.expand-button:hover {
+  background-color: var(--color-button-hover);
+}
+
+.expand-button:active {
+  background-color: var(--color-button-active);
+}
+
+.expand-button:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--color-bg);
+}
+
+@media (forced-colors: active) {
+  .expand-button:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+.expand-icon {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid currentColor;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.expand-button[aria-expanded="true"] .expand-icon {
+  transform: rotate(180deg);
+}
+
+.expand-button[aria-expanded="false"] .expand-icon {
+  transform: rotate(-90deg);
+}
+
+.details {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.details[hidden] {
+  display: none;
+}
+
+.details p:last-child {
+  margin-bottom: 0;
+}
+
+.inline-expand {
+  margin-top: 1rem;
+}
+
+.inline-expand-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  background-color: transparent;
+  color: var(--color-link);
+  border: 1px solid var(--color-link);
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.inline-expand-button:hover {
+  background-color: var(--color-button-hover);
+}
+
+.inline-expand-button:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  .inline-expand-button:focus {
+    outline: 2px solid LinkText;
+  }
+}
+
+.inline-icon {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid currentColor;
+  transition: transform 0.2s;
+}
+
+.inline-expand-button[aria-expanded="true"] .inline-icon {
+  transform: rotate(180deg);
+}
+
+.inline-expand-button[aria-expanded="false"] .inline-icon {
+  transform: rotate(-90deg);
+}
+
+.inline-details {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background-color: var(--color-button-bg);
+  border-left: 3px solid var(--color-link);
+}
+
+.inline-details[hidden] {
+  display: none;
+}
+
+.accordion {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.accordion-item {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.accordion-item:last-child {
+  border-bottom: none;
+}
+
+.accordion-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.accordion-button:hover {
+  background-color: var(--color-button-hover);
+}
+
+.accordion-button:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (forced-colors: active) {
+  .accordion-button:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+.accordion-icon {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid currentColor;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.accordion-button[aria-expanded="true"] .accordion-icon {
+  transform: rotate(180deg);
+}
+
+.accordion-button[aria-expanded="false"] .accordion-icon {
+  transform: rotate(-90deg);
+}
+
+.accordion-panel {
+  padding: 0 1rem 1rem 1rem;
+}
+
+.accordion-panel[hidden] {
+  display: none;
+}
+
+@media (max-width: 320px) {
+  body {
+    padding: 10px;
+  }
+  
+  .example {
+    padding: 1rem;
+  }
+  
+  .expand-button,
+  .accordion-button {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<a href="#maincontent" class="sr-only">Skip to main content</a>
+
+<header>
+  <h1>Expand/Collapse Widget Examples</h1>
+</header>
+
+<main id="maincontent" tabindex="-1">
+  
+  <p>This page demonstrates accessible expand/collapse widgets using <code>aria-expanded</code> and <code>aria-controls</code> attributes. All widgets are keyboard operable and screen reader friendly.</p>
+
+  <section>
+    <h2>Basic Expand/Collapse</h2>
+    
+    <div class="example">
+      <button 
+        class="expand-button" 
+        aria-expanded="false" 
+        aria-controls="basic-details-1"
+        id="basic-button-1">
+        <span class="expand-icon" aria-hidden="true"></span>
+        <span>Additional Information</span>
+      </button>
+      <div class="details" id="basic-details-1" hidden>
+        <p>This is the expanded content that provides additional information. It can contain multiple paragraphs, lists, and other HTML elements.</p>
+        <p>The widget uses <code>aria-expanded</code> to indicate the current state and <code>aria-controls</code> to associate the button with the controlled region.</p>
+      </div>
+    </div>
+
+    <div class="example">
+      <button 
+        class="expand-button" 
+        aria-expanded="false" 
+        aria-controls="basic-details-2"
+        id="basic-button-2">
+        <span class="expand-icon" aria-hidden="true"></span>
+        <span>System Requirements</span>
+      </button>
+      <div class="details" id="basic-details-2" hidden>
+        <p><strong>Minimum Requirements:</strong></p>
+        <ul>
+          <li>Operating System: Windows 10 or macOS 10.14+</li>
+          <li>RAM: 8GB</li>
+          <li>Storage: 2GB available space</li>
+          <li>Browser: Chrome, Firefox, Safari, or Edge (latest version)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Inline Expand/Collapse</h2>
+    
+    <div class="example">
+      <p>Sometimes you need an expand/collapse widget within flowing text. For example, you might want to provide <button class="inline-expand-button" aria-expanded="false" aria-controls="inline-details-1" id="inline-button-1"><span class="inline-icon" aria-hidden="true"></span>additional context</button> without disrupting the reading flow.</p>
+      <div class="inline-details details" id="inline-details-1" hidden>
+        <p><strong>Additional Context:</strong> This supplementary information provides background details that help users understand the topic more thoroughly. It remains hidden by default to avoid cluttering the main content.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Accordion Pattern</h2>
+    
+    <div class="example">
+      <div class="accordion">
+        <div class="accordion-item">
+          <h3 style="margin: 0;">
+            <button 
+              class="accordion-button" 
+              aria-expanded="false" 
+              aria-controls="accordion-panel-1"
+              id="accordion-button-1">
+              <span>What is an accordion?</span>
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="accordion-panel details" id="accordion-panel-1" hidden>
+            <p>An accordion is a vertically stacked set of interactive headings that each reveal a section of content. Only one panel is typically expanded at a time, though some implementations allow multiple panels to be open simultaneously.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h3 style="margin: 0;">
+            <button 
+              class="accordion-button" 
+              aria-expanded="false" 
+              aria-controls="accordion-panel-2"
+              id="accordion-button-2">
+              <span>When should I use an accordion?</span>
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="accordion-panel details" id="accordion-panel-2" hidden>
+            <p>Accordions are useful when you have multiple sections of content on a page and want to keep the page length manageable. They work well for:</p>
+            <ul>
+              <li>Frequently Asked Questions (FAQs)</li>
+              <li>Product features or specifications</li>
+              <li>Step-by-step instructions</li>
+              <li>Settings or configuration options</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h3 style="margin: 0;">
+            <button 
+              class="accordion-button" 
+              aria-expanded="false" 
+              aria-controls="accordion-panel-3"
+              id="accordion-button-3">
+              <span>How do I make accordions accessible?</span>
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="accordion-panel details" id="accordion-panel-3" hidden>
+            <p>To create accessible accordions:</p>
+            <ul>
+              <li>Use button elements for the interactive headers</li>
+              <li>Include <code>aria-expanded</code> to indicate state</li>
+              <li>Use <code>aria-controls</code> to associate buttons with panels</li>
+              <li>Wrap button text in heading elements for proper document structure</li>
+              <li>Ensure keyboard operability (Enter/Space to toggle)</li>
+              <li>Provide visible focus indicators</li>
+              <li>Consider adding arrow key navigation between accordion headers</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h3 style="margin: 0;">
+            <button 
+              class="accordion-button" 
+              aria-expanded="false" 
+              aria-controls="accordion-panel-4"
+              id="accordion-button-4">
+              <span>What are common mistakes?</span>
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="accordion-panel details" id="accordion-panel-4" hidden>
+            <p>Common accessibility mistakes with accordions include:</p>
+            <ul>
+              <li>Using div or span elements instead of buttons</li>
+              <li>Forgetting to update <code>aria-expanded</code> when toggling</li>
+              <li>Not providing sufficient color contrast for text and icons</li>
+              <li>Making the entire panel header clickable instead of just the button</li>
+              <li>Hiding content with CSS in a way that makes it still keyboard-focusable</li>
+              <li>Not managing focus properly when panels open/close</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// Get all expand/collapse buttons
+const expandButtons = document.querySelectorAll('[aria-expanded]');
+
+expandButtons.forEach(button => {
+  button.addEventListener('click', function() {
+    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+    const controlsId = this.getAttribute('aria-controls');
+    const controlledElement = document.getElementById(controlsId);
+    
+    // Toggle aria-expanded
+    this.setAttribute('aria-expanded', !isExpanded);
+    
+    // Toggle hidden attribute on controlled element
+    if (controlledElement) {
+      controlledElement.hidden = isExpanded;
+    }
+  });
+});
+</script>
+
+</body>
+</html>

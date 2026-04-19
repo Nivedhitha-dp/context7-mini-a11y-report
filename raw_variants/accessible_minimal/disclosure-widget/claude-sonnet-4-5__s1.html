@@ -1,0 +1,343 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            padding: 2rem;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        h1 {
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+
+        .example {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .example h2 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #34495e;
+        }
+
+        .toggle-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            text-align: left;
+        }
+
+        .toggle-button:hover {
+            background-color: #2980b9;
+        }
+
+        .toggle-button:focus {
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+            display: inline-block;
+        }
+
+        .toggle-button[aria-expanded="true"] .toggle-icon {
+            transform: rotate(90deg);
+        }
+
+        .details {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .details.expanded {
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 1rem;
+        }
+
+        .details-content {
+            padding: 1rem;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+
+        .details-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        .details-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .native-details {
+            margin-top: 1rem;
+        }
+
+        .native-details summary {
+            background-color: #27ae60;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .native-details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .native-details summary:hover {
+            background-color: #229954;
+        }
+
+        .native-details summary:focus {
+            outline: 2px solid #27ae60;
+            outline-offset: 2px;
+        }
+
+        .native-details[open] summary {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .native-details .details {
+            background-color: #d5f4e6;
+            padding: 1rem;
+            border-left: 4px solid #27ae60;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            max-height: none;
+            opacity: 1;
+            margin-top: 0;
+        }
+
+        .accordion-group {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-button {
+            background-color: #fff;
+            color: #333;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            text-align: left;
+            transition: background-color 0.2s ease;
+        }
+
+        .accordion-button:hover {
+            background-color: #f8f9fa;
+        }
+
+        .accordion-button:focus {
+            outline: 2px solid #3498db;
+            outline-offset: -2px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .accordion-button[aria-expanded="true"] {
+            background-color: #e8f4f8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Expand/Collapse Widget Examples</h1>
+
+    <div class="example">
+        <h2>Basic Expand/Collapse Widget</h2>
+        <button class="toggle-button" aria-expanded="false" aria-controls="content1">
+            <span class="toggle-icon">▶</span>
+            <span>Click to expand</span>
+        </button>
+        <div id="content1" class="details" role="region" aria-hidden="true">
+            <div class="details-content">
+                <p><strong>This is the expanded content.</strong></p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="example">
+        <h2>Multiple Independent Widgets</h2>
+        <button class="toggle-button" aria-expanded="false" aria-controls="content2">
+            <span class="toggle-icon">▶</span>
+            <span>Section A</span>
+        </button>
+        <div id="content2" class="details" role="region" aria-hidden="true">
+            <div class="details-content">
+                <p><strong>Section A Content</strong></p>
+                <p>This section contains information about topic A. Each widget operates independently.</p>
+            </div>
+        </div>
+
+        <button class="toggle-button" aria-expanded="false" aria-controls="content3" style="margin-top: 1rem;">
+            <span class="toggle-icon">▶</span>
+            <span>Section B</span>
+        </button>
+        <div id="content3" class="details" role="region" aria-hidden="true">
+            <div class="details-content">
+                <p><strong>Section B Content</strong></p>
+                <p>This section contains information about topic B. You can have multiple sections open at once.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="example">
+        <h2>Native HTML Details Element</h2>
+        <details class="native-details">
+            <summary>
+                <span>▶</span>
+                <span>Click to reveal native details</span>
+            </summary>
+            <div class="details">
+                <p><strong>Native HTML Solution</strong></p>
+                <p>This uses the native &lt;details&gt; and &lt;summary&gt; elements, which provide built-in expand/collapse functionality with excellent accessibility support.</p>
+                <p>No JavaScript required for basic functionality!</p>
+            </div>
+        </details>
+    </div>
+
+    <div class="example">
+        <h2>Accordion Pattern (One Open at a Time)</h2>
+        <div class="accordion-group" role="region" aria-label="Accordion Example">
+            <div class="accordion-item">
+                <button class="accordion-button" aria-expanded="false" aria-controls="accordion1">
+                    <span>Item 1</span>
+                    <span class="toggle-icon">▶</span>
+                </button>
+                <div id="accordion1" class="details" role="region" aria-hidden="true">
+                    <div class="details-content">
+                        <p>Content for accordion item 1. In an accordion, typically only one item is open at a time.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-button" aria-expanded="false" aria-controls="accordion2">
+                    <span>Item 2</span>
+                    <span class="toggle-icon">▶</span>
+                </button>
+                <div id="accordion2" class="details" role="region" aria-hidden="true">
+                    <div class="details-content">
+                        <p>Content for accordion item 2. Click another item to automatically close this one.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-button" aria-expanded="false" aria-controls="accordion3">
+                    <span>Item 3</span>
+                    <span class="toggle-icon">▶</span>
+                </button>
+                <div id="accordion3" class="details" role="region" aria-hidden="true">
+                    <div class="details-content">
+                        <p>Content for accordion item 3. This pattern helps manage screen space efficiently.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Basic toggle functionality
+        document.querySelectorAll('.toggle-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const contentId = this.getAttribute('aria-controls');
+                const content = document.getElementById(contentId);
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+
+                this.setAttribute('aria-expanded', !isExpanded);
+                content.setAttribute('aria-hidden', isExpanded);
+                content.classList.toggle('expanded');
+            });
+        });
+
+        // Accordion functionality (one open at a time)
+        const accordionButtons = document.querySelectorAll('.accordion-button');
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const contentId = this.getAttribute('aria-controls');
+                const content = document.getElementById(contentId);
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+
+                // Close all accordion items
+                accordionButtons.forEach(btn => {
+                    const btnContentId = btn.getAttribute('aria-controls');
+                    const btnContent = document.getElementById(btnContentId);
+                    btn.setAttribute('aria-expanded', 'false');
+                    btnContent.setAttribute('aria-hidden', 'true');
+                    btnContent.classList.remove('expanded');
+                });
+
+                // Open clicked item if it was closed
+                if (!isExpanded) {
+                    this.setAttribute('aria-expanded', 'true');
+                    content.setAttribute('aria-hidden', 'false');
+                    content.classList.add('expanded');
+                }
+            });
+        });
+
+        // Keyboard accessibility for native details
+        document.querySelectorAll('.native-details summary').forEach(summary => {
+            summary.addEventListener('click', function(e) {
+                const icon = this.querySelector('span:first-child');
+                const details = this.parentElement;
+                setTimeout(() => {
+                    icon.style.transform = details.open ? 'rotate(90deg)' : 'rotate(0deg)';
+                }, 0);
+            });
+        });
+    </script>
+</body>
+</html>

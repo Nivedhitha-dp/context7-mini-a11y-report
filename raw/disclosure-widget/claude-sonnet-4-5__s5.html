@@ -1,0 +1,155 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .example {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .toggle-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .toggle-button:hover {
+            background-color: #45a049;
+        }
+        
+        .toggle-button::after {
+            content: '▼';
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-button.active::after {
+            transform: rotate(-180deg);
+        }
+        
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .details.open {
+            max-height: 500px;
+        }
+        
+        .details-content {
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #4CAF50;
+            margin-top: 10px;
+        }
+        
+        h3 {
+            margin-top: 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Expand/Collapse Widget Examples</h1>
+    
+    <div class="example">
+        <button class="toggle-button" onclick="toggleDetails(this)">
+            <span>Widget 1: Features</span>
+        </button>
+        <div class="details">
+            <div class="details-content">
+                <h3>Amazing Features</h3>
+                <p>This widget demonstrates a smooth expand and collapse animation.</p>
+                <ul>
+                    <li>Smooth transitions</li>
+                    <li>Clean design</li>
+                    <li>Easy to use</li>
+                    <li>Responsive layout</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="example">
+        <button class="toggle-button" onclick="toggleDetails(this)">
+            <span>Widget 2: Information</span>
+        </button>
+        <div class="details">
+            <div class="details-content">
+                <h3>Additional Information</h3>
+                <p>Click the button above to toggle the visibility of this content. The animation provides a smooth user experience.</p>
+                <p>You can include any HTML content here, including images, lists, tables, and more.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="example">
+        <button class="toggle-button" onclick="toggleDetails(this)">
+            <span>Widget 3: FAQ</span>
+        </button>
+        <div class="details">
+            <div class="details-content">
+                <h3>Frequently Asked Questions</h3>
+                <p><strong>Q: How does this work?</strong></p>
+                <p>A: The widget uses CSS transitions and JavaScript to smoothly show and hide content.</p>
+                <p><strong>Q: Can I customize it?</strong></p>
+                <p>A: Yes! You can easily modify the styles and content to fit your needs.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="example">
+        <button class="toggle-button" onclick="toggleDetails(this)">
+            <span>Widget 4: Code Example</span>
+        </button>
+        <div class="details">
+            <div class="details-content">
+                <h3>Example Code</h3>
+                <p>Here's a simple code example:</p>
+                <pre style="background-color: #eee; padding: 10px; border-radius: 4px; overflow-x: auto;">
+function toggleDetails(button) {
+    const details = button.nextElementSibling;
+    details.classList.toggle('open');
+    button.classList.toggle('active');
+}</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(button) {
+            const details = button.nextElementSibling;
+            details.classList.toggle('open');
+            button.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

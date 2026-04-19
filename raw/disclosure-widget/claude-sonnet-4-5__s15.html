@@ -1,0 +1,256 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .example {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .example:hover {
+            transform: translateY(-5px);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .widget-header:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #65408b 100%);
+        }
+
+        .widget-title {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .toggle-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+
+        .toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 15px;
+        }
+
+        .details.expanded {
+            max-height: 1000px;
+            padding: 20px 15px;
+        }
+
+        .details-content {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .details-content h3 {
+            color: #667eea;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .details-content p {
+            margin-bottom: 12px;
+        }
+
+        .details-content ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .details-content li {
+            margin-bottom: 8px;
+        }
+
+        .style-variant-2 .widget-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-left: 5px solid #c71f37;
+        }
+
+        .style-variant-2 .widget-header:hover {
+            background: linear-gradient(135deg, #d97ee6 0%, #d84455 100%);
+        }
+
+        .style-variant-2 .details-content h3 {
+            color: #f5576c;
+        }
+
+        .style-variant-3 .widget-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 25px;
+        }
+
+        .style-variant-3 .widget-header:hover {
+            background: linear-gradient(135deg, #3a8cd9 0%, #00d4e0 100%);
+        }
+
+        .style-variant-3 .details-content h3 {
+            color: #4facfe;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .widget-title {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expand/Collapse Widgets</h1>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">What is JavaScript?</div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>JavaScript is a high-level, interpreted programming language that is one of the core technologies of the World Wide Web, alongside HTML and CSS.</p>
+                    <h3>Key Features:</h3>
+                    <ul>
+                        <li>Dynamic typing and first-class functions</li>
+                        <li>Prototype-based object orientation</li>
+                        <li>Event-driven, functional, and imperative programming styles</li>
+                        <li>APIs for working with text, arrays, dates, and more</li>
+                    </ul>
+                    <p>JavaScript enables interactive web pages and is an essential part of web applications. The vast majority of websites use it for client-side page behavior.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example style-variant-2">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">Web Development Best Practices</div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>Following best practices ensures your web applications are maintainable, accessible, and performant.</p>
+                    <h3>Essential Practices:</h3>
+                    <ul>
+                        <li><strong>Semantic HTML:</strong> Use appropriate HTML elements for their intended purpose</li>
+                        <li><strong>Responsive Design:</strong> Ensure your site works on all device sizes</li>
+                        <li><strong>Accessibility:</strong> Make your content usable by everyone, including people with disabilities</li>
+                        <li><strong>Performance:</strong> Optimize loading times and runtime performance</li>
+                        <li><strong>Security:</strong> Protect against common vulnerabilities like XSS and CSRF</li>
+                    </ul>
+                    <p>Implementing these practices from the start will save time and effort in the long run.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example style-variant-3">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">CSS Grid vs Flexbox</div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>Both CSS Grid and Flexbox are powerful layout systems, but they excel in different scenarios.</p>
+                    <h3>When to Use Flexbox:</h3>
+                    <ul>
+                        <li>One-dimensional layouts (rows OR columns)</li>
+                        <li>Distributing space among items in a container</li>
+                        <li>Navigation menus and toolbars</li>
+                        <li>Aligning items within a container</li>
+                    </ul>
+                    <h3>When to Use Grid:</h3>
+                    <ul>
+                        <li>Two-dimensional layouts (rows AND columns)</li>
+                        <li>Complex page layouts</li>
+                        <li>Overlapping elements</li>
+                        <li>Precise control over item placement</li>
+                    </ul>
+                    <p>In many cases, you'll use both together - Grid for the overall page layout and Flexbox for component-level layouts.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="widget-header" onclick="toggleWidget(this)">
+                <div class="widget-title">Modern JavaScript Frameworks</div>
+                <div class="toggle-icon">▼</div>
+            </div>
+            <div class="details">
+                <div class="details-content">
+                    <p>JavaScript frameworks provide structure and tools to build complex web applications more efficiently.</p>
+                    <h3>Popular Frameworks:</h3>
+                    <ul>
+                        <li><strong>React:</strong> A library for building user interfaces with component-based architecture</li>
+                        <li><strong>Vue:</strong> Progressive framework that's approachable and versatile</li>
+                        <li><strong>Angular:</strong> Full-featured framework with built-in solutions for routing, forms, and HTTP</li>
+                        <li><strong>Svelte:</strong> Compiler-based framework that shifts work to build time</li>
+                    </ul>
+                    <p>Each framework has its strengths, and the choice often depends on project requirements and team expertise.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleWidget(header) {
+            const details = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            details.classList.toggle('expanded');
+            icon.classList.toggle('expanded');
+        }
+    </script>
+</body>
+</html>

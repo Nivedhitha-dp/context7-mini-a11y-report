@@ -1,0 +1,867 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home - Shop Smart - Your Online Shopping Destination</title>
+<style>
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-muted-text: #4a4a4a;
+  --color-link: #0056b3;
+  --color-link-hover: #003d82;
+  --color-link-visited: #551a8b;
+  --color-border: #cccccc;
+  --color-focus: #0056b3;
+  --color-danger: #c41e3a;
+  --color-success: #2d5f2e;
+  --color-accent: #e67e22;
+  --color-accent-dark: #c86419;
+  --color-card-bg: #f8f9fa;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+header {
+  background-color: var(--color-bg);
+  border-bottom: 2px solid var(--color-border);
+  padding: var(--spacing-md) 0;
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.site-logo {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.site-logo:hover {
+  color: var(--color-link-hover);
+}
+
+.site-logo:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+  box-shadow: 0 0 4px 3px rgba(0, 86, 179, 0.3);
+}
+
+@media (forced-colors: active) {
+  .site-logo:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+.search-form {
+  flex: 1 1 300px;
+  max-width: 500px;
+  min-width: 0;
+}
+
+.search-wrapper {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.search-input:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-color: var(--color-focus);
+  box-shadow: 0 0 4px 3px rgba(0, 86, 179, 0.3);
+}
+
+@media (forced-colors: active) {
+  .search-input:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+.btn {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 2px solid transparent;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: var(--color-link);
+  color: var(--color-bg);
+  border-color: var(--color-link);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-link-hover);
+  border-color: var(--color-link-hover);
+}
+
+.btn-primary:focus {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 4px 3px rgba(0, 86, 179, 0.7);
+}
+
+@media (forced-colors: active) {
+  .btn {
+    border: 2px solid ButtonBorder;
+  }
+  
+  .btn:focus {
+    outline: 2px solid ButtonText;
+  }
+}
+
+.header-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.header-link {
+  color: var(--color-link);
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.header-link:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+.header-link:visited {
+  color: var(--color-link-visited);
+}
+
+.header-link:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+  box-shadow: 0 0 4px 3px rgba(0, 86, 179, 0.3);
+}
+
+@media (forced-colors: active) {
+  .header-link:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+nav {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.nav-list li {
+  margin: 0;
+}
+
+.nav-link {
+  display: block;
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--color-bg);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link:visited {
+  color: var(--color-bg);
+}
+
+.nav-link:focus {
+  outline: 2px solid var(--color-bg);
+  outline-offset: -2px;
+  box-shadow: 0 0 4px 3px rgba(255, 255, 255, 0.5);
+}
+
+@media (forced-colors: active) {
+  .nav-link:focus {
+    outline: 2px solid ButtonText;
+  }
+}
+
+main {
+  padding: var(--spacing-2xl) 0;
+}
+
+.hero {
+  background-color: var(--color-card-bg);
+  padding: var(--spacing-2xl) var(--spacing-md);
+  border-radius: 8px;
+  margin-bottom: var(--spacing-2xl);
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin: 0 0 var(--spacing-md) 0;
+  line-height: 1.2;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  color: var(--color-muted-text);
+  margin: 0 0 var(--spacing-xl) 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .hero p {
+    font-size: 1.125rem;
+  }
+}
+
+.section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.section h2 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.view-all-link {
+  color: var(--color-link);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.view-all-link:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+.view-all-link:visited {
+  color: var(--color-link-visited);
+}
+
+.view-all-link:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+  box-shadow: 0 0 4px 3px rgba(0, 86, 179, 0.3);
+}
+
+@media (forced-colors: active) {
+  .view-all-link:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.product-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: var(--spacing-md);
+}
+
+.product-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--color-text);
+}
+
+.product-title a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.product-title a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+.product-title a:visited {
+  color: var(--color-link-visited);
+}
+
+.product-title a:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 4px 3px rgba(0, 86, 179, 0.3);
+}
+
+@media (forced-colors: active) {
+  .product-title a:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.stars {
+  color: var(--color-accent);
+  font-size: 1rem;
+}
+
+.rating-count {
+  color: var(--color-muted-text);
+  font-size: 0.875rem;
+}
+
+.deal-badge {
+  background-color: var(--color-danger);
+  color: var(--color-bg);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: var(--spacing-sm);
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: var(--color-muted-text);
+  font-size: 1rem;
+  margin-right: var(--spacing-sm);
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.blog-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.blog-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.blog-content {
+  padding: var(--spacing-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-meta {
+  color: var(--color-muted-text);
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.blog-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.blog-title a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.blog-title a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+.blog-title a:visited {
+  color: var(--color-link-visited);
+}
+
+.blog-title a:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 4px 3px rgba(0, 86, 179, 0.3);
+}
+
+@media (forced-colors: active) {
+  .blog-title a:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+.blog-excerpt {
+  color: var(--color-muted-text);
+  margin: 0 0 var(--spacing-md) 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.read-more {
+  color: var(--color-link);
+  text-decoration: none;
+  font-weight: 500;
+  align-self: flex-start;
+}
+
+.read-more:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+.read-more:visited {
+  color: var(--color-link-visited);
+}
+
+.read-more:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+  box-shadow: 0 0 4px 3px rgba(0, 86, 179, 0.3);
+}
+
+@media (forced-colors: active) {
+  .read-more:focus {
+    outline: 2px solid ButtonBorder;
+  }
+}
+
+footer {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  padding: var(--spacing-2xl) 0 var(--spacing-md) 0;
+  margin-top: var(--spacing-2xl);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.footer-section h3 {
+  font-size: 1.125rem;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.footer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-list li {
+  margin-bottom: var(--spacing-sm);
+}
+
+.footer-link {
+  color: var(--color-bg);
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+.footer-link:visited {
+  color: var(--color-bg);
+}
+
+.footer-link:focus {
+  outline: 2px solid var(--color-bg);
+  outline-offset: 2px;
+  box-shadow: 0 0 4px 3px rgba(255, 255, 255, 0.5);
+}
+
+@media (forced-colors: active) {
+  .footer-link:focus {
+    outline: 2px solid ButtonText;
+  }
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: var(--spacing-md);
+  text-align: center;
+  color: var(--color-bg);
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-form {
+    max-width: none;
+  }
+  
+  .header-actions {
+    justify-content: center;
+  }
+  
+  .nav-list {
+    flex-direction: column;
+  }
+  
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <a href="#maincontent" class="sr-only">Skip to main content</a>
+    <div class="site-header">
+      <a href="/" class="site-logo">Shop Smart</a>
+      <form role="search" class="search-form">
+        <div class="search-wrapper">
+          <label for="search" class="sr-only">Search products</label>
+          <input type="search" id="search" class="search-input" placeholder="Search products..." aria-label="Search products">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+      <div class="header-actions">
+        <a href="/cart" class="header-link">Cart (0)</a>
+        <a href="/account" class="header-link">Account</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav aria-label="Main">
+  <div class="container">
+    <ul class="nav-list">
+      <li><a href="/electronics" class="nav-link">Electronics</a></li>
+      <li><a href="/clothing" class="nav-link">Clothing</a></li>
+      <li><a href="/home-garden" class="nav-link">Home & Garden</a></li>
+      <li><a href="/sports" class="nav-link">Sports & Outdoors</a></li>
+      <li><a href="/books" class="nav-link">Books</a></li>
+      <li><a href="/deals" class="nav-link">Deals</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="maincontent" tabindex="-1">
+  <div class="container">
+    <section class="hero">
+      <h1>Welcome to Shop Smart</h1>
+      <p>Discover amazing products at unbeatable prices. Free shipping on orders over $50.</p>
+      <a href="/deals" class="btn btn-primary">Shop Deals Now</a>
+    </section>
+
+    <section class="section" aria-labelledby="popular-heading">
+      <div class="section-header">
+        <h2 id="popular-heading">Popular Items</h2>
+        <a href="/popular" class="view-all-link">View all</a>
+      </div>
+      <ul class="product-grid">
+        <li class="product-card">
+          <img src="https://via.placeholder.com/250x200/4a90e2/ffffff?text=Wireless+Headphones" alt="Wireless noise-cancelling headphones" class="product-image">
+          <h3 class="product-title"><a href="/product/wireless-headphones">Wireless Noise-Cancelling Headphones</a></h3>
+          <div class="product-rating">
+            <span class="stars" aria-label="Rating: 4.5 out of 5 stars">★★★★☆</span>
+            <span class="rating-count">(1,234)</span>
+          </div>
+          <p class="product-price">$149.99</p>
+          <button class="btn btn-primary">Add to Cart</button>
+        </li>
+        <li class="product-card">
+          <img src="https://via.placeholder.com/250x200/e67e22/ffffff?text=Smart+Watch" alt="Fitness smart watch" class="product-image">
+          <h3 class="product-title"><a href="/product/smart-watch">Fitness Smart Watch</a></h3>
+          <div class="product-rating">
+            <span class="stars" aria-label="Rating: 4 out of 5 stars">★★★★☆</span>
+            <span class="rating-count">(892)</span>
+          </div>
+          <p class="product-price">$199.99</p>
+          <button class="btn btn-primary">Add to Cart</button>
+        </li>
+        <li class="product-card">
+          <img src="https://via.placeholder.com/250x200/2ecc71/ffffff?text=Running+Shoes" alt="Performance running shoes" class="product-image">
+          <h3 class="product-title"><a href="/product/running-shoes">Performance Running Shoes</a></h3>
+          <div class="product-rating">
+            <span class="stars" aria-label="Rating: 5 out of 5 stars">★★★★★</span>
+            <span class="rating-count">(2,341)</span>
+          </div>
+          <p class="product-price">$89.99</p>
+          <button class="btn btn-primary">Add to Cart</button>
+        </li>
+        <li class="product-card">
+          <img src="https://via.placeholder.com/250x200/9b59b6/ffffff?text=Backpack" alt="Travel backpack" class="product-image">
+          <h3 class="product-title"><a href="/product/travel-backpack">Travel Backpack</a></h3>
+          <div class="product-rating">
+            <span class="stars" aria-label="Rating: 4.5 out of 5 stars">★★★★☆</span>
+            <span class="rating-count">(567)</span>
+          </div>
+          <p class="product-price">$59.99</p>
+          <button class="btn btn-primary">Add to Cart</button>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section" aria-labelledby="deals-heading">
+      <div class="section-header">
+        <h2 id="deals-heading">Today's Deals</h2>
+        <a href="/deals" class="view-all-link">View all deals</a>
+      </div>
+      <ul class="product-grid">
+        <li class="product-card">
+          <span class="deal-badge">30% OFF</span>
+          <img src="https://via.placeholder.com/250x200/e74c3c/ffffff?text=Tablet" alt="10-inch tablet" class="product-image">
+          <h3 class="product-title"><a href="/product/tablet">10-inch Tablet</a></h3>
+          <div class="product-rating">
+            <span class="stars" aria-label="Rating: 4 out of 5 stars">★★★★☆</span>
+            <span class="rating-count">(456)</span>
+          </div>
+          <p class="product-price">
+            <span class="original-price">$299.99</span>
+            $209.99
+          </p>
+          <button class="btn btn-primary">Add to Cart</button>
+        </li>
+        <li class="product-card">
+          <span class="deal-badge">25% OFF</span>
+          <img src="https://via.placeholder.com/250x200/3498db/ffffff?text=Coffee+Maker" alt="Programmable coffee maker" class="product-image">
+          <h3 class="product-title"><a href="/product/coffee-maker">Programmable Coffee Maker</a></h3>
+          <div class="product-rating">
+            <span class="stars" aria-label="Rating: 4.5 out of 5 stars">★★★★☆</span>
+            <span class="rating-count">(1,098)</span>
+          </div>
+          <p class="product-price">
+            <span class="original-price">$79.99</span>
+            $59.99
+          </p>
+          <button class="btn btn-primary">Add to Cart</button>
+        </li>
+        <li class="product-card">
+          <span class="deal-badge">40% OFF</span>
+          <img src="https://via.placeholder.com/250x200/1abc9c/ffffff?text=Yoga+Mat" alt="Premium yoga mat" class="product-image">
+          <h3 class="product-title"><a href="/product/yoga-mat">Premium Yoga Mat</a></h3>
+          <div class="product-rating">
+            <span class="stars" aria-label="Rating: 5 out of 5 stars">★★★★★</span>
+            <span class="rating-count">(789)</span>
+          </div>
+          <p class="product-price">
+            <span class="original-price">$49.99</span>
+            $29.99
+          </p>
+          <button class="btn btn-primary">Add to Cart</button>
+        </li>
+        <li class="product-card">
+          <span class="deal-badge">20% OFF</span>
+          <img src="https://via.placeholder.com/250x200/f39c12/ffffff?text=Blender" alt="High-speed blender" class="product-image">
+          <h3 class="product-title"><a href="/product/blender">High-Speed Blender</a></h3>
+          <div class="product-rating">
+            <span class="stars" aria-label="Rating: 4.5 out of 5 stars">★★★★☆</span>
+            <span class="rating-count">(654)</span>
+          </div>
+          <p class="product-price">
+            <span class="original-price">$99.99</span>
+            $79.99
+          </p>
+          <button class="btn btn-primary">Add to Cart</button>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section" aria-labelledby="blog-heading">
+      <div class="section-header">
+        <h2 id="blog-heading">From Our Blog</h2>
+        <a href="/blog" class="view-all-link">View all posts</a>
+      </div>
+      <ul class="blog-grid">
+        <li class="blog-card">
+          <img src="https://via.placeholder.com/400x200/34495e/ffffff?text=Blog+Post+1" alt="" class="blog-image">
+          <div class="blog-content">
+            <p class="blog-meta">March 15, 2024 • Home & Garden</p>
+            <h3 class="blog-title"><a href="/blog/spring-home-refresh">10 Ways to Refresh Your Home for Spring</a></h3>
+            <p class="blog-excerpt">Discover simple and affordable ways to bring new life to your living space this spring season. From decluttering tips to fresh decor ideas.</p>
+            <a href="/blog/spring-home-refresh" class="read-more">Read more</a>
+          </div>
+        </li>
+        <li class="blog-card">
+          <img src="https://via.placeholder.com/400x200/16a085/ffffff?text=Blog+Post+2" alt="" class="blog-image">
+          <div class="blog-content">
+            <p class="blog-meta">March 12, 2024 • Technology</p>
+            <h3 class="blog-title"><a href="/blog/smart-home-guide">The Ultimate Guide to Smart Home Devices</a></h3>
+            <p class="blog-excerpt">Everything you need to know about setting up a smart home, from choosing the right devices to creating automation routines.</p>
+            <a href="/blog/smart-home-guide" class="read-more">Read more</a>
+          </div>
+        </li>
+        <li class="blog-card">
+          <img src="https://via.placeholder.com/400x200/c0392b/ffffff?text=Blog+Post+3" alt="" class="blog-image">
+          <div class="blog-content">
+            <p class="blog-meta">March 10, 2024 • Fitness</p>
+            <h3 class="blog-title"><a href="/blog/workout-essentials">Essential Workout Gear for Beginners</a></h3>
+            <p class="blog-excerpt">Starting your fitness journey? Here's what you actually need to get started, from basic equipment to comfortable workout clothes.</p>
+            <a href="/blog/workout-essentials" class="read-more">Read more</a>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Customer Service</h3>
+        <ul class="footer-list">
+          <li><a href="/contact" class="footer-link">Contact Us</a></li>
+          <li><a href="/shipping" class="footer-link">Shipping Information</a></li>
+          <li><a href="/returns" class="footer-link">Returns & Exchanges</a></li>
+          <li><a href="/faq" class="footer-link">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>About Us</h3>
+        <ul class="footer-list">
+          <li><a href="/about" class="footer-link">Our Story</a></li>
+          <li><a href="/careers" class="footer-link">Careers</a></li>
+          <li><a href="/press" class="footer-link">Press</a></li>
+          <li><a href="/sustainability" class="footer-link">Sustainability</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Shop</h3>
+        <ul class="footer-list">
+          <li><a href="/new-arrivals" class="footer-link">New Arrivals</a></li>
+          <li><a href="/best-sellers" class="footer-link">Best Sellers</a></li>
+          <li><a href="/sale" class="footer-link">Sale</a></li>
+          <li><a href="/gift-cards" class="footer-link">Gift Cards</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Legal</h3>
+        <ul class="footer-list">
+          <li><a href="/privacy" class="footer-link">Privacy Policy</a></li>
+          <li><a href="/terms" class="footer-link">Terms of Service</a></li>
+          <li><a href="/accessibility" class="footer-link">Accessibility</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Shop Smart. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand/Collapse Widget Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .example {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .toggle-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .details {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        
+        .details.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+        }
+        
+        .details.expanded {
+            max-height: 500px;
+            opacity: 1;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #555;
+            margin-top: 0;
+        }
+        
+        .arrow {
+            display: inline-block;
+            transition: transform 0.3s;
+            margin-left: 8px;
+        }
+        
+        .arrow.down {
+            transform: rotate(0deg);
+        }
+        
+        .arrow.up {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <h1>Expand/Collapse Widget Examples</h1>
+    
+    <div class="example">
+        <h2>Widget 1: Basic Information</h2>
+        <button class="toggle-button" onclick="toggleDetails(1)">
+            Toggle Details
+            <span class="arrow down" id="arrow1">▼</span>
+        </button>
+        <div class="details collapsed" id="details1">
+            <h3>About This Widget</h3>
+            <p>This is a simple expand/collapse widget that shows and hides content when you click the button.</p>
+            <p>It uses CSS transitions to create smooth animations and JavaScript to toggle the visibility.</p>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h2>Widget 2: Feature List</h2>
+        <button class="toggle-button" onclick="toggleDetails(2)">
+            Show/Hide Features
+            <span class="arrow down" id="arrow2">▼</span>
+        </button>
+        <div class="details collapsed" id="details2">
+            <h3>Key Features</h3>
+            <ul>
+                <li>Smooth animations</li>
+                <li>Easy to customize</li>
+                <li>Responsive design</li>
+                <li>Accessible markup</li>
+                <li>Pure JavaScript implementation</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h2>Widget 3: FAQ Section</h2>
+        <button class="toggle-button" onclick="toggleDetails(3)">
+            View Answer
+            <span class="arrow down" id="arrow3">▼</span>
+        </button>
+        <div class="details collapsed" id="details3">
+            <h3>How does this work?</h3>
+            <p>The widget uses a combination of CSS classes and JavaScript to toggle between expanded and collapsed states.</p>
+            <p>When collapsed, the content has zero max-height and zero opacity. When expanded, it transitions to its full height with full opacity.</p>
+            <p>This creates a smooth, professional-looking animation effect.</p>
+        </div>
+    </div>
+    
+    <script>
+        function toggleDetails(id) {
+            const details = document.getElementById('details' + id);
+            const arrow = document.getElementById('arrow' + id);
+            
+            if (details.classList.contains('collapsed')) {
+                details.classList.remove('collapsed');
+                details.classList.add('expanded');
+                arrow.classList.remove('down');
+                arrow.classList.add('up');
+            } else {
+                details.classList.remove('expanded');
+                details.classList.add('collapsed');
+                arrow.classList.remove('up');
+                arrow.classList.add('down');
+            }
+        }
+    </script>
+</body>
+</html>
